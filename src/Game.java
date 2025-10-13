@@ -13,7 +13,7 @@ public class Game {
 
     }
 
-    public void Subtraction() {
+    public void Addition() {
         int z = 10000;
         int x = -9999;
         System.out.println(z+x);
