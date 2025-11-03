@@ -1,14 +1,9 @@
 public class Game {
-    
-    public void helloWorld() {
-        System.out.println("Hello World");
-
-    }
+    //Carlos Matos, Keyvaugn Verring, Clark Newell, Devin Gomez
 
 
-    public void Math(){
-        int a=10;
-        int b=9;
-        System.out.println(a+b);
-    }
+
+
+
+
 }
