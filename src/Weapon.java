@@ -1,6 +1,6 @@
 public class Weapon extends Item{
-    int damage;
-    int DOT;
+    private int damage;
+    private int DOT;
 
     public Weapon(int id, String name, String description, int location, int damage, int DOT) {
         super(id,name,description,location);
