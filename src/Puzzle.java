@@ -19,4 +19,5 @@ public class Puzzle {
     String givePuzzleDescription(){
         return this.Description;
     }
+
 }

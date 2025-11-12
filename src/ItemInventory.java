@@ -7,6 +7,14 @@ public class ItemInventory extends Inventory {
         this.inventory = inventory;
     }
 
+    public ArrayList<Item> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(ArrayList<Item> inventory) {
+        this.inventory = inventory;
+    }
+
     void addItem(Item item){
         if(item!=null){
             inventory.add(item);

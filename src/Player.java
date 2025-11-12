@@ -1,20 +1,28 @@
+import java.util.Random;
+import java.util.Scanner;
+
 public class Player extends Character {
     private int defense;
     private int evasion;
     private int hunger;
     private int thrist;
     private boolean DayorNight;
+    //private int currentRoom;
     ItemInventory playerInventory;
 
-    public Player(int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
-        super(HP,attackDMG);
-        this.defense=defense;
-        this.evasion=evasion;
-        this.hunger=hunger;
-        this.thrist=thrist;
-        this.DayorNight=true;
-        this.playerInventory=null;
+    public Player(int HP, int attackDMG, int defense, int evasion, int hunger, int thrist) {
+        super(HP, attackDMG);
+        this.HP=25;
+        this.attackDMG=1;
+        this.defense = 10;
+        this.evasion = 2;
+        this.hunger = 100;
+        this.thrist = 100;
+        this.DayorNight = true;
+        //this.currentRoom = 1;
+        this.playerInventory = null;
     }
+
     public int getDefense() {
         return defense;
     }
@@ -64,18 +72,28 @@ public class Player extends Character {
     }
 
     void displayStats() {
+        System.out.println("HP: " + getHP());
+        System.out.println("AtkDamage: "+getAttackDMG());
+        System.out.println("Defense: " + getDefense());
+        System.out.println("Evasion: " + getEvasion());
+        System.out.println("Thrist: " + getThrist());
+        System.out.println("Hunger: " + getHunger());
 
     }
-    void savePlayer(){
+
+    void savePlayer() {
 
     }
-    void loadPlayer(){
+
+    void loadPlayer() {
 
     }
-    void sleep(){
+
+    void sleep() {
 
     }
-    void avoid(){
+
+    void avoid() {
 
     }
 
@@ -84,8 +102,37 @@ public class Player extends Character {
 
     }
 
-    void drop(Room Playerroom){
+    void drop(Room Playerroom) {
 
+    }
 
+    void Combat(Monster tempMonster){
+        System.out.println("Your HP" +getHP());
+        System.out.println(tempMonster.displayerMonster());
+        System.out.println("Monster HP: " + tempMonster.getHP());
+        int MonsterHP= tempMonster.getHP();
+        Scanner UserInput=new Scanner(System.in);
+        while(true) {
+            System.out.println("Commands:");
+            String Command = UserInput.nextLine();
+            if (Command.equalsIgnoreCase("Attack")) {
+                MonsterHP -= this.getAttackDMG();
+                setHP(this.getHP() - tempMonster.getAttackDMG());
+            }
+            else if(Command.equalsIgnoreCase("Stats")){
+                displayStats();
+            }
+            else if(Command.equalsIgnoreCase("Run")){
+                //Put random chance to just exit battle
+            }
+            else if(Command.equalsIgnoreCase("Inventory")){
+                inventory();
+            }
+        }
+
+    }
+
+    void inventory() {
+       System.out.println(playerInventory.getInventory());
     }
 }
