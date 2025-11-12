@@ -5,7 +5,8 @@ public class ArtifactInventory {
     public ArtifactInventory(ArrayList<Artifact> Artifactinventory) {
         this.Artifactinventory = Artifactinventory;
     }
-    void addArtifact(){
-
+    void addArtifact(Artifact PArtifact){
+            Artifactinventory.add(PArtifact);
     }
+
 }
