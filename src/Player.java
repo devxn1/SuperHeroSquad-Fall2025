@@ -2,6 +2,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Player extends Character {
+
     private int defense;
     private int evasion;
     private int hunger;
@@ -71,6 +72,11 @@ public class Player extends Character {
         this.playerInventory = playerInventory;
     }
 
+
+    
+
+    
+
     void displayStats() {
         System.out.println("HP: " + getHP());
         System.out.println("AtkDamage: "+getAttackDMG());
@@ -97,9 +103,8 @@ public class Player extends Character {
 
     }
 
-    //For Hashmaps, Key is id(integer),
-    void pickup(Room Playerroom) {
-
+    public int getHp() {
+        return hp;
     }
 
     void drop(Room Playerroom) {
@@ -134,5 +139,9 @@ public class Player extends Character {
 
     void inventory() {
        System.out.println(playerInventory.getInventory());
-    }
+   /*
+    public void setHp(int hp) {
+        this.hp = Math.max(0, Math.min(100, hp));
+    
+    }*/
 }
