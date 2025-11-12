@@ -30,5 +30,4 @@ public class ItemInventory extends Inventory {
             }
             inventory.remove(item);
     }
-
 }
