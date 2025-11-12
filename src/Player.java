@@ -72,11 +72,6 @@ public class Player extends Character {
         this.playerInventory = playerInventory;
     }
 
-
-    
-
-    
-
     void displayStats() {
         System.out.println("HP: " + getHP());
         System.out.println("AtkDamage: "+getAttackDMG());
@@ -84,8 +79,15 @@ public class Player extends Character {
         System.out.println("Evasion: " + getEvasion());
         System.out.println("Thrist: " + getThrist());
         System.out.println("Hunger: " + getHunger());
-
     }
+
+    public void showHelp() {
+        System.out.println("Commands: North/n, South/s, East/e, West/w,");
+        System.out.println("Look/Inspect, Take/Grab, Gather, Craft,");
+        System.out.println("Build, Use, Map/m, Journal/j,");
+        System.out.println("Inventory/i, Sleep, Save/Load, Help/?");
+    }
+
 
     void savePlayer() {
 
@@ -104,7 +106,7 @@ public class Player extends Character {
     }
 
     public int getHp() {
-        return hp;
+        return HP;
     }
 
     void drop(Room Playerroom) {
@@ -138,10 +140,11 @@ public class Player extends Character {
     }
 
     void inventory() {
-       System.out.println(playerInventory.getInventory());
+        System.out.println(playerInventory.getInventory());
    /*
     public void setHp(int hp) {
         this.hp = Math.max(0, Math.min(100, hp));
     
     }*/
+    }
 }
