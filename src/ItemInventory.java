@@ -1,7 +1,8 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class ItemInventory extends Inventory {
-   private  ArrayList<Item> inventory;
+   private  List<Item> inventory = new ArrayList<>();
 
     public ItemInventory(ArrayList<Item> inventory) {
         this.inventory = inventory;
