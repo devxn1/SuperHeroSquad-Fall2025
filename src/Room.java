@@ -32,6 +32,7 @@ public class Room {
 
     }
     void getNextRoom(){
+
     }
 
     public void visit() {
