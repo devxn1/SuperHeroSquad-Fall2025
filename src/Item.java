@@ -2,13 +2,16 @@ public class Item {
     private int id;
     private String Name;
     private String Description;
+    private String Category;
     private int location;
 
-    public Item(int id, String name, String description, int location) {
+    public Item(int id, String name, String description, String Category, int location) {
         this.id = id;
         this.Name = name;
         this.Description = description;
         this.location = location;
+        this.Category = Category;
+
     }
 
     public String getName() {
