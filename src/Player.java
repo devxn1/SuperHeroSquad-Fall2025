@@ -4,6 +4,7 @@ public class Player extends Character {
     int hunger;
     int thrist;
     boolean DayorNight;
+    private int hp;
 
     public Player(int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
         super(HP,attackDMG);
@@ -27,5 +28,32 @@ public class Player extends Character {
     }
     void avoid(){
 
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = Math.max(0, Math.min(100, hp));
+    }
+
+    //for user input STATS
+    public void showStats() {
+        System.out.println("Your current stats are:");
+        System.out.println("Health: " + hp + "/100");
+        System.out.println("Attack Damage: " + getAttackDamage());
+        if (equippedWeapon != null) {
+            System.out.println("Current weapon: " + equippedWeapon.getName());
+        }
+    }
+
+    //for user input HELP
+    public void showHelp() {
+        System.out.println("List of Commands:");
+        System.out.println("Commands: North/n, South/s, East/e, West/w,");
+        System.out.println("Look/Inspect, Take/Grab, Gather,");
+        System.out.println("Craft, Build, Use, Map/m, Journal/j,");
+        System.out.println("Inventory/i, Sleep, Save/Load, Help/?");
     }
 }
