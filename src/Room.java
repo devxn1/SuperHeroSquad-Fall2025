@@ -1,5 +1,5 @@
 public class Room {
-    int roomLocation;
+    int roomID;
     private String roomName;
     private String roomDescription;
     private String North;
