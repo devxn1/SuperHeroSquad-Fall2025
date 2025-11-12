@@ -1,8 +1,9 @@
 public class AmbushMonster extends  Character{
-    int ID;
-    int Location;
-    String Name;
-    String Description;
+    private int ID;
+    private int Location;
+    private String Name;
+    private String Description;
+
     public AmbushMonster(int HP, int attackDMG, int ID, int Location, String Name, String Description){
         super(HP, attackDMG);
         this.ID = ID;
