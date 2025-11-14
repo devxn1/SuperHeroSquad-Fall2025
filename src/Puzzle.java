@@ -5,20 +5,24 @@
 import java.util.Scanner;
 
 public class Puzzle {
-    private int roomId;
-    private String description;
-    private String solution;
-    private boolean solved;
+    private String roomID;
+    private String roomName;
+    private String puzzleDescription;
     private int maxAttempts;
     private int remainingAttempts;
+    private boolean solved;
+    private String rewardID;
 
-    public Puzzle(int roomId, String description, String solution, int attempts) {
-        this.roomId = roomId;
-        this.description = description;
-        this.solution = solution.trim().toUpperCase();
-        this.solved = false;
-        this.maxAttempts = Math.max(0, attempts);
+
+    public Puzzle(String roomID, String roomName,String puzzleDescription, int maxAttempts, int remainingAttempts, boolean solved, String rewardID) {
+        this.roomID = roomID;
+        this.roomName = roomName;
+        this.puzzleDescription = puzzleDescription;
+        this.rewardID = solution.trim().toUpperCase();
+        this.maxAttempts = maxAttempts;
         this.remainingAttempts = this.maxAttempts;
+        this.solved = false;
+
     }
 
     /*
@@ -75,7 +79,7 @@ public class Puzzle {
             return true;
         }
 
-        if (answer.trim().equalsIgnoreCase(solution)) {
+        if (answer.trim().equalsIgnoreCase(rewardID)) {
             solved = true;
             System.out.println("Correct!");
             return true;
