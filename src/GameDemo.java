@@ -19,13 +19,11 @@ public class GameDemo {
 
     private void initializeGame() {
         allRoom = new HashMap<>();
-
     }
 
     private void getRoomTable() {
         String sql = "SELECT roomID, biome, name, description, north, east, south, west, isLockedBy FROM Room";
         ResultSet rs = dbManager.executeQuery(sql);
-
         try {
             while (rs.next()) {
                 String roomID = rs.getString("roomID");
@@ -33,9 +31,6 @@ public class GameDemo {
         } catch (SQLException e) {
             System.err.println("Error in room table method:" + e.getMessage());
         }
-
-
-
     }
 
     private void getItemTable() {
