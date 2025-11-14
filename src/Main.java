@@ -36,7 +36,7 @@ public class Main {
                 //currentRoom.look();
                 continue;
             } else if (input.equals("Inventory")) {
-                player.inventory();
+                //player.inventory();
                 continue;
             }
 
