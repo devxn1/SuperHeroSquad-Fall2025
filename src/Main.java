@@ -20,8 +20,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String input;
         System.out.println("Superhero Squad Final Project Implementation");
-        System.out.println("Commands: North/n, South/s, East/e, West/w,\nLook/Inspect, Take/Grab, Gather,\nCraft, Build, Use, Map/m, Journal/j,\nInventory/i, Sleep, Save/Load, Help/?");
-        //startingRoom.visit();
+        System.out.println("Commands: North/n, South/s, East/e, West/w,\nLook/Inspect, Take/Grab, Gather,\nCraft, Build, Use, Map/m, Journal/j,\nInventory/i, Sleep, Stats, Save/Load, Help/?, Quit");
 
         //Game loop
         while (true) {
@@ -33,6 +32,7 @@ public class Main {
             //These can be added to lower loop, I find it easier to separate one words from the two words
             if (input.equals("QUIT")) {
                 System.out.println("Quitting Island Survival Game");
+                System.exit(0);
                 break;
             }
             else if (input.equals("STATS")) {
@@ -48,7 +48,7 @@ public class Main {
                 continue;
             }
             else if (input.equals("Inventory")) {
-                //player.inventoryList();
+                player.inventory();
                 continue;
             }
 
