@@ -1,3 +1,10 @@
+/**Class: Room
+ * @author Devin Gomez
+ * @version 1.0
+ * Course:  ITEC3860 Fall 2025
+ * Written: November 13, 2025
+ * Purpose:
+ */
 public class Room {
     int roomLocation;
     private String roomName;

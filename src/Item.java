@@ -1,45 +1,37 @@
-public class Item {
+
+public abstract class Item {
     private int id;
-    private String Name;
-    private String Description;
-    private int location;
+    private String name;
+    private String description;
+    private int roomID;
 
-    public Item(int id, String name, String description, int location) {
+    public Item(int id, String name, String description, int roomID) {
         this.id = id;
-        this.Name = name;
-        this.Description = description;
-        this.location = location;
+        this.name = name;
+        this.description = description;
+        this.roomID = roomID;
     }
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return Description;
-    }
-
-    public void setDescription(String description) {
-        Description = description;
-    }
-
-    public int getLocation() {
-        return location;
-    }
-
-    public void setLocation(int location) {
-        this.location = location;
-    }
+//
+//    public int getId() {
+//        return id;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public String getDescription() {
+//        return description;
+//    }
+//
+//    public int getRoomID() {
+//        return roomID;
+//    }
+//
+//    public abstract void use(Player player);
+//
+//   @Override
+//    public String toString() {
+//       return name + ": " + description;
+//   }
 }

@@ -1,3 +1,6 @@
+import java.util.Random;
+import java.util.Scanner;
+
 public class Player extends Character {
     int defense;
     int evasion;
@@ -15,18 +18,35 @@ public class Player extends Character {
         this.DayorNight=true;
     }
     void displayStats() {
+        System.out.println("HP: " + getHP());
+        System.out.println("AtkDamage: "+getAttackDMG());
+        System.out.println("Defense: " + getDefense());
+        System.out.println("Evasion: " + getEvasion());
+        System.out.println("Thrist: " + getThrist());
+        System.out.println("Hunger: " + getHunger());
+    }
+
+    public void showHelp() {
+        System.out.println("Commands: North/n, South/s, East/e, West/w,");
+        System.out.println("Look/Inspect, Take/Grab, Gather, Craft,");
+        System.out.println("Build, Use, Map/m, Journal/j,");
+        System.out.println("Inventory/i, Sleep, Save/Load, Help/?");
+    }
+
+
+    void savePlayer() {
 
     }
-    void savePlayer(){
+
+    void loadPlayer() {
 
     }
-    void loadPlayer(){
+
+    void sleep() {
 
     }
-    void sleep(){
 
-    }
-    void avoid(){
+    void avoid() {
 
     }
 
