@@ -30,13 +30,13 @@ public class Main {
                 player.displayStats();
                 continue;
             } else if (input.equals("HELP")) {
-                player.showHelp();
+                //player.showHelp();
                 continue;
             } else if (input.equals("LOOK")) {
                 //currentRoom.look();
                 continue;
             } else if (input.equals("Inventory")) {
-                player.inventory();
+                //player.inventory();
                 continue;
             }
 
