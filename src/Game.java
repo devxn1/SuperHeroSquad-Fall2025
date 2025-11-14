@@ -1,4 +1,4 @@
-
+import java.sql.*;
 import java.util.Scanner;
 
 public class Game {
@@ -31,11 +31,11 @@ public class Game {
                 break;
             }
             else if (input.equals("STATS")) {
-                player.displayStats();
+                player.showStats();
                 continue;
             }
             else if (input.equals("HELP")) {
-                //player.showHelp();
+                player.showHelp();
                 continue;
             }
 

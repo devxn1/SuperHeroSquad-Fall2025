@@ -12,7 +12,7 @@ public class ItemInventory extends Inventory {
         this.inventory = inventory;
     }
 
-    public List<Item> getInventory() {
+    public ArrayList<Item> getInventory() {
         return inventory;
     }
 
@@ -20,9 +20,8 @@ public class ItemInventory extends Inventory {
         this.inventory = inventory;
     }
 
-    public void addItem(Item item) {
-
-        if(item!=null || inventory.size()<=10) {
+    void addItem(Item item){
+        if(item!=null){
             inventory.add(item);
         }
         else{

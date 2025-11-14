@@ -8,6 +8,14 @@ public class Main {
         main.start();
     }
 
+    public static void startGame() {
+        Scanner input = new Scanner(System.in);
+        UserInterface userview = new UserInterface();
+        Game usergame = new Game();
+
+    }
+}
+
     public void start() {
         Scanner scanner = new Scanner(System.in);
         String input;

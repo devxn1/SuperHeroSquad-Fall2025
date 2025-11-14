@@ -2,116 +2,21 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Player extends Character {
-    private int defense;
-    private int evasion;
-    private int hunger;
-    private int thrist;
-    private boolean DayorNight;
-    private String currentRoom;
-    ItemInventory playerInventory;
-    ArtifactInventory artifactInventory;
-    Armor Parmor;
-    Weapon Pweapon;
+    int defense;
+    int evasion;
+    int hunger;
+    int thrist;
+    boolean DayorNight;
+    private int hp;
 
-
-
-    public Player(int HP, int attackDMG, int defense, int evasion, int hunger, int thrist) {
-        super(HP, attackDMG);
-        this.HP=25;
-        this.attackDMG=1;
-        this.defense = 10;
-        this.evasion = 2;
-        this.hunger = 100;
-        this.thrist = 100;
-        this.DayorNight = true;
-        this.currentRoom ="A1";
-        this.playerInventory = null;
-        this.artifactInventory = null;
-        this.Parmor=null;
-        this.Pweapon=null;
+    public Player(int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
+        super(HP,attackDMG);
+        this.defense=defense;
+        this.evasion=evasion;
+        this.hunger=hunger;
+        this.thrist=thrist;
+        this.DayorNight=true;
     }
-
-    //Create another Constructor For Player.txt file when loading a game
-
-    public int getDefense() {
-        return defense;
-    }
-
-    public void setDefense(int defense) {
-        this.defense = defense;
-    }
-
-    public boolean isDayorNight() {
-        return DayorNight;
-    }
-
-    public void setDayorNight(boolean dayorNight) {
-        DayorNight = dayorNight;
-    }
-
-    public int getThrist() {
-        return thrist;
-    }
-
-    public void setThrist(int thrist) {
-        this.thrist = thrist;
-    }
-
-    public int getHunger() {
-        return hunger;
-    }
-
-    public void setHunger(int hunger) {
-        this.hunger = hunger;
-    }
-
-    public int getEvasion() {
-        return evasion;
-    }
-
-    public void setEvasion(int evasion) {
-        this.evasion = evasion;
-    }
-
-    public ItemInventory getPlayerInventory() {
-        return playerInventory;
-    }
-
-    public void setPlayerInventory(ItemInventory playerInventory) {
-        this.playerInventory = playerInventory;
-    }
-
-    public Armor getParmor() {
-        return Parmor;
-    }
-
-    public void setParmor(Armor parmor) {
-        Parmor = parmor;
-    }
-
-    public Weapon getPweapon() {
-        return Pweapon;
-    }
-
-    public void setPweapon(Weapon pweapon) {
-        Pweapon = pweapon;
-    }
-
-    public ArtifactInventory getArtifactInventory() {
-        return artifactInventory;
-    }
-
-    public void setArtifactInventory(ArtifactInventory artifactInventory) {
-        this.artifactInventory = artifactInventory;
-    }
-    public String getCurrentRoom() {
-        return currentRoom;
-    }
-
-    public void setCurrentRoom(String currentRoom) {
-        this.currentRoom = currentRoom;
-    }
-
     void displayStats() {
         System.out.println("HP: " + getHP());
         System.out.println("AtkDamage: "+getAttackDMG());
@@ -145,69 +50,30 @@ public class Player extends Character {
 
     }
 
-    void equip(Item item) {
-
+    public int getHp() {
+        return hp;
     }
 
-    void unequip(){
-
+    public void setHp(int hp) {
+        this.hp = Math.max(0, Math.min(100, hp));
     }
 
-    //For Hashmaps, Key is id(integer),
-    void pickup(Room Playerroom) {
-
-    }
-
-    void drop(Room Playerroom) {
-
-    }
-
-    void Combat(Monster tempMonster){
-        System.out.println("Your HP" +getHP());
-        System.out.println(tempMonster.displayerMonster());
-        //System.out.println("Monster HP: " + tempMonster.getHP());
-        int MonsterHP= tempMonster.getHP();
-        Scanner UserInput=new Scanner(System.in);
-        while(true) {
-            System.out.println("Monster HP: " + MonsterHP);
-            System.out.println("Commands:");
-            String Command = UserInput.nextLine();
-            if (Command.equalsIgnoreCase("Attack")) {
-                MonsterHP -= this.getAttackDMG();
-                setHP(this.getHP() - tempMonster.getAttackDMG());
-                if(this.getHP()<=0){
-                    break;
-                }
-            }
-            else if(Command.equalsIgnoreCase("Stats")){
-                displayStats();
-            }
-            else if(Command.equalsIgnoreCase("Run")){
-                double randomRun=new Random().nextDouble(0,1);
-                double playerRun=new Random().nextDouble(0,1);
-                if(randomRun<playerRun){
-                    break;
-                }
-            }
-            else if(Command.equalsIgnoreCase("Inventory")){
-                //Show inventory method here
-                inventory();
-            }
-            else if(Command.equalsIgnoreCase("Equip")){
-                //Put method to equip Items here
-            }
-            else if(Command.equalsIgnoreCase("Unequip")){
-                //Put method to Unequip Items here
-            }
-            else if(Command.equalsIgnoreCase("Use")){
-                //Put Method to use Items here
-                //Healing or Combat (Strength)
-            }
+    //for user input STATS
+    public void showStats() {
+        System.out.println("Your current stats are:");
+        System.out.println("Health: " + hp + "/100");
+        System.out.println("Attack Damage: " + getAttackDamage());
+        if (equippedWeapon != null) {
+            System.out.println("Current weapon: " + equippedWeapon.getName());
         }
-
     }
 
-    void inventory() {
-       System.out.println(playerInventory.getInventory());
+    //for user input HELP
+    public void showHelp() {
+        System.out.println("List of Commands:");
+        System.out.println("Commands: North/n, South/s, East/e, West/w,");
+        System.out.println("Look/Inspect, Take/Grab, Gather,");
+        System.out.println("Craft, Build, Use, Map/m, Journal/j,");
+        System.out.println("Inventory/i, Sleep, Save/Load, Help/?");
     }
 }
