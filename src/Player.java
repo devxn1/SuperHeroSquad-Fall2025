@@ -119,8 +119,15 @@ public class Player extends Character {
         System.out.println("Evasion: " + getEvasion());
         System.out.println("Thrist: " + getThrist());
         System.out.println("Hunger: " + getHunger());
-
     }
+
+    public void showHelp() {
+        System.out.println("Commands: North/n, South/s, East/e, West/w,");
+        System.out.println("Look/Inspect, Take/Grab, Gather, Craft,");
+        System.out.println("Build, Use, Map/m, Journal/j,");
+        System.out.println("Inventory/i, Sleep, Save/Load, Help/?");
+    }
+
 
     void savePlayer() {
 
