@@ -7,11 +7,13 @@ public class Player extends Character {
     private int hunger;
     private int thrist;
     private boolean DayorNight;
-    //private int currentRoom;
+    private String currentRoom;
     ItemInventory playerInventory;
     ArtifactInventory artifactInventory;
     Armor Parmor;
     Weapon Pweapon;
+
+
 
     public Player(int HP, int attackDMG, int defense, int evasion, int hunger, int thrist) {
         super(HP, attackDMG);
@@ -22,12 +24,14 @@ public class Player extends Character {
         this.hunger = 100;
         this.thrist = 100;
         this.DayorNight = true;
-        //this.currentRoom = 1;
+        this.currentRoom ="A1";
         this.playerInventory = null;
         this.artifactInventory = null;
         this.Parmor=null;
         this.Pweapon=null;
     }
+
+    //Create another Constructor For Player.txt file when loading a game
 
     public int getDefense() {
         return defense;
@@ -99,6 +103,13 @@ public class Player extends Character {
 
     public void setArtifactInventory(ArtifactInventory artifactInventory) {
         this.artifactInventory = artifactInventory;
+    }
+    public String getCurrentRoom() {
+        return currentRoom;
+    }
+
+    public void setCurrentRoom(String currentRoom) {
+        this.currentRoom = currentRoom;
     }
 
     void displayStats() {
