@@ -8,9 +8,14 @@ public class Weapon extends Item {
         this.DOT = DOT;
     }
 
-    public int getDamage(){
+    public int getDamage() {
         return damage;
     }
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+    void addWeapon(){
+
 
     public int getDOT(){
         return DOT;
