@@ -30,7 +30,7 @@ public class Main {
                 player.displayStats();
                 continue;
             } else if (input.equals("HELP")) {
-                player.showHelp();
+                //player.showHelp();
                 continue;
             } else if (input.equals("LOOK")) {
                 //currentRoom.look();
