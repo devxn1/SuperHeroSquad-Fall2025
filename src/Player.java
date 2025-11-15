@@ -128,9 +128,9 @@ public class Player extends Character {
     public void showStats() {
         System.out.println("Your current stats are:");
         System.out.println("Health: " + hp + "/100");
-        //System.out.println("Attack Damage: " + getAttackDamage());
+        System.out.println("Attack Damage: " + this.getAttackDMG());
         if (equippedWeapon != null) {
-           // System.out.println("Current weapon: " + equippedWeapon.getName());
+            //System.out.println("Current weapon: " + this.getEquippedWeapon());
         }
     }
 
