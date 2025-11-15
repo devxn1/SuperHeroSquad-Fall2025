@@ -1,21 +1,41 @@
-public class Armor  extends Item{
+public class Armor extends Item {
     private int defense;
     private int evasion;
-    private int HP;
+    private int hpAdded;
 
-    public  Armor(int id, String name, String description, int location, int defense, int evasion, int HP) {
-        super(id,name,description,location);
+    public Armor(int id, String name, String description, int roomID, int defense, int evasion, int hpAdded){
+        super(id, name, description, roomID);
         this.defense = defense;
         this.evasion = evasion;
-        this.HP = HP;
-
+        this.hpAdded = hpAdded;
     }
 
-    void addArmor(){
-
+    public int getDefense(){
+        return defense;
     }
-    void removeArmor(){
 
+    public int getEvasion() {
+        return evasion;
     }
+
+    public int getHpAdded(){
+        return hpAdded;
+    }
+
+    public String getType(){
+        return "Armor";
+    }
+
+//    @Override
+//    public String toString() {
+//
+//    }
+
+    public void use(Object player){
+        if (player == null){
+            System.out.println("?");
+        }
+    }
+
 
 }

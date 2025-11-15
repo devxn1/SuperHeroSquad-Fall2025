@@ -11,27 +11,32 @@ public abstract class Item {
         this.description = description;
         this.roomID = roomID;
     }
-//
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public int getRoomID() {
-//        return roomID;
-//    }
-//
-//    public abstract void use(Player player);
-//
-//   @Override
-//    public String toString() {
-//       return name + ": " + description;
-//   }
+
+    public int getID(){
+        return id;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public int getRoomID(){
+        return roomID;
+    }
+
+    public void setRoomID(int roomID){
+        this.roomID = roomID;
+    }
+
+    //abstract use for different items
+    public abstract void use(Object player);
+
+    @Override
+    public String toString(){
+        return name + (" - ") + description;
+    }
 }
