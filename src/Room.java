@@ -1,48 +1,318 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**Class: Room
  * @author Devin Gomez
  * @version 1.0
  * Course:  ITEC3860 Fall 2025
  * Written: November 13, 2025
- * Purpose:
+ * Purpose: Room/location
  */
 public class Room {
-    int roomLocation;
+    private String roomID;
+    private String biome;
     private String roomName;
     private String roomDescription;
-    private String North;
-    private String East;
-    private String South;
-    private String West;
-    private Puzzle puzzle;
+    private String north;
+    private String east;
+    private String south;
+    private String west;
+    private String isLockedBy;
     private boolean visited;
 
-    public Room(int roomLocation, String roomName, String roomDescription, String North, String East, String South, String West, Boolean visited) {
-        this.roomLocation = roomLocation;
+
+    //Meant for checking instance of another Objects in the room
+    private List<Item> items;
+    private Puzzle puzzle;
+    private Monster monster;
+
+
+
+    public Room(String roomID, String biome,String roomName, String roomDescription, String north, String east, String south, String west, String isLockedBy) {
+        this.roomID = roomID;
+        this.biome = biome;
         this.roomName = roomName;
         this.roomDescription = roomDescription;
-        this.North = North;
-        this.East = East;
-        this.South = South;
-        this.West = West;
+        this.north = north;
+        this.east = east;
+        this.south = south;
+        this.west = west;
+        //this.isLockedBy = isLockedBy;
+        if (isLockedBy == null || isLockedBy.trim().isEmpty()) {
+            this.isLockedBy = null;
+        } else {
+            this.isLockedBy = isLockedBy.trim();
+        }
+
         this.visited = false;
+
+
+        this.items = new ArrayList<>();
+        this.puzzle = null;
+        this.monster = null;
+    }
+
+    public String getRoomID() {
+        return roomID;
+    }
+
+    public String getBiome() {
+        return biome;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public String getRoomDescription() {
+        return roomDescription;
+    }
+
+    public String getNorth() {
+        return north;
+    }
+
+    public String getEast() {
+        return east;
+    }
+
+    public String getSouth() {
+        return south;
+    }
+
+    public String getWest() {
+        return west;
+    }
+
+    public String getIsLockedBy() {
+        return isLockedBy;
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
+    //Handling direction
+
+    public String getExit(String direction) {
+        switch (direction.toLowerCase()) {
+            case "north":
+            case "n":
+                return north;
+            case "east":
+            case "e":
+                return east;
+            case "south":
+            case "s":
+                return south;
+            case "west":
+            case "w":
+                return west;
+            default:
+                return null;
+        }
+    }
+
+    public List<String> getAvailableDirections() {
+        List<String> directions = new ArrayList<>();
+        if (north != null && !north.isEmpty()) {
+            directions.add(north);
+        }
+        if (east != null && !east.isEmpty()) {
+            directions.add(east);
+        }
+        if (south != null && !south.isEmpty()) {
+            directions.add(south);
+        }
+        if (west != null && !west.isEmpty()) {
+            directions.add(west);
+        }
+        return directions;
+    }
+
+    public boolean hasExit(String direction) {
+        return getExit(direction) != null;
+    }
+
+    public String getExitDirection() {
+        List<String> directions = new ArrayList<>();
+
+        if (north != null && !north.isEmpty()) {
+            directions.add("↑ North");
+        }
+        if (east != null && !east.isEmpty()) {
+            directions.add("→ East");
+        }
+        if (south != null && !south.isEmpty()) {
+            directions.add("↓ South");
+        }
+        if (west != null && !west.isEmpty()) {
+            directions.add("← West");
+        }
+        if (directions.isEmpty()) {
+            return "Exits: None";
+        }
+
+        return "Exits: " + String.join("  ", directions);
+    }
+
+    public boolean isLocked() {
+        return isLockedBy != null && !isLockedBy.isEmpty();
+    }
+
+    // Unlocks the room by setting said ID that is locking it to null
+
+    public void unlock() {
+        isLockedBy = null;
+    }
+
+
+
+
+    //Handling Items
+
+
+    /* Adds item to the current room.
+     * Really to meant to called when a player drops an item
+     * or in the case an item is drop as a reward from puzzle or monster.
+     * As well to initialize items that are already in rooms by default
+     */
+    public void addItemToRoom(Item item) {
+        if (item != null) {
+            items.add(item);
+        }
+    }
+
+    /* Removes item from the current room.
+     * Really to meant to called when a player pickups an item
+    */
+    public Item removeItemFromRoom(String itemName) {
+        if (itemName == null) {
+            return null;
+        }
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                items.remove(i);
+                return item;
+            }
+        }
+        return null;
+    }
+
+
+
+    public List<Item> getItems() {
+        return new ArrayList<>(items);
+    }
+
+    public boolean hasItems() {
+        return !items.isEmpty();
+    }
+
+
+    // Display items in current room
+//    public void displayItems() {
+//        if(!items.isEmpty() && items.size() > 1) {
+//            System.out.println("\nItems in room:");
+//            for (Item item : items) {
+//                System.out.print("[" + item.getName() + "] ");
+//            }
+//            System.out.println();
+//        }
+//    }
+
+    public String displayItems() {
+        if (items != null && !items.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("\nItems in room:\n");
+            for (Item item : items) {
+                sb.append("[").append(item.getName()).append("]");
+            }
+            sb.append("\n");
+            return sb.toString();
+        }
+        return "";
+    }
+
+
+
+
+
+
+
+
+    //Handling Puzzle in room
+    public void setPuzzle(Puzzle puzzle) {
+        this.puzzle = puzzle;
     }
 
     public Puzzle getPuzzle() {
         return puzzle;
     }
 
-    public void setPuzzle(Puzzle puzzle) {
-        this.puzzle = puzzle;
+    public void removePuzzle() {
+        this.puzzle = null;
     }
 
-    void moveRoom(){
-
+    public boolean hasPuzzle() {
+        return puzzle != null;
     }
-    void getNextRoom(){
 
+    //Handling Monster in Monster
+    public void setMonster(Monster monster) {
+        this.monster = monster;
+    }
+
+    public Monster getMonster() {
+        return monster;
+    }
+
+    public void removeMonster() {
+        monster = null;
+    }
+
+    public boolean hasMonster() {
+        return monster != null;
+    }
+
+    public String getMonstersList() {
+        if (monster == null) {
+            return "None";
+        }
+        return monster.isAlive() ? monster.getName() : "None";
+    }
+
+
+
+    public String getFullRoomInfo() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("[").append(roomName).append("]").append("\n");
+        sb.append(roomDescription).append("\n");
+
+        sb.append("\n").append(getExitDirection()).append("\n");
+
+        if (hasItems()) {
+            sb.append(displayItems());
+        }
+
+
+        if (hasPuzzle() && !getPuzzle().isSolved()) {
+            sb.append("\nThere's a puzzle here to solve!");
+        }
+
+        return sb.toString();
     }
 
     public void visit() {
         visited = true;
     }
+
 }

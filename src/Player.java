@@ -1,22 +1,81 @@
-import java.util.Random;
-import java.util.Scanner;
+
+import java.util.*;
 
 public class Player extends Character {
     int defense;
     int evasion;
     int hunger;
     int thrist;
+    private String currentRoomid;
     boolean DayorNight;
-    private int hp;
+    private int hp = 100;
+    Weapon equippedWeapon;
+    Armor equippedArmor;
+    public static ArrayList<Item> inventory = new ArrayList<Item>();
+    public static ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
+    public static ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+
+
 
     public Player(int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
         super(HP,attackDMG);
+        this.HP=25;
+        this.attackDMG=10;
         this.defense=defense;
         this.evasion=evasion;
         this.hunger=hunger;
         this.thrist=thrist;
         this.DayorNight=true;
+        this.equippedWeapon=null;
+        this.equippedArmor=null;
+
     }
+    public static void PlayerMoveDirection(String direction) {
+
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public int getEvasion() {
+        return evasion;
+    }
+
+    public void setEvasion(int evasion) {
+        this.evasion = evasion;
+    }
+
+    public int getHunger() {
+        return hunger;
+    }
+
+    public void setHunger(int hunger) {
+        this.hunger = hunger;
+    }
+
+    public int getThrist() {
+        return thrist;
+    }
+
+    public void setThrist(int thrist) {
+        this.thrist = thrist;
+    }
+
+    public boolean isDayorNight() {
+        return DayorNight;
+    }
+
+    public void setDayorNight(boolean dayorNight) {
+        DayorNight = dayorNight;
+    }
+
+
+
     void displayStats() {
         System.out.println("HP: " + getHP());
         System.out.println("AtkDamage: "+getAttackDMG());
@@ -58,22 +117,30 @@ public class Player extends Character {
         this.hp = Math.max(0, Math.min(100, hp));
     }
 
+    public Weapon getEquippedWeapon() {
+        return equippedWeapon;
+    }
+
+    public void setEquippedWeapon(Weapon equippedWeapon) {
+        this.equippedWeapon = equippedWeapon;
+    }
+
+    public Armor getEquippedArmor() {
+        return equippedArmor;
+    }
+
+    public void setEquippedArmor(Armor equippedArmor) {
+        this.equippedArmor = equippedArmor;
+    }
+
     //for user input STATS
     public void showStats() {
         System.out.println("Your current stats are:");
         System.out.println("Health: " + hp + "/100");
-        System.out.println("Attack Damage: " + getAttackDamage());
+        System.out.println("Attack Damage: " + this.getAttackDMG());
         if (equippedWeapon != null) {
-            System.out.println("Current weapon: " + equippedWeapon.getName());
+            //System.out.println("Current weapon: " + this.getEquippedWeapon());
         }
     }
 
-    //for user input HELP
-    public void showHelp() {
-        System.out.println("List of Commands:");
-        System.out.println("Commands: North/n, South/s, East/e, West/w,");
-        System.out.println("Look/Inspect, Take/Grab, Gather,");
-        System.out.println("Craft, Build, Use, Map/m, Journal/j,");
-        System.out.println("Inventory/i, Sleep, Save/Load, Help/?");
-    }
 }

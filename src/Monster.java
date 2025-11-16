@@ -1,18 +1,30 @@
+/**Class: Inventory
+ * @author Carlos Matos
+ * @version 1.0
+ * Course:  ITEC3860 Fall 2025
+ * Written: November 12, 2025
+ * Purpose: Create Monster Class that will define the enemies in the game
+ */
+
+
 public class Monster extends Character{
     private int ID;
     private String Name;
     private String Description;
     private int IDLocation;
+    boolean IsAlive;
 
 
 
-    public Monster(int HP, int attackDMG, int ID, String Name, String Description,int IDLocation){
+    public Monster(int HP, int attackDMG, int ID, String Name, String Description,int IDLocation,boolean IsAlive) {
         super(HP, attackDMG);
+        this.HP=HP;
+        this.attackDMG=attackDMG;
         this.ID = ID;
         this.IDLocation = IDLocation;
         this.Name = Name;
         this.Description = Description;
-
+        this.IsAlive = IsAlive;
     }
 
     public int getID() {
@@ -48,7 +60,15 @@ public class Monster extends Character{
     }
 
     String displayerMonster(){
-        return this.Name + " " +this.Description;
+        return this.Name + "||" +this.Description;
     }
 
+    //here you go Devin.
+    public boolean isAlive() {
+        return IsAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        IsAlive = alive;
+    }
 }

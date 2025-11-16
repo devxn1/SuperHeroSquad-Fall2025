@@ -1,7 +1,7 @@
-M01/Wild Boar/"A study,and muscular mammal.it has a bristly coat,and tusks."/B3/10/2/Beast
-MO2/Panther/"A sleek and powerful car,known for its stealthy nature"/D4/15/8/Predator
-M03/Giant Grab/"A Large crab with large claws that can crush a cocounut"/A2/20/20/Aquatic
-M04/Venmous Snake/"A Reptile that would be extremely dangerous if not cautious/C2/10/10/beast
-M05/Cave Bat/"A small nocturnal mammal that roosts in the dark always sheltered"/C3/5/5/Beast
-M06/Lava Wisp/"A Fantasy-like Creature that floats in the air, The temperatures rise quickly when close to the creature/F4/15/15/Elemental
-M07/Island Guardian/"The Guardian of the island the one who got you into this island"/F5/50/50/Boss
+Beast/M01/Wild Boar/"A study,and muscular mammal.it has a bristly coat,and tusks."/B3/10/2/IO1,I02
+Predator/MO2/Panther/"A sleek and powerful car,known for its stealthy nature"/D4/15/8/IO2,IO3
+Aquatic/M03/Giant Grab/"A Large crab with large claws that can crush a cocounut"/A2/20/20/IO4,IO3
+Beast/M04/Venmous Snake/"A Reptile that would be extremely dangerous if not cautious/C2/10/10/IO1,IO5
+Beast/M05/Cave Bat/"A small nocturnal mammal that roosts in the dark always sheltered"/C3/5/5/106
+Elemental/M06/Lava Wisp/"A Fantasy-like Creature that floats in the air, The temperatures rise quickly when close to the creature/F4/15/15/IO7
+Boss/M07/Island Guardian/"The Guardian of the island the one who got you into this island"/F5/50/50/AO5
