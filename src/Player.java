@@ -90,12 +90,29 @@ public class Player extends Character {
         CurrentRoom = currentRoom;
     }
 
+    public static void MoveDirection(String direction){
+
+    }
+
+
     public ArrayList<Item> getPlayerInventory() {
         return PlayerInventory;
     }
 
     public void setPlayerInventory(ArrayList<Item> playerInventory) {
         PlayerInventory = playerInventory;
+    }
+
+    public void displayInventory() {
+        if (PlayerInventory.isEmpty()) {
+            System.out.println("You didn't pickup any items yet");
+        } else {
+            System.out.println("\t Inventory");
+            for (Item items : PlayerInventory) {
+                System.out.print(items.getName());
+            }
+            System.out.println();
+        }
     }
 
     //Display ALl their Stats

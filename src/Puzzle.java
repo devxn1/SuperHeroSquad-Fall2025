@@ -53,12 +53,12 @@ public class Puzzle {
 //        }
 //    }
 
-    public int getRoomId() {
+    public String getRoomId() {
         return roomId;
     }
 
     public String getDescription() {
-        return description;
+        return puzzleDescription;
     }
 
     public boolean isSolved() {
