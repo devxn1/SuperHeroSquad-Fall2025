@@ -50,7 +50,7 @@ public class Puzzle {
 
     // to get hints
     private void loadHintsFromFile() {
-        try (Scanner scanner = new Scanner(new File("PuzzleHints"))) {
+        try (Scanner scanner = new Scanner(new File("data/PuzzleHints.txt"))) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (line.trim().isEmpty()) continue; // skip blank lines
@@ -72,6 +72,7 @@ public class Puzzle {
             this.markSolved();
             System.out.println("You've used all 3 hints.");
             System.out.println("Puzzle will be automatically solved.");
+            return "Puzzle automatically solved!";
 
         }
 
@@ -129,6 +130,5 @@ public class Puzzle {
     public String getRewardID() {
         return rewardID;
     }
-
 
 }

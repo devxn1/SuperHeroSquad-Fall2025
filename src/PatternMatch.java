@@ -1,9 +1,9 @@
-/**Class: Room
+/**Class: PatternMatch
  * @author Devin Gomez
  * @version 1.0
  * Course:  ITEC3860 Fall 2025
  * Written: November 16, 2025
- * Purpose: Room/location
+ * Purpose:
  */
 
 public class PatternMatch extends Puzzle {
@@ -19,9 +19,10 @@ public class PatternMatch extends Puzzle {
         this.rightPattern = normalizePattern(correctPattern);
     }
 
+    @Override
     public boolean attemptSolve(String playerInput) {
         //check if is already solve, just in case
-        if (isSolved) return true;
+        if (isSolved()) return true;
 
 
         String attempt = normalizePattern(playerInput);
@@ -33,8 +34,14 @@ public class PatternMatch extends Puzzle {
             return true;
         } else {
             decrementAttempts();
-            System.out.println("Puzzl Failed");
-            System.out.println("Remaining attempts: " + remainingAttempts);
+            System.out.println("Wrong pattern.");
+
+            if (getRemainingAttempts() > 0) {
+                System.out.println("Remaining attempts: " + getRemainingAttempts());
+                System.out.println("Type 'hint' for help.");
+            } else {
+                System.out.println("No remaining attempts.");
+            }
             return false;
         }
 
@@ -49,7 +56,17 @@ public class PatternMatch extends Puzzle {
     //Purpose: remove space and replace with "-"
     private String normalizePattern(String pattern) {
         if (pattern == null) return "";
-        return pattern.toUpperCase().replaceAll("\\s+", "");
+
+        // Remove all whitespace and convert to uppercase
+        String normalized = pattern.toUpperCase().replaceAll("\\s+", "");
+
+        // If player typed without dashes, add them
+        // Example: "XXOX" becomes "X-X-O-X"
+        if (!normalized.contains("-") && normalized.length() > 1) {
+            normalized = String.join("-", normalized.split(""));
+        }
+
+        return normalized;
     }
 
 
