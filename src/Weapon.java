@@ -1,8 +1,8 @@
-public abstract class Weapon extends Item {
+public class Weapon extends Item {
     private int damage;
     private int DOT;
 
-    public Weapon(String id, String name, String description, int roomID, int damage, int DOT) {
+    public Weapon(String id, String name, String description, String roomID, int damage, int DOT) {
         super(id, name, description, roomID);
         this.damage = damage;
         this.DOT = DOT;
@@ -12,16 +12,8 @@ public abstract class Weapon extends Item {
         return damage;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
-
     public int getDOT() {
         return DOT;
-    }
-
-    public void addWeapon() {
-
     }
 
     @Override
@@ -29,6 +21,7 @@ public abstract class Weapon extends Item {
         return "Weapon";
     }
 
+    @Override
     public void use(Object playerObj) {
         if (playerObj instanceof Player player) {
             player.setEquippedWeapon(this);
