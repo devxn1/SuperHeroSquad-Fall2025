@@ -1,7 +1,8 @@
-public class PatternMatch extends Puzzle{
+abstract class PatternMatch extends Puzzle{
     String Pattern;
-    public PatternMatch(int ID, String Name, String Description, int PuzzleAtmpts, int Location, String Pattern) {
-        super(ID, Name, Description, PuzzleAtmpts, Location);
+    public PatternMatch(String puzzleID, String puzzleName, String roomID,
+                        String puzzleDescription, int puzzleAttempts, String rewardID, String Pattern) {
+        super(puzzleID,puzzleName,roomID,puzzleDescription,puzzleAttempts,rewardID);
         this.Pattern = Pattern;
     }
 }

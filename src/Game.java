@@ -192,8 +192,17 @@ public static void quitGame(){
                 int health = Integer.parseInt(parts[5].trim());
                 int damage = Integer.parseInt(parts[6].trim());
                 List<String> drops = parseList(parts[7]);
+                ArrayList<Item> tempItems = new ArrayList<>();
+                for(int i=0; i<ItemData.size();i++){
+                    if(ItemData.get(i).getID().equalsIgnoreCase(String.valueOf(drops))){
+                        tempItems.add(ItemData.get(i));
+                    }
+                }
 
-                Monster monster = new Monster(category, id, name, description, location, health, damage, drops);
+
+               // tempItems.add(drops);
+
+                Monster monster = new Monster(id, name, description, location, health, damage, tempItems);
                 monsters.add(monster);
             }
 

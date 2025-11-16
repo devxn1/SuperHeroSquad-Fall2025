@@ -1,7 +1,8 @@
-public class TimingWithTides extends Puzzle{
+abstract class TimingWithTides extends Puzzle{
     String Prompt;
-    public TimingWithTides(int ID, String Name, String Description, int PuzzleAtmpts, int Location, String Prompt) {
-        super(ID, Name, Description, PuzzleAtmpts, Location);
+    public TimingWithTides(String puzzleID, String puzzleName, String roomID,
+                           String puzzleDescription, int puzzleAttempts, String rewardID,String Prompt) {
+        super(puzzleID,puzzleName,roomID,puzzleDescription,puzzleAttempts,rewardID);
         this.Prompt = Prompt;
     }
 }
