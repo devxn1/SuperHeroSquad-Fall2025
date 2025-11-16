@@ -16,23 +16,23 @@ public abstract class Weapon extends Item {
         this.damage = damage;
     }
 
-    public void addWeapon() {
-
-    }
-
     public int getDOT() {
         return DOT;
     }
 
-    void addWeapon() {
+    public void addWeapon() {
 
-    public void use(Object player) {
-        if (player == null) {
-            return;
-        }
-        /*
+    }
+
+    @Override
+    public String getType() {
+        return "Weapon";
+    }
+
+    public void use(Object playerObj) {
+        if (playerObj instanceof Player player) {
             player.setEquippedWeapon(this);
-            System.out.println(player.getEquippedWeapon().getName() + " equipped!");
-         */
+            System.out.println(this.getName() + " equipped!");
+        }
     }
 }
