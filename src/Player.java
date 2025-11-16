@@ -26,7 +26,16 @@ public class Player extends Character {
     private Map<String, Room> world;
 
 
-    public Player(String currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist,ArrayList<Item> PlayerInventory, Map<String, Room> world) {
+    public Player(String currentRoom,
+                  int HP,
+                  int attackDMG,
+                  int defense,
+                  int evasion,
+                  int hunger,
+                  int thrist,
+                  ArrayList<Item> PlayerInventory,
+                  ArrayList<Artifact> ArtifactInventory,
+                  ArrayList<Recipe> MaterialInventory) {
         super(HP,attackDMG);
         CurrentRoom=currentRoom;
         this.HP=HP;
@@ -41,7 +50,7 @@ public class Player extends Character {
         this.PlayerInventory=PlayerInventory;
         this.ArtifactInventory=new ArrayList<>();
         this.MaterialInventory=new ArrayList<>();
-        this.world = world;
+
     }
 
 
