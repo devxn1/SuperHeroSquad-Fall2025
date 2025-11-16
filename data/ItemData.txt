@@ -17,8 +17,8 @@ Material/I06/Guano/Bat Excrement/C3
 Material/I07/Ember Core/A bright glowing gem, it could be useful for something./F4
 Consumable/I08/Water/Fresh Water/Anywhere/12
 Armor/I09/Leather Armor/Somewhat protective armor/Crafted/2
-Weapon/I10/Spiked Gauntlet/A Sharp weapon crafted with Claws/Crafted/Normal/9/0
-Craftable/I11/Sharp Machete/A sturdy and sharp machete, very useful against encounters./C3/Normal/10/0
+Weapon/I10/Spiked Gauntlet/A Sharp weapon crafted with Claws/Crafted/9/0
+Craftable/I11/Sharp Machete/A sturdy and sharp machete, very useful against encounters./C3/10/0
 Consumable/I12/Cure vial/A vial containing a liquid that cures poison effect./Anywhere/5/0
 Craftable/I13/Poisoned Spiked gauntlet/Spiked gauntlets, dipped in poison./Crafted/12/2
 Craftable/I14/Firey Spiked Gauntlets/Spiked flaming gauntlets, it can burn a monster for quite some time. Be careful to not set the forest on fire./Crafted/12/4

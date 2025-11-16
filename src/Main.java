@@ -8,8 +8,8 @@ public class Main {
 
     public static void main(String[] args) {
         Main main = new Main();
-        main.loadItems("ItemData.txt");
-        main.loadRooms("RoomData.txt");
+        main.loadItems("data/ItemData.txt");
+        Game.loadGame();
         main.start();
     }
 
@@ -66,53 +66,7 @@ public class Main {
         }
     }
 
-    private void loadRooms(String filename) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                //ID/Name/Description/Locked/North,South,East,West/Items/Puzzles
-                String[] parts = line.split("/", -1);
-                String id = parts[0];
-                String name = parts[1];
-                String description = parts[2];
-                boolean locked = Boolean.parseBoolean(parts[3]);
 
-                //Exits
-                String[] exitParts = parts[4].split(",", -1);
-                List<String> locs = parseList(parts[4]);
-                String north = exitParts[0].equals("0") ? null : exitParts[0];
-                String south = exitParts[1].equals("0") ? null : exitParts[1];
-                String east = exitParts[2].equals("0") ? null : exitParts[2];
-                String west = exitParts[3].equals("0") ? null : exitParts[3];
-
-                //Items
-                List<Item> items = new ArrayList<>();
-                if (parts.length > 5 && !parts[5].isBlank()) {
-                    String[] itemIds = parts[5].split(",");
-                    for (String itemId : itemIds) {
-                        Item base = this.items.get(itemId);
-                        if (base != null) {
-                            items.add(base);
-                        }
-                    }
-                }
-
-                //Puzzles
-                List<String> puzzles = new ArrayList<>();
-                if (parts.length > 6 && !parts[6].isBlank()) {
-                    puzzles.addAll(Arrays.asList(parts[6].split(",")));
-                }
-
-                //Create Room
-                Room room = new Room(id, "DefaultBiome", name, false,locs, locked ? "LOCKED" : null);
-
-                for (Item it : items) room.addItemToRoom(it);
-                world.put(id, room);
-            }
-        } catch (IOException e) {
-            System.out.println("Error loading rooms: " + e.getMessage());
-        }
-    }
 
     public void start() {
         Scanner scanner = new Scanner(System.in);
@@ -121,7 +75,7 @@ public class Main {
         System.out.println("Superhero Squad Final Project Implementation");
         System.out.println("Commands: North/n, South/s, East/e, West/w,\nLook/Inspect, Take/Grab, Gather,\nCraft, Build, Use, Map/m, Journal/j,\nInventory/i, Sleep, Stats, Save/Load, Help/?, Quit");
 
-        player = new Player("A1", 100, 5, 5, 5, 100, 100, new ArrayList<>());
+        player = new Player("A1", 100, 5, 5, 5, 100, 100, new ArrayList<>(), world);
 
         //Game loop
         while (true) {
