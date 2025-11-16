@@ -27,6 +27,7 @@ public class Room {
     private List<Item> items;
     private Puzzle puzzle;
     private Monster monster;
+    private AmbushMonster ambushMonster;
 
 
 
@@ -52,6 +53,8 @@ public class Room {
         this.items = new ArrayList<>();
         this.puzzle = null;
         this.monster = null;
+        this.ambushMonster = null;
+
     }
 
     public String getRoomID() {
@@ -269,6 +272,10 @@ public class Room {
     public void setMonster(Monster monster) {
         this.monster = monster;
     }
+    public void setMonster(AmbushMonster ambushMonster) {
+        this.ambushMonster = ambushMonster;
+    }
+
 
     public Monster getMonster() {
         return monster;
@@ -283,10 +290,15 @@ public class Room {
     }
 
     public String getMonstersList() {
-        if (monster == null) {
-            return "None";
+        if (ambushMonster != null && ambushMonster.isAlive()) {
+            return ambushMonster.getName() + " - " + ambushMonster.getDescription();
         }
-        return monster.isAlive() ? monster.getName() : "None";
+
+        if (monster != null && monster.isAlive()) {
+            return monster.getName() + " - " + monster.getDescription();
+        }
+
+        return "";
     }
 
 
@@ -303,6 +315,10 @@ public class Room {
             sb.append(displayItems());
         }
 
+        String monsterInfo = getMonstersList();
+        if (!monsterInfo.isEmpty()) {
+            sb.append("Monster in the room!").append("\n").append(monsterInfo).append("\n");
+        }
 
         if (hasPuzzle() && !getPuzzle().isSolved()) {
             sb.append("\nThere's a puzzle here to solve!");
