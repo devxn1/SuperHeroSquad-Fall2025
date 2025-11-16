@@ -1,125 +1,109 @@
-//import java.util.Map;
-//import java.io.BufferedReader;
-//import java.io.FileReader;
-//import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
 
-public class Puzzle {
-    private String roomID;
-    private String roomName;
-    private String puzzleDescription;
-    private int maxAttempts;
-    private int remainingAttempts;
-    private boolean solved;
-    private String rewardID;
+public abstract class Puzzle {
+    protected String puzzleID;
+    protected String puzzleName;
+    protected String roomID;
+    protected String puzzleDescription;
+    protected int puzzleAttempts;
+    protected int remainingAttempts;
+    protected boolean isSolved;
+    protected String rewardID;
+    protected int hintsUsed;
+    protected List<String> hints;
 
-
-    public Puzzle(String roomID, String roomName,String puzzleDescription, int maxAttempts, int remainingAttempts, boolean solved, String rewardID) {
+    public Puzzle(String puzzleID, String puzzleName, String roomID,
+                  String puzzleDescription, int puzzleAttempts, String rewardID) {
+        this.puzzleID = puzzleID;
+        this.puzzleName = puzzleName;
         this.roomID = roomID;
-        this.roomName = roomName;
         this.puzzleDescription = puzzleDescription;
-        this.rewardID = solution.trim().toUpperCase();
-        this.maxAttempts = maxAttempts;
-        this.remainingAttempts = this.maxAttempts;
-        this.solved = false;
-
+        this.puzzleAttempts = puzzleAttempts;
+        this.remainingAttempts = puzzleAttempts;
+        this.isSolved = false;
+        this.rewardID = rewardID;
+        this.hintsUsed = 0;
+        this.hints = new ArrayList<>();
+        loadHintsFromFile();
     }
 
-    /*
-    This was for hashmaps, the logic should still be the same but I have no idea how to relate it to
-    a database.
-     */
-//    public static void loadPuzzles(String filename, Map<Integer, Room> rooms) {
-//        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                String[] parts = line.split("~");
-//                if (parts.length < 4) continue;
-//
-//                int roomNumber = Integer.parseInt(parts[0].trim());
-//                String description = parts[1].trim();
-//                String solution = parts[2].trim();
-//                int attempts = Integer.parseInt(parts[3].trim());
-//
-//                Room room = rooms.get(roomNumber);
-//                if (room == null) continue;
-//
-//                Puzzle puzzle = new Puzzle(roomNumber, description, solution, attempts);
-//                //setPuzzle will be a simple getter/setter in rooms
-//                room.setPuzzle(puzzle);
-//            }
-//        } catch (IOException e) {
-//            System.out.println("Puzzle loading error: " + e.getMessage());
-//        }
-//    }
+    // to get hints
+    private void loadHintsFromFile() {
+        try (Scanner scanner = new Scanner(new File("PuzzleHints"))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split("/");
 
-    public int getRoomId() {
-        return roomId;
+                // parts[1] is puzzleID, parts[3] is hint text
+                if (parts[1].equals(this.puzzleID)) {
+                    hints.add(parts[3]);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading hints for puzzle " + puzzleID);
+        }
     }
 
-    public String getDescription() {
-        return description;
+    public String getHint() {
+        if (hintsUsed >= 3) {
+            this.markSolved();
+            System.out.println("You've used all 3 hints.");
+            System.out.println("Puzzle will be automatically solved.");
+
+        }
+
+        String hint = hints.get(hintsUsed);
+        hintsUsed++;
+        return hint;
     }
 
-    public boolean isSolved() {
-        return solved;
+    //prob not needed
+    public abstract boolean attemptSolve(String playerInput);
+
+    public void decrementAttempts() {
+        if (remainingAttempts > 0) {
+            remainingAttempts--;
+        }
     }
 
-    public void resetAttempts() {
-        this.remainingAttempts = this.maxAttempts;
+    public void markSolved() {
+        this.isSolved = true;
+    }
+
+
+    public String getPuzzleID() {
+        return puzzleID;
+    }
+
+    public String getPuzzleName() {
+        return puzzleName;
+    }
+
+    public String getRoomID() {
+        return roomID;
+    }
+
+    public String getPuzzleDescription() {
+        return puzzleDescription;
+    }
+
+    public int getPuzzleAttempts() {
+        return puzzleAttempts;
     }
 
     public int getRemainingAttempts() {
         return remainingAttempts;
     }
 
-    public boolean attempt(String answer) {
-        if (solved) {
-            System.out.println("You have already solved this puzzle.");
-            return true;
-        }
-
-        if (answer.trim().equalsIgnoreCase(rewardID)) {
-            solved = true;
-            System.out.println("Correct!");
-            return true;
-        } else {
-            if (maxAttempts > 0) {
-                remainingAttempts = Math.max(0, remainingAttempts - 1);
-                if (remainingAttempts > 0) {
-                    System.out.println("Wrong answer, you still have " + remainingAttempts + " attempt(s). Try again.");
-                } else {
-                    System.out.println("Try again!");
-                }
-            } else {
-                System.out.println("Wrong answer. Try again.");
-            }
-            return false;
-        }
+    public boolean isSolved() {
+        return isSolved;
     }
 
-    public void solvingPuzzle(Scanner scanner) {
-        if (isSolved()) return;
-
-        resetAttempts();
-        System.out.println("\nPuzzle: " + getDescription());
-
-        while (!isSolved()) {
-            System.out.print("What is your answer? (Or Ignore?)\n");
-            String answer = scanner.nextLine().trim().toUpperCase();
-
-            if (answer.equals("IGNORE")) {
-                System.out.println("You decide the puzzle's not worth your time.");
-                break;
-            }
-
-            boolean solved = attempt(answer);
-            if (solved) break;
-
-            if (getRemainingAttempts() == 0) {
-                System.out.println("Wrong answer.");
-                resetAttempts();
-            }
-        }
+    public String getRewardID() {
+        return rewardID;
     }
 }
