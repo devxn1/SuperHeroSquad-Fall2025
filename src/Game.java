@@ -15,7 +15,7 @@ public static void loadGame(){
     RoomData = ParseRoomdata();
     ItemData = ParseItemData();
     MonsterData = ParseMonsterData();
-    //PuzzleData = ParsePuzzleData();
+    PuzzleData = ParsePuzzleData();
     registerCommands();
 
 }
@@ -123,31 +123,31 @@ public static void quitGame(){
                 switch (category.toLowerCase()) {
                     case "artifact": {
                         List<String> locs = parseList(parts[4]);
-                        //items.add(new Artifact(id, name, desc, locs));
+                        items.add(new Artifact(id, name, desc, locs));
                         break;
                     }
                     case "material": {
                         List<String> locs = parseList(parts[4]);
-                        //items.add(new Material(id, name, desc, locs));
+                        items.add(new Material(id, name, desc, locs));
                         break;
                     }
                     case "armor": {
                         List<String> locs = parseList(parts[4]);
                         int defensePoints = Integer.parseInt(parts[5].trim());
-                        //items.add(new Armor(id, name, desc, locs, defensePoints));
+                        items.add(new Armor(id, name, desc, locs, defensePoints));
                         break;
                     }
                     case "consumable": {
                         List<String> locs = parseList(parts[4]);
                         int healingAmount = Integer.parseInt(parts[5].trim());
-                        //items.add(new Consumable(id, name, desc, locs, healingAmount));
+                        items.add(new Consumable(id, name, desc, locs, healingAmount));
                         break;
                     }
                     case "weapon": {
                         List<String> locs = parseList(parts[4]);
                         int damage = Integer.parseInt(parts[5].trim());
                         int dot = Integer.parseInt(parts[6].trim());
-                        //items.add(new Weapon(id, name, desc, locs, damage, dot));
+                        items.add(new Weapon(id, name, desc, locs, damage, dot));
                         break;
                     }
                     default:
