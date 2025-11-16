@@ -1,3 +1,12 @@
+/**Class: Inventory
+ * @author Carlos Matos
+ * @version 1.0
+ * Course:  ITEC3860 Fall 2025
+ * Written: November 12, 2025
+ * Purpose: Create Monster Class that will define the enemies in the game
+ */
+
+
 public class Monster extends Character{
     private int ID;
     private String Name;
@@ -51,7 +60,7 @@ public class Monster extends Character{
     }
 
     String displayerMonster(){
-        return this.Name + " " +this.Description;
+        return this.Name + "||" +this.Description;
     }
 
     //here you go Devin.
