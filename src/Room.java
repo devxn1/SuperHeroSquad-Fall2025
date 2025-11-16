@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class Room {
     private String roomID;
-    //private String biome;
+    private String biome;
     private String roomName;
     private String roomDescription;
     private Map<String, String> exits;
@@ -30,7 +30,7 @@ public class Room {
 
     public Room(String roomID,String roomName, String roomDescription, boolean isVisted, List<String> Directions,String isLockedBy) {
         this.roomID = roomID;
-        //this.biome = biome;
+        this.biome = "null";
         this.roomName = roomName;
         this.roomDescription = roomDescription;
         this.exits = new HashMap<>();

@@ -36,7 +36,7 @@ public class GameDemo {
                 String west = rs.getString("west");
                 String isLockedBy = rs.getString("isLockedBy");
 
-                Room room = new Room (roomID, biome, name, description, north, east, south, west, isLockedBy);
+                //Room room = new Room (roomID, biome, name, description, north, east, south, west, isLockedBy);
             }
         } catch (SQLException e) {
             System.err.println("Error in room table method:" + e.getMessage());
@@ -86,9 +86,9 @@ public class GameDemo {
 //                            " (" + (int)(ambushChance * 100) + "% ambush)");
                 } else {
                     // Create regular Monster for all other types
-                    int idLocation = 0;  // Not used
-                    Monster monster = new Monster(health, damage, ID,
-                            name, description, idLocation, isAlive);
+//                    int idLocation = 0;  // Not used
+//                    Monster monster = new Monster(health, damage, ID,
+//                            name, description, idLocation, isAlive);
 
                 }
 
@@ -96,7 +96,7 @@ public class GameDemo {
                 if (roomID != null && !roomID.isEmpty()) {
                     Room room = allRoom.get(roomID);
                     if (room != null) {
-                        room.setMonster(monster);
+                        //room.setMonster(monster);
                     }
                 }
             }
