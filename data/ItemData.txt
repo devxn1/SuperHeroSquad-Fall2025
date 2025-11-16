@@ -18,9 +18,9 @@ Material/I07/Ember Core/A bright glowing gem, it could be useful for something./
 Consumable/I08/Water/Fresh Water/Anywhere/12
 Armor/I09/Leather Armor/Somewhat protective armor/Crafted/2
 Weapon/I10/Spiked Gauntlet/A Sharp weapon crafted with Claws/Crafted/Normal/9/0
-Weapon/I11/Sharp Machete/A sturdy and sharp machete, very useful against encounters./C3/Normal/10/0
+Craftable/I11/Sharp Machete/A sturdy and sharp machete, very useful against encounters./C3/Normal/10/0
 Consumable/I12/Cure vial/A vial containing a liquid that cures poison effect./Anywhere/5/0
-Weapon/I13/Poisoned Spiked gauntlet/Spiked gauntlets, dipped in poison./Crafted/12/2
-Weapon/I14/Firey Spiked Gauntlets/Spiked flaming gauntlets, it can burn a monster for quite some time. Be careful to not set the forest on fire./Crafted/12/4
-Weapon/I15/Poisoned Sharp Machete/A sharp machete dosed in poison, a single cut can really hurt an enemy/Crafted/12/2
-Weapon/I16/Firey Machete/A Flaming Sharp Machete could burn a Monster for quite some time. Be careful to not set the forest on fire./Crafted/12/4
+Craftable/I13/Poisoned Spiked gauntlet/Spiked gauntlets, dipped in poison./Crafted/12/2
+Craftable/I14/Firey Spiked Gauntlets/Spiked flaming gauntlets, it can burn a monster for quite some time. Be careful to not set the forest on fire./Crafted/12/4
+Craftable/I15/Poisoned Sharp Machete/A sharp machete dosed in poison, a single cut can really hurt an enemy/Crafted/12/2
+Craftable/I16/Firey Machete/A Flaming Sharp Machete could burn a Monster for quite some time. Be careful to not set the forest on fire./Crafted/12/4
