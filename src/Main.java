@@ -40,6 +40,7 @@ public class Main {
                 continue;
             }
 
+
             //if more than one word is typed in, this runs. Separates first word (command) from
             // next word (usually an object the user is trying to use)
             String command = input;

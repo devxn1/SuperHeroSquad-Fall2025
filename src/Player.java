@@ -1,5 +1,5 @@
-import java.util.Random;
-import java.util.Scanner;
+
+import java.util.*;
 
 public class Player extends Character {
     int defense;
@@ -10,6 +10,11 @@ public class Player extends Character {
     private int hp;
     Weapon equippedWeapon;
     Armor equippedArmor;
+    public static ArrayList<Item> inventory = new ArrayList<Item>();
+    public static ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
+    public static ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+
+
 
     public Player(int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
         super(HP,attackDMG);
