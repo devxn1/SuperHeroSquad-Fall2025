@@ -5,8 +5,6 @@
  * Written: November 11, 2025
  * Purpose:To Track Player in the text based adventure Game and all their items they will interact with.
  */
-
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -29,8 +27,8 @@ public class Player extends Character {
     public Player(String currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist,ArrayList<Item> PlayerInventory) {
         super(HP,attackDMG);
         this.CurrentRoom=currentRoom;
-        this.HP=25;
-        this.attackDMG=10;
+        this.HP=HP;
+        this.attackDMG=attackDMG;
         this.defense=defense;
         this.evasion=evasion;
         this.hunger=hunger;

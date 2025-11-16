@@ -3,7 +3,7 @@ public abstract class Item {
     private String id;
     private String name;
     private String description;
-    private int roomID;
+    private String roomID;
 
     public Item(String id, String name, String description, int roomID) {
         this.id = id;
@@ -28,7 +28,7 @@ public abstract class Item {
         return roomID;
     }
 
-    public void setRoomID(int roomID){
+    public void setRoomID(String roomID){
         this.roomID = roomID;
     }
 
