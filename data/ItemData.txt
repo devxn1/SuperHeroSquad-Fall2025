@@ -9,7 +9,7 @@ Artifact/A08/Power Core/The energy source that powers the beacon./F5
 Artifact/A09/Beacon Emitter/Final Component, it projects the signal outward./F5
 Artifact/A10/Caldera Beacon/The assembled Beacon/Crafted
 Consumable/I01/Meat/A chunk of meat, edible if cooked./B3,C2/10
-Material/I02/Hide/Animal Hide, could be used to make leather armor/B3,D4/
+Material/I02/Hide/Animal Hide, could be used to make leather armor/B3,D4
 Material/I03/Claw/A crab claw, could be useful to create a weapon with this./A2,D4
 Material/I04/Shell/Shell from the Giant Crab, could be useful to craft armor./A2
 Material/I05/Venom Sac/This venom sac could be applied to weapons./C2
@@ -20,7 +20,7 @@ Armor/I09/Leather Armor/Somewhat protective armor/Crafted/2
 Weapon/I10/Spiked Gauntlet/A Sharp weapon crafted with Claws/Crafted/Normal/9/0
 Weapon/I11/Sharp Machete/A sturdy and sharp machete, very useful against encounters./C3/Normal/10/0
 Consumable/I12/Cure vial/A vial containing a liquid that cures poison effect./Anywhere/5/0
-Weapon/I13/Poisoned Spiked gauntlet/Spiked gauntlets, dipped in poison./Crafted/Poison/Poison/12/2
-Weapon/I14/Firey Spiked Gauntlets/Spiked flaming gauntlets, it can burn a monster for quite some time. Be careful to not set the forest on fire./Crafted/Fire/Fire/12/4
-Weapon/I15/Poisoned Sharp Machete/A sharp machete dosed in poison, a single cut can really hurt an enemy/Crafted/Poison/Poison/12/2
-Weapon/I16/Firey Machete/A Flaming Sharp Machete could burn a Monster for quite some time. Be careful to not set the forest on fire./Crafted/Fire/Fire/12/4
+Weapon/I13/Poisoned Spiked gauntlet/Spiked gauntlets, dipped in poison./Crafted/12/2
+Weapon/I14/Firey Spiked Gauntlets/Spiked flaming gauntlets, it can burn a monster for quite some time. Be careful to not set the forest on fire./Crafted/12/4
+Weapon/I15/Poisoned Sharp Machete/A sharp machete dosed in poison, a single cut can really hurt an enemy/Crafted/12/2
+Weapon/I16/Firey Machete/A Flaming Sharp Machete could burn a Monster for quite some time. Be careful to not set the forest on fire./Crafted/12/4
