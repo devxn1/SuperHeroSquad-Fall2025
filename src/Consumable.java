@@ -1,7 +1,7 @@
 public abstract class Consumable extends Item{
     private int healing;
 
-    public Consumable(int id, String name, String description, int roomID, int healing){
+    public Consumable(String id, String name, String description, int roomID, int healing){
         super(id, name, description, roomID);
         this.healing = healing;
     }
