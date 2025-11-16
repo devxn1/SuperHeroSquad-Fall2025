@@ -26,13 +26,12 @@ public abstract class Armor extends Item {
         return "Armor";
     }
 
-    public void use(Player player){
-        if (player == null) {
-            return;
-        }
+    public void use(Player playerObj){
+        if (playerObj instanceof Player player) {
             player.setEquippedArmor(this);
             player.setDefense(player.getDefense() + defense);
             player.setHp(player.getHP() + hpAdded);
-            System.out.println(player.getEquippedArmor().getName() + " equipped!");
+            System.out.println(this.getName() + " equipped!");
+        }
     }
 }
