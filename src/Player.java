@@ -1,7 +1,10 @@
 import java.util.Random;
 import java.util.Scanner;
+import java.io.PrintWriter;
+import java.io.File;
 
 public class Player extends Character {
+    int CurrentRoom;
     int defense;
     int evasion;
     int hunger;
@@ -11,8 +14,9 @@ public class Player extends Character {
     Weapon equippedWeapon;
     Armor equippedArmor;
 
-    public Player(int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
+    public Player(int currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
         super(HP,attackDMG);
+        this.CurrentRoom=currentRoom;
         this.HP=25;
         this.attackDMG=10;
         this.defense=defense;
@@ -65,15 +69,28 @@ public class Player extends Character {
         DayorNight = dayorNight;
     }
 
+    public int getCurrentRoom() {
+        return CurrentRoom;
+    }
 
+    public void setCurrentRoom(int currentRoom) {
+        CurrentRoom = currentRoom;
+    }
 
+    //Display ALl their Stats
     void displayStats() {
-        System.out.println("HP: " + getHP());
+        System.out.println("HP: " + getHP()+"/100");
         System.out.println("AtkDamage: "+getAttackDMG());
         System.out.println("Defense: " + getDefense());
         System.out.println("Evasion: " + getEvasion());
-        System.out.println("Thrist: " + getThrist());
-        System.out.println("Hunger: " + getHunger());
+        System.out.println("Thrist: " + getThrist()+"/100");
+        System.out.println("Hunger: " + getHunger()+"/100");
+        if(equippedWeapon != null){
+            System.out.println(getEquippedWeapon());
+        }
+        if(equippedArmor != null){
+            System.out.println(getEquippedArmor());
+        }
     }
 
     public void showHelp() {
@@ -85,6 +102,7 @@ public class Player extends Character {
 
 
     void savePlayer() {
+
 
     }
 
@@ -124,14 +142,62 @@ public class Player extends Character {
         this.equippedArmor = equippedArmor;
     }
 
-    //for user input STATS
-    public void showStats() {
-        System.out.println("Your current stats are:");
-        System.out.println("Health: " + hp + "/100");
-        System.out.println("Attack Damage: " + this.getAttackDMG());
-        if (equippedWeapon != null) {
-            //System.out.println("Current weapon: " + this.getEquippedWeapon());
+
+    void Combat(Monster tempMonster) {
+        System.out.println("Your HP" + getHP());
+        System.out.println(tempMonster.displayerMonster());
+        System.out.println("Monster HP: " + tempMonster.getHP());
+        int MonsterHP = tempMonster.getHP();
+        Scanner UserInput = new Scanner(System.in);
+        while (true) {
+            if(getHP()<=0){
+                //Put Lose Method Here where player must reload or start game
+            }//Make sure Monster is dead in room
+            else if(MonsterHP<=0){
+                tempMonster.setHP(0);
+                //The Monster should be dead when false
+                tempMonster.setAlive(false);
+                break;
+            }
+
+            System.out.println("Your HP" + getHP());
+            System.out.println("Commands:");
+            String Command = UserInput.nextLine();
+            if (Command.equalsIgnoreCase("Attack")) {
+                MonsterHP -= this.getAttackDMG();
+                setHP(this.getHP() - tempMonster.getAttackDMG());
+            } else if (Command.equalsIgnoreCase("Stats")) {
+                displayStats();
+            } else if (Command.equalsIgnoreCase("Run")) {
+                //Put random chance to just exit battle
+                Random rand = new Random();
+                double MonsterChance=rand.nextDouble(0,1);
+                double PlayerChance=rand.nextDouble(0,1);
+                if(MonsterChance<PlayerChance) {
+                    break;
+                }
+                else{
+                    System.out.println("You weren't able to run away");
+                    setHP(this.getHP() - tempMonster.getAttackDMG());
+                }
+            } else if (Command.equalsIgnoreCase("Inventory")) {
+                //Put inventory Here
+            }
+            else if(Command.equalsIgnoreCase("Help")) {
+                showHelp();
+            }
         }
     }
+
+    //for user input STATS
+//    public void showStats() {
+//        System.out.println("Your current stats are:");
+//        System.out.println("Health: " + hp + "/100");
+//        System.out.println("Attack Damage: " + this.getAttackDMG());
+//        if (equippedWeapon != null) {
+//            //System.out.println("Current weapon: " + this.getEquippedWeapon());
+//        }
+//    }
+
 
 }
