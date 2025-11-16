@@ -4,7 +4,15 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class Puzzle {
+/**Class: Room
+ * @author Devin Gomez
+ * @version 1.0
+ * Course:  ITEC3860 Fall 2025
+ * Written: November 16, 2025
+ * Purpose: Room/location
+ */
+
+public class Puzzle {
     protected String puzzleID;
     protected String puzzleName;
     protected String roomID;
@@ -13,11 +21,13 @@ public abstract class Puzzle {
     protected int remainingAttempts;
     protected boolean isSolved;
     protected String rewardID;
+    protected String rewardType;
     protected int hintsUsed;
     protected List<String> hints;
 
     public Puzzle(String puzzleID, String puzzleName, String roomID,
-                  String puzzleDescription, int puzzleAttempts, String rewardID) {
+                  String puzzleDescription, int puzzleAttempts,
+                  String rewardType, String rewardID) {
         this.puzzleID = puzzleID;
         this.puzzleName = puzzleName;
         this.roomID = roomID;
@@ -25,21 +35,30 @@ public abstract class Puzzle {
         this.puzzleAttempts = puzzleAttempts;
         this.remainingAttempts = puzzleAttempts;
         this.isSolved = false;
+        this.rewardType = rewardType;
         this.rewardID = rewardID;
         this.hintsUsed = 0;
         this.hints = new ArrayList<>();
         loadHintsFromFile();
     }
 
+    public String getRewardType() {
+        return rewardType;
+    }
+
+
+
     // to get hints
     private void loadHintsFromFile() {
         try (Scanner scanner = new Scanner(new File("PuzzleHints"))) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
+                if (line.trim().isEmpty()) continue; // skip blank lines
+
                 String[] parts = line.split("/");
 
-                // parts[1] is puzzleID, parts[3] is hint text
-                if (parts[1].equals(this.puzzleID)) {
+                // hintID / puzzleID / hintNumber / hintText
+                if (parts.length >= 4 && parts[1].equals(this.puzzleID)) {
                     hints.add(parts[3]);
                 }
             }
@@ -62,7 +81,11 @@ public abstract class Puzzle {
     }
 
     //prob not needed
-    public abstract boolean attemptSolve(String playerInput);
+    // DEFAULT implementation so class is NOT abstract
+    public boolean attemptSolve(String playerInput) {
+        System.out.println("This puzzle does not have a solve mechanic defined.");
+        return false;
+    }
 
     public void decrementAttempts() {
         if (remainingAttempts > 0) {
@@ -106,4 +129,6 @@ public abstract class Puzzle {
     public String getRewardID() {
         return rewardID;
     }
+
+
 }

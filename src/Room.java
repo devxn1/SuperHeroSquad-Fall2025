@@ -144,7 +144,7 @@ public class Room {
         return getExit(direction) != null;
     }
 
-    public static String getExitDirection() {
+    public String getExitDirection() {
         List<String> directions = new ArrayList<>();
 
         if (exits.containsKey("north")) {
