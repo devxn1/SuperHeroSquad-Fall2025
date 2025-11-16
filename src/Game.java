@@ -8,7 +8,7 @@ public class Game {
     public static ArrayList<Puzzle> PuzzleData;
     public static ArrayList<Monster> MonsterData;
     public static HashMap<String, Runnable> commandInputs = new HashMap<>();
-
+    public static Player player;
 
 public static void loadGame(){
     welcomeMessage();
@@ -16,22 +16,34 @@ public static void loadGame(){
     ItemData = ParseItemData();
     MonsterData = ParseMonsterData();
     //PuzzleData = ParsePuzzleData();
+    player = new Player(
+            "A1",         // starting room ID
+            100,          // HP
+            10,           // attackDMG
+            5,            // defense
+            5,            // evasion
+            50,           // hunger
+            50,           // thirst
+            new ArrayList<Item>(),
+            new ArrayList<Artifact>(),
+            new ArrayList<Recipe>()// empty inventory at start
+    );
     registerCommands();
 
 }
 
 public static void registerCommands(){
-
+NaviagationCommands();
 }
 public static void NaviagationCommands(){
-    commandInputs.put("north", () -> Player.PlayerMoveDirection("north"));
-    commandInputs.put("south", () -> Player.PlayerMoveDirection("south"));
-    commandInputs.put("east", () -> Player.PlayerMoveDirection("east"));
-    commandInputs.put("west", () -> Player.PlayerMoveDirection("west"));
-    commandInputs.put("move north", () -> Player.PlayerMoveDirection("north"));
-    commandInputs.put("move south", () -> Player.PlayerMoveDirection("south"));
-    commandInputs.put("move east", () -> Player.PlayerMoveDirection("east"));
-    commandInputs.put("move west", () -> Player.PlayerMoveDirection("west"));
+    commandInputs.put("north", () -> player.PlayerMoveDirection("north"));
+    commandInputs.put("south", () -> player.PlayerMoveDirection("south"));
+    commandInputs.put("east", () -> player.PlayerMoveDirection("east"));
+    commandInputs.put("west", () -> player.PlayerMoveDirection("west"));
+    commandInputs.put("move north", () -> player.PlayerMoveDirection("north"));
+    commandInputs.put("move south", () -> player.PlayerMoveDirection("south"));
+    commandInputs.put("move east", () -> player.PlayerMoveDirection("east"));
+    commandInputs.put("move west", () -> player.PlayerMoveDirection("west"));
 }
 public static void welcomeMessage(){
     System.out.println("Welcome to the Adventure Game!");
@@ -130,7 +142,7 @@ public static void quitGame(){
                     }
                     case "material": {
                         List<String> locs = parseList(parts[4]);
-                        items.add(new Material(id, name, desc, locs));
+                        items.add(new Material(id, name, desc,  locs));
                         break;
                     }
                     case "armor": {
@@ -150,6 +162,14 @@ public static void quitGame(){
                         int damage = Integer.parseInt(parts[5].trim());
                         int dot = Integer.parseInt(parts[6].trim());
                         items.add(new Weapon(id, name, desc, locs, damage, dot));
+                        break;
+                    }
+                    case "craftable": {
+                        List<String> locs = parseList(parts[4]);
+                        int damage = Integer.parseInt(parts[5].trim());
+                        int dot = Integer.parseInt(parts[6].trim());
+                        List<String> materialIDs = parseList(parts[7]);
+                        items.add(new CraftableItem(id, name, desc, locs, damage, dot, materialIDs));
                         break;
                     }
                     default:
