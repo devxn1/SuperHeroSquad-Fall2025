@@ -1,30 +1,30 @@
-A1/Beach/Beach/The salty breeze greets you on the open shore, waves rolling against pale sand. Seashells and driftwood scatter the ground, offering little shelter. The horizon stretches endlessly, inviting exploration./0,A2,0,0
-A2/Tide Pools/Beach/Rocky pools glisten with trapped seawater, teeming with darting fish. A giant crab lurks here, claws snapping menacingly. Careful footing is needed to avoid slipping into the water./0,0,A3,A1
-A3/Shallow Reef/Reef/Coral fragments and bright fish shimmer in shallow waters. Movement is easier here with the Reef Token, speeding your steps. The water hides currents that could pull you deeper./A2,A5,0,A4
-A4/Freshwater Lagoon/0/Palm fronds shade a still pool of cool, fresh water. The quiet masks unseen ripples, suggesting hidden wildlife beneath. The lagoon feels like a temporary refuge before moving inland./0,A3,0,0
-A5/Cliff Overlook/0/Jagged cliffs rise above the sea, offering a breathtaking but dizzying view. Seabirds wheel in the sky, their cries echoing off the stone. A narrow path south promises greater danger ahead./0,0,B1,A3
-B1/Driftwood/0/Broken branches and sun-bleached logs tangle the shoreline. The area feels like nature’s barricade, funneling travelers deeper into the island. Footprints in the sand suggest you’re not alone./A5,0,B4,B2
-B2/Plants/0/Dense foliage surrounds you with the smell of greenery and damp earth. Hidden paths twist between ferns, and shadows shift with movement. The air feels heavy, urging caution./0,B1,B5,B3
-B3/Boars Den/0/The undergrowth parts to reveal a trampled clearing. A wild boar prowls here, bristly coat glistening in the light. Tusks dig into the ground, daring challengers to approach./0,B2,0,C2
-B4/River Crossing/0/A shallow river splits the ground, water flowing swiftly over smooth stones. The current tugs at your feet, and nearby vegetation hides what may watch from the shore. Every crossing feels risky./B1,0,0,B5
-B5/Goat Path/0/A narrow trail climbs sharply along jagged rocks. Loose stones clatter underfoot, threatening to tumble into the ravine. The way feels precarious but promising./B2,B4,0,0
-C1/Termite Mound/0/Towering earthen spires rise like jagged teeth from the soil. A faint buzzing fills the air, warning that the colony is alive and active. The passage narrows, forcing careful steps./0,C2,0,0
-C2/Fruit Trees/0/Heavy branches drip with ripe fruit, filling the air with sweetness. A venomous snake coils silently in the shade, watching intruders. The area tempts with food but punishes carelessness./B3,C4,0,C1
-C3/Cave Mouth/0/A dark gap yawns in the stone, cool air rushing outward. A cave bat swarm stirs at the edges, their wings rustling in warning. The darkness beckons, promising secrets deeper in./C2,C5,0,0
-C4/Stone Gate/0/Massive carved stones form an ancient gateway. Strange markings glow faintly — the Stone Gate Runes puzzle awaits decoding. The gate radiates mystery and challenge./0,0,C5,C2
-C5/Rope Bridge/0/A frayed rope bridge sways over a steep chasm. The planks creak with every step, threatening to snap. Wind whips through, making balance a deadly test./C4,D2,0,C3
-D1/Bee Hives/0/The hum of countless bees fills the clearing. Honey drips from combs high above, luring but warning all at once. The air is thick with danger and sweetness./0,D5,0,0
-D2/River Bend/0/The river curves sharply here, water foaming against stone. Echoes suggest hidden depths below. The area feels like a crossroads to harsher lands beyond./D5,0,E1,C5
-D3/Sun Dial/0/A towering stone sundial casts shifting shadows across the ground. The Sun Dial puzzle challenges you to align the light. The Sun Shard glimmers faintly, hinting at hidden power./D4,0,0,D2
-D4/Panther Tracks/0/Paw prints sink deep into the soft earth. A panther prowls nearby, silent and unseen until too late. The jungle here feels alive with eyes./0,0,D3,D5
-D5/Wind Shrine/0/Tall stones form a circle where the wind howls unnaturally. The Wind Shrine puzzle resonates with shifting air. The Gale Charm lies waiting, promising speed and protection./0,D4,D2,D1
-E1/Sea Cave/0/The entrance to a cave yawns by the crashing surf. Waves echo deep inside, masking whispers of secrets. The TideLock puzzle bars further progress without cunning./D2,0,0,E4
-E2/Mushrooms/0/Bioluminescent fungi glow faintly in the dark. Their spores hang in the air, creating a hazy, dreamlike effect. The place feels otherworldly, both beautiful and dangerous./E1,0,0,E3
-E3/Crystal Cavern/0/Jagged crystals jut from the walls, casting refracted light in dazzling patterns. The Crystal Resonance puzzle hums faintly, awaiting a solver. The cavern sparkles but feels unstable./E4,E2,0,E5
-E4/Lava Tubes/0/Hollowed tunnels of cooled magma twist unpredictably. Warm air seeps from cracks, hinting at the fire below. The ground shakes faintly as if alive./0,E1,E3,0
-E5/Summit Trail/0/A rocky trail winds upward, the air thinner and colder. Each step feels heavier, pulling you toward the peak. The climb tests your resolve./0,E3,0,F2
-F1/Shipwreck Hull/0/A shattered vessel lies broken across the rocks. The timbers creak as if still alive, and gulls screech overhead. The Captain’s Compass rests within, pointing to hidden truths./0,F4,0,F3
-F2/Coral Reefs/0/Dozens of bottles line the shore, their notes whispering of lost sailors. Some messages are warnings, others pleas for help. The air smells of salt and secrets./0,C5,F3,0
-F3/Coral Garden/0/A lush undersea bloom of coral stretches in impossible colors. The Reef Token shimmers faintly, guiding swifter movement. Schools of fish scatter as shadows pass overhead./F2,F1,0,0
-F4/Caldera Rim/0/The rim of a massive volcanic crater glows faintly with heat. The Lava Wisp flickers here, raising the temperature dangerously. The Heart of the Island pulses nearby, radiant with power./0,F5,0,F1
-F5/Signal Peak/0/The island’s highest point pierces the sky, battered by roaring winds. The Caldera Beacon puzzle hums faintly in the stone. The Heart of the Island gleams here, waiting to be claimed./0,0,F4,0
+A1/Beach/The salty breeze greets you on the open shore, waves rolling against pale sand. Seashells and driftwood scatter the ground, offering little shelter. The horizon stretches endlessly, inviting exploration./0,A2,0,0
+A2/Tide Pools/Rocky pools glisten with trapped seawater, teeming with darting fish. A giant crab lurks here, claws snapping menacingly. Careful footing is needed to avoid slipping into the water./0,0,A3,A1
+A3/Shallow Reef/Coral fragments and bright fish shimmer in shallow waters. Movement is easier here with the Reef Token, speeding your steps. The water hides currents that could pull you deeper./A2,A5,0,A4
+A4/Freshwater Lagoon/Palm fronds shade a still pool of cool, fresh water. The quiet masks unseen ripples, suggesting hidden wildlife beneath. The lagoon feels like a temporary refuge before moving inland./0,A3,0,0
+A5/Cliff Overlook/Jagged cliffs rise above the sea, offering a breathtaking but dizzying view. Seabirds wheel in the sky, their cries echoing off the stone. A narrow path south promises greater danger ahead./0,0,B1,A3
+B1/Driftwood/Broken branches and sun-bleached logs tangle the shoreline. The area feels like nature’s barricade, funneling travelers deeper into the island. Footprints in the sand suggest you’re not alone./A5,0,B4,B2
+B2/Plants/Dense foliage surrounds you with the smell of greenery and damp earth. Hidden paths twist between ferns, and shadows shift with movement. The air feels heavy, urging caution./0,B1,B5,B3
+B3/Boars Den/The undergrowth parts to reveal a trampled clearing. A wild boar prowls here, bristly coat glistening in the light. Tusks dig into the ground, daring challengers to approach./0,B2,0,C2
+B4/River Crossing/A shallow river splits the ground, water flowing swiftly over smooth stones. The current tugs at your feet, and nearby vegetation hides what may watch from the shore. Every crossing feels risky./B1,0,0,B5
+B5/Goat Path/A narrow trail climbs sharply along jagged rocks. Loose stones clatter underfoot, threatening to tumble into the ravine. The way feels precarious but promising./B2,B4,0,0
+C1/Termite Mound/Towering earthen spires rise like jagged teeth from the soil. A faint buzzing fills the air, warning that the colony is alive and active. The passage narrows, forcing careful steps./0,C2,0,0
+C2/Fruit Trees/Heavy branches drip with ripe fruit, filling the air with sweetness. A venomous snake coils silently in the shade, watching intruders. The area tempts with food but punishes carelessness./B3,C4,0,C1
+C3/Cave Mouth/A dark gap yawns in the stone, cool air rushing outward. A cave bat swarm stirs at the edges, their wings rustling in warning. The darkness beckons, promising secrets deeper in./C2,C5,0,0
+C4/Stone Gate/Massive carved stones form an ancient gateway. Strange markings glow faintly — the Stone Gate Runes puzzle awaits decoding. The gate radiates mystery and challenge./0,0,C5,C2
+C5/Rope Bridge/A frayed rope bridge sways over a steep chasm. The planks creak with every step, threatening to snap. Wind whips through, making balance a deadly test./C4,D2,0,C3
+D1/Bee Hives/The hum of countless bees fills the clearing. Honey drips from combs high above, luring but warning all at once. The air is thick with danger and sweetness./0,D5,0,0
+D2/River Bend/The river curves sharply here, water foaming against stone. Echoes suggest hidden depths below. The area feels like a crossroads to harsher lands beyond./D5,0,E1,C5
+D3/Sun Dial/A towering stone sundial casts shifting shadows across the ground. The Sun Dial puzzle challenges you to align the light. The Sun Shard glimmers faintly, hinting at hidden power./D4,0,0,D2
+D4/Panther Tracks/Paw prints sink deep into the soft earth. A panther prowls nearby, silent and unseen until too late. The jungle here feels alive with eyes./0,0,D3,D5
+D5/Wind Shrine/Tall stones form a circle where the wind howls unnaturally. The Wind Shrine puzzle resonates with shifting air. The Gale Charm lies waiting, promising speed and protection./0,D4,D2,D1
+E1/Sea Cave/The entrance to a cave yawns by the crashing surf. Waves echo deep inside, masking whispers of secrets. The TideLock puzzle bars further progress without cunning./D2,0,0,E4
+E2/Mushrooms/Bioluminescent fungi glow faintly in the dark. Their spores hang in the air, creating a hazy, dreamlike effect. The place feels otherworldly, both beautiful and dangerous./E1,0,0,E3
+E3/Crystal Cavern/Jagged crystals jut from the walls, casting refracted light in dazzling patterns. The Crystal Resonance puzzle hums faintly, awaiting a solver. The cavern sparkles but feels unstable./E4,E2,0,E5
+E4/Lava Tubes/Hollowed tunnels of cooled magma twist unpredictably. Warm air seeps from cracks, hinting at the fire below. The ground shakes faintly as if alive./0,E1,E3,0
+E5/Summit Trail/A rocky trail winds upward, the air thinner and colder. Each step feels heavier, pulling you toward the peak. The climb tests your resolve./0,E3,0,F2
+F1/Shipwreck Hull/A shattered vessel lies broken across the rocks. The timbers creak as if still alive, and gulls screech overhead. The Captain’s Compass rests within, pointing to hidden truths./0,F4,0,F3
+F2/Coral Reefs/Dozens of bottles line the shore, their notes whispering of lost sailors. Some messages are warnings, others pleas for help. The air smells of salt and secrets./0,C5,F3,0
+F3/Coral Garden/A lush undersea bloom of coral stretches in impossible colors. The Reef Token shimmers faintly, guiding swifter movement. Schools of fish scatter as shadows pass overhead./F2,F1,0,0
+F4/Caldera Rim/The rim of a massive volcanic crater glows faintly with heat. The Lava Wisp flickers here, raising the temperature dangerously. The Heart of the Island pulses nearby, radiant with power./0,F5,0,F1
+F5/Signal Peak/The island’s highest point pierces the sky, battered by roaring winds. The Caldera Beacon puzzle hums faintly in the stone. The Heart of the Island gleams here, waiting to be claimed./0,0,F4,0
