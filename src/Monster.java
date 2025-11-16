@@ -13,11 +13,11 @@ public class Monster extends Character{
     private String Description;
     private String IDLocation;
     boolean IsAlive=true;
-    ItemInventory MonsterInventory;
+    ArrayList<Item> MonsterInventory;
 
 
 
-    public Monster( String ID, String Name, String Description,String IDLocation,int HP, int attackDMG, ItemInventory MonsterInventory) {
+    public Monster( String ID, String Name, String Description,String IDLocation,int HP, int attackDMG, ArrayList<Item> MonsterInventory) {
         super(HP, attackDMG);
         this.HP=HP;
         this.attackDMG=attackDMG;
@@ -65,11 +65,11 @@ public class Monster extends Character{
         return this.Name + "||" +this.Description;
     }
 
-    public ItemInventory getMonsterInventory() {
+    public ArrayList<Item> getMonsterInventory() {
         return MonsterInventory;
     }
 
-    public void setMonsterInventory(ItemInventory monsterInventory) {
+    public void setMonsterInventory(ArrayList<Item> monsterInventory) {
         MonsterInventory = monsterInventory;
     }
 
