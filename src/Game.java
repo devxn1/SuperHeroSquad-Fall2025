@@ -31,7 +31,7 @@ public class Game {
                 break;
             }
             else if (input.equals("STATS")) {
-                player.showStats();
+                player.displayStats();
                 continue;
             }
             else if (input.equals("HELP")) {

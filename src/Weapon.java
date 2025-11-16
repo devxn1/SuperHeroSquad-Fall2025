@@ -24,9 +24,7 @@ public abstract class Weapon extends Item {
         return DOT;
     }
 
-    public String getType() {
-        return "Weapon";
-    }
+    void addWeapon() {
 
     public void use(Object player) {
         if (player == null) {

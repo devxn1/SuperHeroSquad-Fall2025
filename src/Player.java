@@ -1,7 +1,20 @@
+/**Class: Inventory
+ * @author Carkis Matos
+ * @version 1.0
+ * Course:  ITEC3860 Fall 2025
+ * Written: November 12, 2025
+ * Purpose:To Track Player in the text based adventure Game and all their items they will interact with.
+ */
+
+
+import java.io.FileNotFoundException;
 import java.util.Random;
 import java.util.Scanner;
+import java.io.PrintWriter;
+import java.io.File;
 
 public class Player extends Character {
+    int CurrentRoom;
     int defense;
     int evasion;
     int hunger;
@@ -11,8 +24,9 @@ public class Player extends Character {
     Weapon equippedWeapon;
     Armor equippedArmor;
 
-    public Player(int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
+    public Player(int currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
         super(HP,attackDMG);
+        this.CurrentRoom=currentRoom;
         this.HP=25;
         this.attackDMG=10;
         this.defense=defense;
@@ -65,15 +79,28 @@ public class Player extends Character {
         DayorNight = dayorNight;
     }
 
+    public int getCurrentRoom() {
+        return CurrentRoom;
+    }
 
+    public void setCurrentRoom(int currentRoom) {
+        CurrentRoom = currentRoom;
+    }
 
+    //Display ALl their Stats
     void displayStats() {
-        System.out.println("HP: " + getHP());
+        System.out.println("HP: " + getHP()+"/100");
         System.out.println("AtkDamage: "+getAttackDMG());
         System.out.println("Defense: " + getDefense());
         System.out.println("Evasion: " + getEvasion());
-        System.out.println("Thrist: " + getThrist());
-        System.out.println("Hunger: " + getHunger());
+        System.out.println("Thrist: " + getThrist()+"/100");
+        System.out.println("Hunger: " + getHunger()+"/100");
+        if(equippedWeapon != null){
+            System.out.println(getEquippedWeapon());
+        }
+        if(equippedArmor != null){
+            System.out.println(getEquippedArmor());
+        }
     }
 
     public void showHelp() {
@@ -85,10 +112,63 @@ public class Player extends Character {
 
 
     void savePlayer() {
+        PrintWriter fileoutput;
+        while(true){
+            try{
+                fileoutput=new PrintWriter("User/player.txt");
+                //Going to print Room,HP,DMG,Defense,Evasion,Hunger,Thirst,(True or false) DayorNight
+                //Into player.txt file
+                fileoutput.println(getCurrentRoom()+"/"+getHP()+"/"+getAttackDMG()+"/"+getDefense());
+                fileoutput.print("/"+getEvasion()+"/"+getHunger()+"/"+getThrist()+"/"+isDayorNight());
+                fileoutput.close();//<Remember to close to save buffer into file
+
+                //Will Add inventory later, it a pain to deal with SORRY!!!
+            } catch (FileNotFoundException e) {
+                System.out.println("player.txt is not found, please put back text file.");
+                System.exit(0);
+            }
+
+        }
 
     }
 
     void loadPlayer() {
+            Scanner fileinput=null;
+            String fileName="User/player.txt";
+            File file=new File(fileName);
+            try{
+                fileinput=new Scanner(file);
+            }
+            catch(FileNotFoundException e){
+                System.out.println("player.txt is not found, please put back text file.");
+                System.exit(0);
+            }
+
+            while(fileinput.hasNextLine()){
+                String line=fileinput.nextLine();
+                String[] split=line.split("/");
+
+                //Create Variables based on what would be stored in file then set them.
+                int TempCurrentRoom=Integer.parseInt(split[0]);
+                setCurrentRoom(TempCurrentRoom);
+                int TempHP=Integer.parseInt(split[1]);
+                setHP(TempHP);
+                int TempDMG=Integer.parseInt(split[2]);
+                setAttackDMG(TempDMG);
+                int TempDefense=Integer.parseInt(split[3]);
+                setDefense(TempDefense);
+                int TempEvasion=Integer.parseInt(split[4]);
+                setEvasion(TempEvasion);
+                int TempHunger=Integer.parseInt(split[5]);
+                setHunger(TempHunger);
+                int TempThrist=Integer.parseInt(split[6]);
+                setThrist(TempThrist);
+                boolean tempTime=Boolean.parseBoolean(split[7]);
+                setDayorNight(tempTime);
+
+                //Below this would be inventory, and equipment, will work later
+
+            }
 
     }
 
@@ -96,9 +176,23 @@ public class Player extends Character {
 
     }
 
-    void avoid() {
+    void avoid(Monster tempMonster) {
+        //It going to be 95% chance to avoid monster encounter
+        //5% chance to enter combat with monster
+        //avoid combat successfully, DOES NOT despawn Monster
+        Random rand=new Random();
+        double chance=rand.nextDouble();
+
+        if(chance<0.95){
+            //Debug message below to test out avoid mechanic
+            System.out.println("You avoided combat");
+        }
+        else{
+            Combat(tempMonster);
+        }
 
     }
+
 
     public int getHp() {
         return hp;
@@ -124,14 +218,71 @@ public class Player extends Character {
         this.equippedArmor = equippedArmor;
     }
 
-    //for user input STATS
-    public void showStats() {
-        System.out.println("Your current stats are:");
-        System.out.println("Health: " + hp + "/100");
-        System.out.println("Attack Damage: " + this.getAttackDMG());
-        if (equippedWeapon != null) {
-            //System.out.println("Current weapon: " + this.getEquippedWeapon());
+
+    void Combat(Monster tempMonster) {
+        System.out.println("Your HP" + getHP());
+        System.out.println(tempMonster.displayerMonster());
+        System.out.println("Monster HP: " + tempMonster.getHP());
+        int MonsterHP = tempMonster.getHP();
+        Scanner UserInput = new Scanner(System.in);
+        while (true) {
+            if(getHP()<=0){
+                //Put Lose Method Here where player must reload or start game
+            }//Make sure Monster is dead in room
+            else if(MonsterHP<=0){
+                tempMonster.setHP(0);
+                //The Monster should be dead when false
+                tempMonster.setAlive(false);
+                break;
+            }
+
+            System.out.println("Your HP" + getHP());
+            System.out.println("Commands:");
+            String Command = UserInput.nextLine();
+            if (Command.equalsIgnoreCase("Attack")) {
+                MonsterHP -= this.getAttackDMG();
+                setHP(this.getHP() - tempMonster.getAttackDMG());
+            } else if (Command.equalsIgnoreCase("Stats")) {
+                displayStats();
+            } else if (Command.equalsIgnoreCase("Run")) {
+                //Put random chance to just exit battle
+                Random rand = new Random();
+                double MonsterChance=rand.nextDouble(0,1);
+                double PlayerChance=rand.nextDouble(0,1);
+                if(MonsterChance<PlayerChance) {
+                    break;
+                }
+                else{
+                    System.out.println("You weren't able to run away");
+                    setHP(this.getHP() - tempMonster.getAttackDMG());
+                }
+            } else if (Command.equalsIgnoreCase("Inventory")) {
+                //Put inventory Here
+            }
+            else if(Command.equalsIgnoreCase("Help")) {
+                showHelp();
+            }
+            else if(Command.equalsIgnoreCase("Item")) {
+                //item use here in combat
+            }
+            else if(Command.equalsIgnoreCase("equip")) {
+                //Equip here
+            }
+            else if(Command.equalsIgnoreCase("unequip")) {
+                //Unequip Here
+            }
         }
     }
+
+    //for user input STATS
+//    public void showStats() {
+//        System.out.println("Your current stats are:");
+//        System.out.println("Health: " + hp + "/100");
+//        System.out.println("Attack Damage: " + this.getAttackDMG());
+//        if (equippedWeapon != null) {
+//            //System.out.println("Current weapon: " + this.getEquippedWeapon());
+//        }
+//    }
+
 
 }

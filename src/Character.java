@@ -3,6 +3,7 @@ public class Character {
     int HP;
     int attackDMG;
 
+
     public Character(int HP, int attackDMG){
         this.HP = 100;
         this.attackDMG=attackDMG;
