@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class Puzzle {
+public class Puzzle {
     protected String puzzleID;
     protected String puzzleName;
     protected String roomID;
@@ -62,7 +62,7 @@ public abstract class Puzzle {
     }
 
     //prob not needed
-    public abstract boolean attemptSolve(String playerInput);
+    //public abstract boolean attemptSolve(String playerInput);
 
     public void decrementAttempts() {
         if (remainingAttempts > 0) {

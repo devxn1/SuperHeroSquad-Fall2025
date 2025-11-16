@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class Room {
     private String roomID;
-    private String biome;
+    //private String biome;
     private String roomName;
     private String roomDescription;
     private Map<String, String> exits;
@@ -28,24 +28,24 @@ public class Room {
 
 
 
-    public Room(String roomID, String biome,String roomName, String roomDescription, String north, String east, String south, String west, String isLockedBy) {
+    public Room(String roomID,String roomName, String roomDescription, boolean isVisted, List<String> Directions,String isLockedBy) {
         this.roomID = roomID;
-        this.biome = biome;
+        //this.biome = biome;
         this.roomName = roomName;
         this.roomDescription = roomDescription;
         this.exits = new HashMap<>();
-        if (north != null && !north.trim().isEmpty()) {
-            exits.put("north", north.trim());
-        }
-        if (east != null && !east.trim().isEmpty()) {
-            exits.put("east", east.trim());
-        }
-        if (south != null && !south.trim().isEmpty()) {
-            exits.put("south", south.trim());
-        }
-        if (west != null && !west.trim().isEmpty()) {
-            exits.put("west", west.trim());
-        }
+//        if (north != null && !north.trim().isEmpty()) {
+//            exits.put("north", north.trim());
+//        }
+//        if (east != null && !east.trim().isEmpty()) {
+//            exits.put("east", east.trim());
+//        }
+//        if (south != null && !south.trim().isEmpty()) {
+//            exits.put("south", south.trim());
+//        }
+//        if (west != null && !west.trim().isEmpty()) {
+//            exits.put("west", west.trim());
+//        }
 
         if (isLockedBy == null || isLockedBy.trim().isEmpty()) {
             this.isLockedBy = null;
@@ -144,7 +144,7 @@ public class Room {
         return getExit(direction) != null;
     }
 
-    public static String getExitDirection() {
+    public String getExitDirection() {
         List<String> directions = new ArrayList<>();
 
         if (exits.containsKey("north")) {

@@ -15,7 +15,7 @@ public static void loadGame(){
     RoomData = ParseRoomdata();
     ItemData = ParseItemData();
     MonsterData = ParseMonsterData();
-    PuzzleData = ParsePuzzleData();
+    //PuzzleData = ParsePuzzleData();
     registerCommands();
 
 }
@@ -24,14 +24,14 @@ public static void registerCommands(){
 
 }
 public static void NaviagationCommands(){
-    commandInputs.put("north", () -> Player.MoveDirection("north"));
-    commandInputs.put("south", () -> Player.MoveDirection("south"));
-    commandInputs.put("east", () -> Player.MoveDirection("east"));
-    commandInputs.put("west", () -> Player.MoveDirection("west"));
-    commandInputs.put("move north", () -> Player.MoveDirection("north"));
-    commandInputs.put("move south", () -> Player.MoveDirection("south"));
-    commandInputs.put("move east", () -> Player.MoveDirection("east"));
-    commandInputs.put("move west", () -> Player.MoveDirection("west"));
+    commandInputs.put("north", () -> Player.PlayerMoveDirection("north"));
+    commandInputs.put("south", () -> Player.PlayerMoveDirection("south"));
+    commandInputs.put("east", () -> Player.PlayerMoveDirection("east"));
+    commandInputs.put("west", () -> Player.PlayerMoveDirection("west"));
+    commandInputs.put("move north", () -> Player.PlayerMoveDirection("north"));
+    commandInputs.put("move south", () -> Player.PlayerMoveDirection("south"));
+    commandInputs.put("move east", () -> Player.PlayerMoveDirection("east"));
+    commandInputs.put("move west", () -> Player.PlayerMoveDirection("west"));
 }
 public static void welcomeMessage(){
     System.out.println("Welcome to the Adventure Game!");
@@ -77,9 +77,11 @@ public static void quitGame(){
 
                 List<String> directions = parseList(parts[4]);
                 List<String> items = parseList(parts[5]);
+
                 List<String> monsters = parseList(parts[6]);
 
-                Room room = new Room(id, name, description, isVisited, directions, items, monsters);
+
+                Room room = new Room(id,name, description,isVisited,directions,"");
                 rooms.add(room);
             }
 
@@ -187,9 +189,12 @@ public static void quitGame(){
                 int damage = Integer.parseInt(parts[6].trim());
                 List<String> drops = parseList(parts[7]);
                 ArrayList<Item> tempItems = new ArrayList<>();
-                for(int i=0; i<ItemData.size();i++){
-                    if(ItemData.get(i).getID().equalsIgnoreCase(String.valueOf(drops))){
-                        tempItems.add(ItemData.get(i));
+                for (String dropID : drops) {
+                    for (Item item : ItemData) {
+                        if (item.getID().equalsIgnoreCase(dropID)) {
+                            tempItems.add(item);
+                            break; // Found the item, no need to keep searching
+                        }
                     }
                 }
 
