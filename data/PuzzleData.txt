@@ -1,6 +1,6 @@
-P01/Stone Gate Ruins/C4/ALIGNMENT/Ancient stone runes are carved into the gateway. They can be rotated to point in different compass directions./3/0/ROOM_ACCESS/C5
-P02/Sun Dial/D3/TIMING/A towering stone sundial casts shifting shadows. The gnomon can be turned to different positions marked 0 through 12./4/0/ITEM/A01
-P03/TideLock/E1/TIMING/A heavy stone door blocks deeper passage into the sea cave. It seems connected to the tide somehow./5/0/ROOM_ACCESS/E2
-P04/Crystal Resonance/E3/SEQUENCE/Glowing crystals jut from the cavern walls. They hum faintly and seem to respond to touch./4/0/RECIPE/8
-P05/Wind Shrine/D5/SEQUENCE/Tall stones form a circle where wind howls unnaturally. Stone weights can be moved along carved grooves./4/0/ITEM/A02
-P06/Caldera Beacon/F5/ASSEMBLY/A stone platform awaits components to assemble the beacon that will signal your rescue./4/0/ITEM/A10
+P01/Stone Gate Ruins/C4/ALIGNMENT/Ancient stone runes are carved into the gateway. They can be rotated to point in different compass directions./3/C5
+P02/Sun Dial/D3/TIMING/A towering stone sundial casts shifting shadows. The gnomon can be turned to different positions marked 0 through 12./4/A01
+P03/TideLock/E1/TIMING/A heavy stone door blocks deeper passage into the sea cave. It seems connected to the tide somehow./5/E2
+P04/Crystal Resonance/E3/SEQUENCE/Glowing crystals jut from the cavern walls. They hum faintly and seem to respond to touch./4/R8
+P05/Wind Shrine/D5/SEQUENCE/Tall stones form a circle where wind howls unnaturally. Stone weights can be moved along carved grooves./4/A02
+P06/Caldera Beacon/F5/ASSEMBLY/A stone platform awaits components to assemble the beacon that will signal your rescue./4/A10
