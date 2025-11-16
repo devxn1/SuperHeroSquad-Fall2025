@@ -8,13 +8,14 @@
 
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.io.File;
 
 public class Player extends Character {
-    int CurrentRoom;
+    String CurrentRoom;
     int defense;
     int evasion;
     int hunger;
@@ -23,8 +24,9 @@ public class Player extends Character {
     private int hp;
     Weapon equippedWeapon;
     Armor equippedArmor;
+    ArrayList<Item> PlayerInventory;
 
-    public Player(int currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
+    public Player(String currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist,ArrayList<Item> PlayerInventory) {
         super(HP,attackDMG);
         this.CurrentRoom=currentRoom;
         this.HP=25;
@@ -36,6 +38,7 @@ public class Player extends Character {
         this.DayorNight=true;
         this.equippedWeapon=null;
         this.equippedArmor=null;
+        this.PlayerInventory=PlayerInventory;
 
     }
 
@@ -79,12 +82,20 @@ public class Player extends Character {
         DayorNight = dayorNight;
     }
 
-    public int getCurrentRoom() {
+    public String getCurrentRoom() {
         return CurrentRoom;
     }
 
-    public void setCurrentRoom(int currentRoom) {
+    public void setCurrentRoom(String currentRoom) {
         CurrentRoom = currentRoom;
+    }
+
+    public ArrayList<Item> getPlayerInventory() {
+        return PlayerInventory;
+    }
+
+    public void setPlayerInventory(ArrayList<Item> playerInventory) {
+        PlayerInventory = playerInventory;
     }
 
     //Display ALl their Stats
@@ -149,7 +160,7 @@ public class Player extends Character {
                 String[] split=line.split("/");
 
                 //Create Variables based on what would be stored in file then set them.
-                int TempCurrentRoom=Integer.parseInt(split[0]);
+                String TempCurrentRoom=split[0];
                 setCurrentRoom(TempCurrentRoom);
                 int TempHP=Integer.parseInt(split[1]);
                 setHP(TempHP);
