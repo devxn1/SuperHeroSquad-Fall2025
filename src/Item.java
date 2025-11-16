@@ -35,6 +35,8 @@ public abstract class Item {
     //abstract use for different items
     public abstract void use(Object player);
 
+    public abstract String getType();
+
     @Override
     public String toString(){
         return name + (" - ") + description;

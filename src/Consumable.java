@@ -1,4 +1,4 @@
-public class Consumable extends Item{
+public abstract class Consumable extends Item{
     private int healing;
 
     public Consumable(int id, String name, String description, int roomID, int healing){
@@ -14,14 +14,15 @@ public class Consumable extends Item{
         return "Consumable";
     }
 
-//    @Override
-//    public String toString() {
-//
-//    }
-
     public void use(Object player){
         if (player == null) {
-            System.out.println("?");
+            return;
         }
+            /*
+            //cap at 100 health, change 100 to change max start hp
+            int newHp = Math.min(player.getHP() + healing, 100);
+            player.setHp(newHp);
+            System.out.println(player.getName() + " healed for " + healing + " HP. Current HP: " + player.getHP());
+             */
     }
 }

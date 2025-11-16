@@ -1,4 +1,4 @@
-public class Armor extends Item {
+public abstract class Armor extends Item {
     private int defense;
     private int evasion;
     private int hpAdded;
@@ -26,16 +26,13 @@ public class Armor extends Item {
         return "Armor";
     }
 
-//    @Override
-//    public String toString() {
-//
-//    }
-
-    public void use(Object player){
-        if (player == null){
-            System.out.println("?");
+    public void use(Player player){
+        if (player == null) {
+            return;
         }
+            player.setEquippedArmor(this);
+            player.setDefense(player.getDefense() + defense);
+            player.setHp(player.getHP() + hpAdded);
+            System.out.println(player.getEquippedArmor().getName() + " equipped!");
     }
-
-
 }
