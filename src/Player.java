@@ -1,20 +1,21 @@
 /**Class: Inventory
- * @author Carkis Matos
+ * @author Carlos Matos
  * @version 1.0
  * Course:  ITEC3860 Fall 2025
- * Written: November 12, 2025
+ * Written: November 11, 2025
  * Purpose:To Track Player in the text based adventure Game and all their items they will interact with.
  */
 
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.io.File;
 
 public class Player extends Character {
-    int CurrentRoom;
+    String CurrentRoom;
     int defense;
     int evasion;
     int hunger;
@@ -23,8 +24,9 @@ public class Player extends Character {
     private int hp;
     Weapon equippedWeapon;
     Armor equippedArmor;
+    ArrayList<Item> PlayerInventory;
 
-    public Player(int currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist){
+    public Player(String currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist,ArrayList<Item> PlayerInventory) {
         super(HP,attackDMG);
         this.CurrentRoom=currentRoom;
         this.HP=25;
@@ -36,6 +38,7 @@ public class Player extends Character {
         this.DayorNight=true;
         this.equippedWeapon=null;
         this.equippedArmor=null;
+        this.PlayerInventory=PlayerInventory;
 
     }
 
@@ -79,12 +82,20 @@ public class Player extends Character {
         DayorNight = dayorNight;
     }
 
-    public int getCurrentRoom() {
+    public String getCurrentRoom() {
         return CurrentRoom;
     }
 
-    public void setCurrentRoom(int currentRoom) {
+    public void setCurrentRoom(String currentRoom) {
         CurrentRoom = currentRoom;
+    }
+
+    public ArrayList<Item> getPlayerInventory() {
+        return PlayerInventory;
+    }
+
+    public void setPlayerInventory(ArrayList<Item> playerInventory) {
+        PlayerInventory = playerInventory;
     }
 
     //Display ALl their Stats
@@ -119,7 +130,12 @@ public class Player extends Character {
                 //Going to print Room,HP,DMG,Defense,Evasion,Hunger,Thirst,(True or false) DayorNight
                 //Into player.txt file
                 fileoutput.println(getCurrentRoom()+"/"+getHP()+"/"+getAttackDMG()+"/"+getDefense());
-                fileoutput.print("/"+getEvasion()+"/"+getHunger()+"/"+getThrist()+"/"+isDayorNight());
+                fileoutput.print("/"+getEvasion()+"/"+getHunger()+"/"+getThrist()+"/"+isDayorNight()+"/");
+                StringBuilder temp= new StringBuilder();
+                for(Item T:getPlayerInventory()){
+                    temp.append(T.getName());
+                }
+                fileoutput.print(temp);
                 fileoutput.close();//<Remember to close to save buffer into file
 
                 //Will Add inventory later, it a pain to deal with SORRY!!!
@@ -149,7 +165,7 @@ public class Player extends Character {
                 String[] split=line.split("/");
 
                 //Create Variables based on what would be stored in file then set them.
-                int TempCurrentRoom=Integer.parseInt(split[0]);
+                String TempCurrentRoom=split[0];
                 setCurrentRoom(TempCurrentRoom);
                 int TempHP=Integer.parseInt(split[1]);
                 setHP(TempHP);
@@ -165,6 +181,8 @@ public class Player extends Character {
                 setThrist(TempThrist);
                 boolean tempTime=Boolean.parseBoolean(split[7]);
                 setDayorNight(tempTime);
+
+
 
                 //Below this would be inventory, and equipment, will work later
 
@@ -183,7 +201,10 @@ public class Player extends Character {
         Random rand=new Random();
         double chance=rand.nextDouble();
 
-        if(chance<0.95){
+        if(!tempMonster.isAlive()){
+            System.out.println("IT DEAD!");
+        }
+        else if(chance<0.95){
             //Debug message below to test out avoid mechanic
             System.out.println("You avoided combat");
         }

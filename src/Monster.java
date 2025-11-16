@@ -6,17 +6,18 @@
  * Purpose: Create Monster Class that will define the enemies in the game
  */
 
-
+import java.util.ArrayList;
 public class Monster extends Character{
-    private int ID;
+    private String ID;
     private String Name;
     private String Description;
-    private int IDLocation;
-    boolean IsAlive;
+    private String IDLocation;
+    boolean IsAlive=true;
+    ArrayList<Item> MonsterInventory;
 
 
 
-    public Monster(int HP, int attackDMG, int ID, String Name, String Description,int IDLocation,boolean IsAlive) {
+    public Monster( String ID, String Name, String Description,String IDLocation,int HP, int attackDMG, ArrayList<Item> MonsterInventory) {
         super(HP, attackDMG);
         this.HP=HP;
         this.attackDMG=attackDMG;
@@ -25,21 +26,22 @@ public class Monster extends Character{
         this.Name = Name;
         this.Description = Description;
         this.IsAlive = IsAlive;
+        this.MonsterInventory=MonsterInventory;
     }
 
-    public int getID() {
+    public String getID() {
         return ID;
     }
 
-    public void setID(int ID) {
+    public void setID(String ID) {
         this.ID = ID;
     }
 
-    public int getIDLocation() {
+    public String getIDLocation() {
         return IDLocation;
     }
 
-    public void setIDLocation(int IDLocation) {
+    public void setIDLocation(String IDLocation) {
         this.IDLocation = IDLocation;
     }
 
@@ -61,6 +63,14 @@ public class Monster extends Character{
 
     String displayerMonster(){
         return this.Name + "||" +this.Description;
+    }
+
+    public ArrayList<Item> getMonsterInventory() {
+        return MonsterInventory;
+    }
+
+    public void setMonsterInventory(ArrayList<Item> monsterInventory) {
+        MonsterInventory = monsterInventory;
     }
 
     //here you go Devin.
