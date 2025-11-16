@@ -1,5 +1,5 @@
 
-public abstract class Item {
+public  class Item {
     private int id;
     private String name;
     private String description;
@@ -33,11 +33,8 @@ public abstract class Item {
     }
 
     //abstract use for different items
-    public abstract void use(Object player);
 
-    public abstract String getType();
 
-    @Override
     public String toString(){
         return name + (" - ") + description;
     }
