@@ -63,23 +63,28 @@ public static void quitGame(){
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
-                String[] parts = line.split("/", -1);
-
-                if (parts.length < 7) {
-                    System.err.println("Malformed line: " + line);
+                String[] parts = line.split("/", -1); // keep empty values
+                if (parts.length < 8) {
+                    System.err.println("Malformed line (expecting 8 parts): " + line);
                     continue;
                 }
 
-                String id = parts[0];
-                String name = parts[1];
-                String description = parts[2];
-                boolean isVisited = Boolean.parseBoolean(parts[3]);
+                String id = parts[0].trim();
+                String name = parts[1].trim();
+                String description = parts[2].trim();
+                boolean isVisited = Boolean.parseBoolean(parts[3].trim());
 
                 List<String> directions = parseList(parts[4]);
                 List<String> items = parseList(parts[5]);
                 List<String> monsters = parseList(parts[6]);
 
-                Room room = new Room(id, name, description, isVisited, directions, items, monsters);
+                // Handle nullable isLocked
+                String isLockedRaw = parts[7].trim().toLowerCase();
+                Boolean isLocked = null;
+                if (isLockedRaw.equals("true")) isLocked = true;
+                else if (isLockedRaw.equals("false")) isLocked = false;
+
+                Room room = new Room(id, name, description, isVisited, directions, items, monsters, isLocked);
                 rooms.add(room);
             }
 
@@ -90,6 +95,7 @@ public static void quitGame(){
 
         return rooms;
     }
+
 
     private static List<String> parseList(String raw) {
         List<String> list = new ArrayList<>();
