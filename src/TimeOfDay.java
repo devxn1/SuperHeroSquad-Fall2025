@@ -1,8 +1,11 @@
-public class TimeOfDay extends Puzzle{
+abstract public class TimeOfDay extends Puzzle{
     private int currentHour;
     private int currentDay;
 
-    public TimeOfDay(int currentHour, int currentDay) {
+
+    public TimeOfDay(String puzzleID, String puzzleName, String roomID,
+                     String puzzleDescription, int puzzleAttempts, String rewardID,int currentHour, int currentDay) {
+        super(puzzleID,puzzleName,roomID,puzzleDescription,puzzleAttempts,rewardID);
         this.currentHour = currentHour;
         this.currentDay = currentDay;
     }
@@ -24,5 +27,33 @@ public class TimeOfDay extends Puzzle{
                 System.out.println("\nIt's night, the current hour is " + currentHour);
             }
         }
+
+
     }
+
+    public int getCurrentHour() {
+        return currentHour;
+    }
+
+    public void setCurrentHour(int currentHour) {
+        this.currentHour = currentHour;
+    }
+
+    public int getCurrentDay() {
+        return currentDay;
+    }
+
+    public void setCurrentDay(int currentDay) {
+        this.currentDay = currentDay;
+    }
+
+//    void DoPuzzle(){}
+//    int PuzzleClock=12;
+//    if(getCurrentHour()<=12){
+//        System.out.println("You are at a sunDial, there are 12 marks that resemable a clock with a long structure in the middle that make shadows of the hour hand.");
+//        while(true){
+//
+//        }
+//    }
+
 }

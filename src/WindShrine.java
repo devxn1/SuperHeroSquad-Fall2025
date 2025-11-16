@@ -1,7 +1,8 @@
-public class WindShrine extends Puzzle{
+abstract class WindShrine extends Puzzle{
     String weightPlacement;
-    public WindShrine(int ID, String Name, String Description, int PuzzleAtmpts, int Location, String weightPlacement) {
-        super(ID, Name, Description, PuzzleAtmpts, Location);
+    public WindShrine(String puzzleID, String puzzleName, String roomID,
+                      String puzzleDescription, int puzzleAttempts, String rewardID, String weightPlacement) {
+        super(puzzleID,puzzleName,roomID,puzzleDescription,puzzleAttempts,rewardID);
         this.weightPlacement = weightPlacement;
     }
     void placeWeights(){
