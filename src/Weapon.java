@@ -1,4 +1,4 @@
-abstract class Weapon extends Item {
+public abstract class Weapon extends Item {
     private int damage;
     private int DOT;
 
@@ -16,27 +16,23 @@ abstract class Weapon extends Item {
         this.damage = damage;
     }
 
+    public void addWeapon() {
+
+    }
+
+    public int getDOT() {
+        return DOT;
+    }
+
     void addWeapon() {
 
-
-//    public int getDOT(){
-//        return DOT;
-//    }
-//
-//    public String getType() {
-//        return "Weapon";
-//    }
-//
-//    public void use(Object player){
-//        if (player == null){
-//            System.out.println("?");
-//        }
-//    }
-
-
-//    @Override
-//    public String toString(){
-//
-//    }
+    public void use(Object player) {
+        if (player == null) {
+            return;
+        }
+        /*
+            player.setEquippedWeapon(this);
+            System.out.println(player.getEquippedWeapon().getName() + " equipped!");
+         */
     }
 }
