@@ -5,8 +5,6 @@
  * Written: November 11, 2025
  * Purpose:To Track Player in the text based adventure Game and all their items they will interact with.
  */
-
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -32,8 +30,8 @@ public class Player extends Character {
     public Player(String currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist,ArrayList<Item> PlayerInventory) {
         super(HP,attackDMG);
         this.CurrentRoom=currentRoom;
-        this.HP=25;
-        this.attackDMG=10;
+        this.HP=HP;
+        this.attackDMG=attackDMG;
         this.defense=defense;
         this.evasion=evasion;
         this.hunger=hunger;
@@ -96,12 +94,29 @@ public class Player extends Character {
         CurrentRoom = currentRoom;
     }
 
+    public static void MoveDirection(String direction){
+
+    }
+
+
     public ArrayList<Item> getPlayerInventory() {
         return PlayerInventory;
     }
 
     public void setPlayerInventory(ArrayList<Item> playerInventory) {
         PlayerInventory = playerInventory;
+    }
+
+    public void displayInventory() {
+        if (PlayerInventory.isEmpty()) {
+            System.out.println("You didn't pickup any items yet");
+        } else {
+            System.out.println("\t Inventory");
+            for (Item items : PlayerInventory) {
+                System.out.print(items.getName());
+            }
+            System.out.println();
+        }
     }
 
     public void PlayerMoveDirection(String direction) {
@@ -202,6 +217,50 @@ public class Player extends Character {
 
         }
 
+    }
+    //Thank you Devin, You're a Hero.
+    public void equipWeapon(String itemName) {
+        Item item = findItemFromInventory(itemName);
+
+        if (item == null) {
+            System.out.println("You don't have that item in your inventory");
+            return;
+        }
+
+        if (!(item instanceof Weapon)) {
+            System.out.println("That item cannot be equipped as a weapon");
+            return;
+        }
+
+        Weapon weapon = (Weapon) item;
+
+        if (equippedWeapon != null) {
+            System.out.println("Unequipped " + equippedWeapon.getName());
+        }
+
+        equippedWeapon = weapon;
+        System.out.println("Equipped " + equippedWeapon.getName() +
+                " (+" + equippedWeapon.getDamage() + " attack damage)");
+    }
+
+
+    public void unequipWeapon() {
+        if (equippedWeapon == null) {
+            System.out.println("You don't have any weapon equipped");
+            return;
+        }
+
+        System.out.println("Unequipped " + equippedWeapon.getName());
+        equippedWeapon = null;
+    }
+
+    private Item findItemFromInventory(String itemName) {
+        for (Item items : PlayerInventory) {
+            if (items.getName().equalsIgnoreCase(itemName)) {
+                return items;
+            }
+        }
+        return null;
     }
 
     void loadPlayer() {
@@ -335,6 +394,7 @@ public class Player extends Character {
                 }
             } else if (Command.equalsIgnoreCase("Inventory")) {
                 //Put inventory Here
+                displayInventory();
             }
             else if(Command.equalsIgnoreCase("Help")) {
                 showHelp();

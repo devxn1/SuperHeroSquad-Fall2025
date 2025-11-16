@@ -1,18 +1,18 @@
 
 public abstract class Item {
-    private int id;
+    private String id;
     private String name;
     private String description;
-    private int roomID;
+    private String roomID;
 
-    public Item(int id, String name, String description, int roomID) {
+    public Item(String id, String name, String description, int roomID) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.roomID = roomID;
     }
 
-    public int getID(){
+    public String getID(){
         return id;
     }
 
@@ -28,7 +28,7 @@ public abstract class Item {
         return roomID;
     }
 
-    public void setRoomID(int roomID){
+    public void setRoomID(String roomID){
         this.roomID = roomID;
     }
 
