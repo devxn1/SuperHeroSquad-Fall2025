@@ -15,10 +15,7 @@ public class Room {
     private String biome;
     private String roomName;
     private String roomDescription;
-    private String north;
-    private String east;
-    private String south;
-    private String west;
+    private Map<String, String> exits;
     private String isLockedBy;
     private boolean visited;
 
@@ -27,6 +24,7 @@ public class Room {
     private List<Item> items;
     private Puzzle puzzle;
     private Monster monster;
+    private AmbushMonster ambushMonster;
 
 
 
@@ -35,10 +33,26 @@ public class Room {
         this.biome = biome;
         this.roomName = roomName;
         this.roomDescription = roomDescription;
-        this.north = north;
-        this.east = east;
-        this.south = south;
-        this.west = west;
+        this.exits = new HashMap<>();
+        if (north != null && !north.trim().isEmpty()) {
+            exits.put("north", north.trim());
+        }
+        if (east != null && !east.trim().isEmpty()) {
+            exits.put("east", east.trim());
+        }
+        if (south != null && !south.trim().isEmpty()) {
+            exits.put("south", south.trim());
+        }
+        if (west != null && !west.trim().isEmpty()) {
+            exits.put("west", west.trim());
+        }
+
+        if (isLockedBy == null || isLockedBy.trim().isEmpty()) {
+            this.isLockedBy = null;
+        } else {
+            this.isLockedBy = isLockedBy.trim();
+        }
+
         //this.isLockedBy = isLockedBy;
         if (isLockedBy == null || isLockedBy.trim().isEmpty()) {
             this.isLockedBy = null;
@@ -52,6 +66,8 @@ public class Room {
         this.items = new ArrayList<>();
         this.puzzle = null;
         this.monster = null;
+        this.ambushMonster = null;
+
     }
 
     public String getRoomID() {
@@ -71,19 +87,19 @@ public class Room {
     }
 
     public String getNorth() {
-        return north;
+        return exits.get("north");
     }
 
     public String getEast() {
-        return east;
+        return exits.get("east");
     }
 
     public String getSouth() {
-        return south;
+        return exits.get("south");
     }
 
     public String getWest() {
-        return west;
+        return exits.get("west");
     }
 
     public String getIsLockedBy() {
@@ -101,39 +117,27 @@ public class Room {
     //Handling direction
 
     public String getExit(String direction) {
-        switch (direction.toLowerCase()) {
+        String dir = direction.toLowerCase();
+        switch (dir) {
             case "north":
             case "n":
-                return north;
+                return exits.get("north");
             case "east":
             case "e":
-                return east;
+                return exits.get("east");
             case "south":
             case "s":
-                return south;
+                return exits.get("south");
             case "west":
             case "w":
-                return west;
+                return exits.get("west");
             default:
                 return null;
         }
     }
 
     public List<String> getAvailableDirections() {
-        List<String> directions = new ArrayList<>();
-        if (north != null && !north.isEmpty()) {
-            directions.add(north);
-        }
-        if (east != null && !east.isEmpty()) {
-            directions.add(east);
-        }
-        if (south != null && !south.isEmpty()) {
-            directions.add(south);
-        }
-        if (west != null && !west.isEmpty()) {
-            directions.add(west);
-        }
-        return directions;
+        return new ArrayList<>(exits.values());
     }
 
     public boolean hasExit(String direction) {
@@ -143,18 +147,19 @@ public class Room {
     public static String getExitDirection() {
         List<String> directions = new ArrayList<>();
 
-        if (north != null && !north.isEmpty()) {
+        if (exits.containsKey("north")) {
             directions.add("↑ North");
         }
-        if (east != null && !east.isEmpty()) {
+        if (exits.containsKey("east")) {
             directions.add("→ East");
         }
-        if (south != null && !south.isEmpty()) {
+        if (exits.containsKey("south")) {
             directions.add("↓ South");
         }
-        if (west != null && !west.isEmpty()) {
+        if (exits.containsKey("west")) {
             directions.add("← West");
         }
+
         if (directions.isEmpty()) {
             return "Exits: None";
         }
@@ -269,6 +274,10 @@ public class Room {
     public void setMonster(Monster monster) {
         this.monster = monster;
     }
+    public void setMonster(AmbushMonster ambushMonster) {
+        this.ambushMonster = ambushMonster;
+    }
+
 
     public Monster getMonster() {
         return monster;
@@ -283,10 +292,15 @@ public class Room {
     }
 
     public String getMonstersList() {
-        if (monster == null) {
-            return "None";
+        if (ambushMonster != null && ambushMonster.isAlive()) {
+            return ambushMonster.getName() + " - " + ambushMonster.getDescription();
         }
-        return monster.isAlive() ? monster.getName() : "None";
+
+        if (monster != null && monster.isAlive()) {
+            return monster.getName() + " - " + monster.getDescription();
+        }
+
+        return "";
     }
 
 
@@ -303,6 +317,10 @@ public class Room {
             sb.append(displayItems());
         }
 
+        String monsterInfo = getMonstersList();
+        if (!monsterInfo.isEmpty()) {
+            sb.append("Monster in the room!").append("\n").append(monsterInfo).append("\n");
+        }
 
         if (hasPuzzle() && !getPuzzle().isSolved()) {
             sb.append("\nThere's a puzzle here to solve!");

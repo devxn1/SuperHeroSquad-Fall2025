@@ -48,7 +48,63 @@ public class GameDemo {
     }
 
     private void getMonsterTable() {
+        String sql = "SELECT monsterID, name, description, roomID, hp, damage, type FROM Monster";
+        ResultSet rs = dbManager.executeQuery(sql);
 
+        try {
+            while (rs.next()) {
+                String monsterID = rs.getString("monsterID");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                String roomID = rs.getString("roomID");
+                int health = rs.getInt("health");
+                int damage = rs.getInt("damage");
+                String type = rs.getString("type");
+
+                boolean isAlive = health > 0;
+
+
+
+                if ("Predator".equalsIgnoreCase(type)) {
+                    double ambushChance = 0.75;  // Default 75%
+
+                    // Try to get from database if column exists
+                    try {
+                        ambushChance = rs.getDouble("ambushChance");
+                        if (ambushChance == 0.0) {
+                            ambushChance = 0.75;
+                        }
+                    } catch (SQLException e) {
+                        // Column doesn't exist, use default
+                    }
+
+                    AmbushMonster AmbushMonster = new AmbushMonster(health, damage, monsterID,
+                            name, description, roomID,
+                            isAlive, ambushChance);
+
+//                    System.out.println("Loaded ambush monster: " + name +
+//                            " (" + (int)(ambushChance * 100) + "% ambush)");
+                } else {
+                    // Create regular Monster for all other types
+                    int idLocation = 0;  // Not used
+                    Monster monster = new Monster(health, damage, ID,
+                            name, description, idLocation, isAlive);
+
+                }
+
+                // Add to room
+                if (roomID != null && !roomID.isEmpty()) {
+                    Room room = allRoom.get(roomID);
+                    if (room != null) {
+                        room.setMonster(monster);
+                    }
+                }
+            }
+            System.out.println("Monsters loaded successfully");
+        } catch (SQLException e) {
+            System.err.println("Error loading monsters: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 
