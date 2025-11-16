@@ -1,8 +1,8 @@
 /**Class: Inventory
- * @author Carkis Matos
+ * @author Carlos Matos
  * @version 1.0
  * Course:  ITEC3860 Fall 2025
- * Written: November 12, 2025
+ * Written: November 11, 2025
  * Purpose:To Track Player in the text based adventure Game and all their items they will interact with.
  */
 
@@ -130,7 +130,12 @@ public class Player extends Character {
                 //Going to print Room,HP,DMG,Defense,Evasion,Hunger,Thirst,(True or false) DayorNight
                 //Into player.txt file
                 fileoutput.println(getCurrentRoom()+"/"+getHP()+"/"+getAttackDMG()+"/"+getDefense());
-                fileoutput.print("/"+getEvasion()+"/"+getHunger()+"/"+getThrist()+"/"+isDayorNight());
+                fileoutput.print("/"+getEvasion()+"/"+getHunger()+"/"+getThrist()+"/"+isDayorNight()+"/");
+                StringBuilder temp= new StringBuilder();
+                for(Item T:getPlayerInventory()){
+                    temp.append(T.getName());
+                }
+                fileoutput.print(temp);
                 fileoutput.close();//<Remember to close to save buffer into file
 
                 //Will Add inventory later, it a pain to deal with SORRY!!!
@@ -177,6 +182,8 @@ public class Player extends Character {
                 boolean tempTime=Boolean.parseBoolean(split[7]);
                 setDayorNight(tempTime);
 
+
+
                 //Below this would be inventory, and equipment, will work later
 
             }
@@ -194,7 +201,10 @@ public class Player extends Character {
         Random rand=new Random();
         double chance=rand.nextDouble();
 
-        if(chance<0.95){
+        if(!tempMonster.isAlive()){
+            System.out.println("IT DEAD!");
+        }
+        else if(chance<0.95){
             //Debug message below to test out avoid mechanic
             System.out.println("You avoided combat");
         }

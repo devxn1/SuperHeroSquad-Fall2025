@@ -5,7 +5,7 @@ public class Character {
 
 
     public Character(int HP, int attackDMG){
-        this.HP = 100;
+        this.HP =HP;
         this.attackDMG=attackDMG;
     }
     public int getHP() {
