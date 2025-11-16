@@ -6,12 +6,9 @@
  * Purpose:To Track Player in the text based adventure Game and all their items they will interact with.
  */
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.io.PrintWriter;
 import java.io.File;
-import java.util.List;
 
 public class Player extends Character {
     static String CurrentRoom;
@@ -26,8 +23,10 @@ public class Player extends Character {
     ArrayList<Item> PlayerInventory;
     ArrayList<Artifact> ArtifactInventory;
     ArrayList<Recipe> MaterialInventory;
+    private Map<String, Room> world;
 
-    public Player(String currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist,ArrayList<Item> PlayerInventory) {
+
+    public Player(String currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist,ArrayList<Item> PlayerInventory, Map<String, Room> world) {
         super(HP,attackDMG);
         CurrentRoom=currentRoom;
         this.HP=HP;
@@ -42,7 +41,7 @@ public class Player extends Character {
         this.PlayerInventory=PlayerInventory;
         this.ArtifactInventory=new ArrayList<>();
         this.MaterialInventory=new ArrayList<>();
-
+        this.world = world;
     }
 
 
@@ -117,10 +116,10 @@ public class Player extends Character {
 
     public static void PlayerMoveDirection(String direction) {
 
-        // 1. Find the current room object based on this.CurrentRoom
+        // 1. Find current room
         Room currentRoom = null;
         for (Room r : Game.RoomData) {
-            if (r.getRoomID().equals(currentRoom.getRoomID())) {
+            if (r.getRoomID().equals(CurrentRoom)) {   // FIXED: compare to CurrentRoom STRING
                 currentRoom = r;
                 break;
             }
@@ -131,19 +130,18 @@ public class Player extends Character {
             return;
         }
 
-        // 2. Get the exit room ID (north, south, east, west)
+        // 2. Get destination
         String nextRoomID = currentRoom.getExit(direction);
 
-        if (nextRoomID == null || nextRoomID.isEmpty() || nextRoomID.equals("0")) {
+        if (nextRoomID == null || nextRoomID.equals("0") || nextRoomID.isEmpty()) {
             System.out.println("You cannot go " + direction + " from here.");
             return;
         }
 
-        // 3. Move player into next room
+        // 3. Update player location
         CurrentRoom = nextRoomID;
 
-
-        // 4. Retrieve next room object
+        // 4. Find destination room
         Room nextRoom = null;
         for (Room r : Game.RoomData) {
             if (r.getRoomID().equals(nextRoomID)) {
@@ -152,16 +150,17 @@ public class Player extends Character {
             }
         }
 
+        if (nextRoom == null) {
+            System.out.println("ERROR: Destination room not found.");
+            return;
+        }
 
-
-        // 5. Print full room info
+        // 5. Show room details
         System.out.println("\nYou move " + direction + "...");
         System.out.println(nextRoom.getFullRoomInfo());
 
-        // Optional: mark visited
         nextRoom.visit();
 
-        // Optional: monster check
         if (nextRoom.hasMonster() && nextRoom.getMonster().isAlive()) {
             System.out.println("\n⚠ A monster is here: " + nextRoom.getMonster().getName());
         }
