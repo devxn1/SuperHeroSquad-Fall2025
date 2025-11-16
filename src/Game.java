@@ -18,4 +18,5 @@ public static void quitgame(){
 public static void lost(){
     System.out.println();
 }
+
 }
