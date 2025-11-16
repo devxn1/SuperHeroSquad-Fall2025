@@ -5,14 +5,13 @@
  * Written: November 11, 2025
  * Purpose:To Track Player in the text based adventure Game and all their items they will interact with.
  */
-
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.io.File;
+import java.util.List;
 
 public class Player extends Character {
     String CurrentRoom;
@@ -25,12 +24,14 @@ public class Player extends Character {
     Weapon equippedWeapon;
     Armor equippedArmor;
     ArrayList<Item> PlayerInventory;
+    ArrayList<Artifact> ArtifactInventory;
+    ArrayList<Recipe> MaterialInventory;
 
     public Player(String currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist,ArrayList<Item> PlayerInventory) {
         super(HP,attackDMG);
         this.CurrentRoom=currentRoom;
-        this.HP=25;
-        this.attackDMG=10;
+        this.HP=HP;
+        this.attackDMG=attackDMG;
         this.defense=defense;
         this.evasion=evasion;
         this.hunger=hunger;
@@ -39,8 +40,11 @@ public class Player extends Character {
         this.equippedWeapon=null;
         this.equippedArmor=null;
         this.PlayerInventory=PlayerInventory;
+        this.ArtifactInventory=new ArrayList<>();
+        this.MaterialInventory=new ArrayList<>();
 
     }
+
 
     public int getDefense() {
         return defense;
@@ -90,6 +94,11 @@ public class Player extends Character {
         CurrentRoom = currentRoom;
     }
 
+    public static void MoveDirection(String direction){
+
+    }
+
+
     public ArrayList<Item> getPlayerInventory() {
         return PlayerInventory;
     }
@@ -98,6 +107,68 @@ public class Player extends Character {
         PlayerInventory = playerInventory;
     }
 
+    public void displayInventory() {
+        if (PlayerInventory.isEmpty()) {
+            System.out.println("You didn't pickup any items yet");
+        } else {
+            System.out.println("\t Inventory");
+            for (Item items : PlayerInventory) {
+                System.out.print(items.getName());
+            }
+            System.out.println();
+        }
+    }
+
+    public void PlayerMoveDirection(String direction) {
+
+        // 1. Find the current room object based on this.CurrentRoom
+        Room currentRoom = null;
+        for (Room r : Game.RoomData) {
+            if (r.getRoomID().equals(this.CurrentRoom)) {
+                currentRoom = r;
+                break;
+            }
+        }
+
+        if (currentRoom == null) {
+            System.out.println("ERROR: Player is in an invalid room.");
+            return;
+        }
+
+        // 2. Get the exit room ID (north, south, east, west)
+        String nextRoomID = currentRoom.getExit(direction);
+
+        if (nextRoomID == null || nextRoomID.isEmpty() || nextRoomID.equals("0")) {
+            System.out.println("You cannot go " + direction + " from here.");
+            return;
+        }
+
+        // 3. Move player into next room
+        this.CurrentRoom = nextRoomID;
+
+        // 4. Retrieve next room object
+        Room nextRoom = null;
+        for (Room r : Game.RoomData) {
+            if (r.getRoomID().equals(nextRoomID)) {
+                nextRoom = r;
+                break;
+            }
+        }
+
+
+
+        // 5. Print full room info
+        System.out.println("\nYou move " + direction + "...");
+        System.out.println(nextRoom.getFullRoomInfo());
+
+        // Optional: mark visited
+        nextRoom.visit();
+
+        // Optional: monster check
+        if (nextRoom.hasMonster() && nextRoom.getMonster().isAlive()) {
+            System.out.println("\n⚠ A monster is here: " + nextRoom.getMonster().getName());
+        }
+    }
     //Display ALl their Stats
     void displayStats() {
         System.out.println("HP: " + getHP()+"/100");
@@ -146,6 +217,50 @@ public class Player extends Character {
 
         }
 
+    }
+    //Thank you Devin, You're a Hero.
+    public void equipWeapon(String itemName) {
+        Item item = findItemFromInventory(itemName);
+
+        if (item == null) {
+            System.out.println("You don't have that item in your inventory");
+            return;
+        }
+
+        if (!(item instanceof Weapon)) {
+            System.out.println("That item cannot be equipped as a weapon");
+            return;
+        }
+
+        Weapon weapon = (Weapon) item;
+
+        if (equippedWeapon != null) {
+            System.out.println("Unequipped " + equippedWeapon.getName());
+        }
+
+        equippedWeapon = weapon;
+        System.out.println("Equipped " + equippedWeapon.getName() +
+                " (+" + equippedWeapon.getDamage() + " attack damage)");
+    }
+
+
+    public void unequipWeapon() {
+        if (equippedWeapon == null) {
+            System.out.println("You don't have any weapon equipped");
+            return;
+        }
+
+        System.out.println("Unequipped " + equippedWeapon.getName());
+        equippedWeapon = null;
+    }
+
+    private Item findItemFromInventory(String itemName) {
+        for (Item items : PlayerInventory) {
+            if (items.getName().equalsIgnoreCase(itemName)) {
+                return items;
+            }
+        }
+        return null;
     }
 
     void loadPlayer() {
@@ -279,6 +394,7 @@ public class Player extends Character {
                 }
             } else if (Command.equalsIgnoreCase("Inventory")) {
                 //Put inventory Here
+                displayInventory();
             }
             else if(Command.equalsIgnoreCase("Help")) {
                 showHelp();

@@ -16,7 +16,6 @@ public class Monster extends Character{
     ArrayList<Item> MonsterInventory;
 
 
-
     public Monster( String ID, String Name, String Description,String IDLocation,int HP, int attackDMG, ArrayList<Item> MonsterInventory) {
         super(HP, attackDMG);
         this.HP=HP;
