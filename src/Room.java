@@ -140,7 +140,7 @@ public class Room {
         return getExit(direction) != null;
     }
 
-    public String getExitDirection() {
+    public static String getExitDirection() {
         List<String> directions = new ArrayList<>();
 
         if (north != null && !north.isEmpty()) {
