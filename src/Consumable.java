@@ -14,15 +14,13 @@ public abstract class Consumable extends Item{
         return "Consumable";
     }
 
-    public void use(Object player){
-        if (player == null) {
-            return;
-        }
-            /*
-            //cap at 100 health, change 100 to change max start hp
+    public void use(Object playerObj) {
+        if (playerObj instanceof Player player) {
             int newHp = Math.min(player.getHP() + healing, 100);
-            player.setHp(newHp);
-            System.out.println(player.getName() + " healed for " + healing + " HP. Current HP: " + player.getHP());
-             */
+            player.setHP(newHp);
+            System.out.println(player.getHP() + " HP after using " + this.getName());
+        } else {
+            System.out.println("This item can only be used by a player.");
+        }
     }
 }
