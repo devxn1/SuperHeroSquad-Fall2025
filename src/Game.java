@@ -15,7 +15,7 @@ public static void loadGame(){
     RoomData = ParseRoomdata();
     ItemData = ParseItemData();
     MonsterData = ParseMonsterData();
-    PuzzleData = ParsePuzzleData();
+    //PuzzleData = ParsePuzzleData();
     registerCommands();
 
 }
@@ -24,14 +24,14 @@ public static void registerCommands(){
 
 }
 public static void NaviagationCommands(){
-    commandInputs.put("north", () -> Player.MoveDirection("north"));
-    commandInputs.put("south", () -> Player.MoveDirection("south"));
-    commandInputs.put("east", () -> Player.MoveDirection("east"));
-    commandInputs.put("west", () -> Player.MoveDirection("west"));
-    commandInputs.put("move north", () -> Player.MoveDirection("north"));
-    commandInputs.put("move south", () -> Player.MoveDirection("south"));
-    commandInputs.put("move east", () -> Player.MoveDirection("east"));
-    commandInputs.put("move west", () -> Player.MoveDirection("west"));
+    commandInputs.put("north", () -> Player.PlayerMoveDirection("north"));
+    commandInputs.put("south", () -> Player.PlayerMoveDirection("south"));
+    commandInputs.put("east", () -> Player.PlayerMoveDirection("east"));
+    commandInputs.put("west", () -> Player.PlayerMoveDirection("west"));
+    commandInputs.put("move north", () -> Player.PlayerMoveDirection("north"));
+    commandInputs.put("move south", () -> Player.PlayerMoveDirection("south"));
+    commandInputs.put("move east", () -> Player.PlayerMoveDirection("east"));
+    commandInputs.put("move west", () -> Player.PlayerMoveDirection("west"));
 }
 public static void welcomeMessage(){
     System.out.println("Welcome to the Adventure Game!");
@@ -63,28 +63,25 @@ public static void quitGame(){
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
-                String[] parts = line.split("/", -1); // keep empty values
-                if (parts.length < 8) {
-                    System.err.println("Malformed line (expecting 8 parts): " + line);
+                String[] parts = line.split("/", -1);
+
+                if (parts.length < 7) {
+                    System.err.println("Malformed line: " + line);
                     continue;
                 }
 
-                String id = parts[0].trim();
-                String name = parts[1].trim();
-                String description = parts[2].trim();
-                boolean isVisited = Boolean.parseBoolean(parts[3].trim());
+                String id = parts[0];
+                String name = parts[1];
+                String description = parts[2];
+                boolean isVisited = Boolean.parseBoolean(parts[3]);
 
                 List<String> directions = parseList(parts[4]);
                 List<String> items = parseList(parts[5]);
+
                 List<String> monsters = parseList(parts[6]);
 
-                // Handle nullable isLocked
-                String isLockedRaw = parts[7].trim().toLowerCase();
-                Boolean isLocked = null;
-                if (isLockedRaw.equals("true")) isLocked = true;
-                else if (isLockedRaw.equals("false")) isLocked = false;
 
-                Room room = new Room(id, name, description, isVisited, directions, items, monsters, isLocked);
+                Room room = new Room(id,name, description,isVisited,directions,"");
                 rooms.add(room);
             }
 
@@ -95,7 +92,6 @@ public static void quitGame(){
 
         return rooms;
     }
-
 
     private static List<String> parseList(String raw) {
         List<String> list = new ArrayList<>();
@@ -193,9 +189,12 @@ public static void quitGame(){
                 int damage = Integer.parseInt(parts[6].trim());
                 List<String> drops = parseList(parts[7]);
                 ArrayList<Item> tempItems = new ArrayList<>();
-                for(int i=0; i<ItemData.size();i++){
-                    if(ItemData.get(i).getID().equalsIgnoreCase(String.valueOf(drops))){
-                        tempItems.add(ItemData.get(i));
+                for (String dropID : drops) {
+                    for (Item item : ItemData) {
+                        if (item.getID().equalsIgnoreCase(dropID)) {
+                            tempItems.add(item);
+                            break; // Found the item, no need to keep searching
+                        }
                     }
                 }
 

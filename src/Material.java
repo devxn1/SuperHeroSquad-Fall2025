@@ -1,6 +1,8 @@
+import java.util.List;
+
 public class Material extends Item  {
 
-    public Material(String id, String name, String description, int location) {
+    public Material(String id, String name, String description, List<String> location) {
         super(id,name,description,location);
 
     }
