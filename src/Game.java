@@ -105,9 +105,101 @@ public static void quitGame(){
     }
 
     public static ArrayList<Item> ParseItemData() {
-    ArrayList<Item> items = new ArrayList<Item>();
+        ArrayList<Item> items = new ArrayList<>();
 
-    return items;
+        try (InputStream inputStream = Game.class.getClassLoader().getResourceAsStream("data/ItemData.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split("/", -1);
+                String category = parts[0].trim();
+                String id = parts[1].trim();
+                String name = parts[2].trim();
+                String desc = parts[3].trim();
+
+                switch (category.toLowerCase()) {
+                    case "artifact": {
+                        List<String> locs = parseList(parts[4]);
+                        items.add(new Artifact(id, name, desc, locs));
+                        break;
+                    }
+                    case "material": {
+                        List<String> locs = parseList(parts[4]);
+                        items.add(new Material(id, name, desc, locs));
+                        break;
+                    }
+                    case "armor": {
+                        List<String> locs = parseList(parts[4]);
+                        int defensePoints = Integer.parseInt(parts[5].trim());
+                        items.add(new Armor(id, name, desc, locs, defensePoints));
+                        break;
+                    }
+                    case "consumable": {
+                        List<String> locs = parseList(parts[4]);
+                        int healingAmount = Integer.parseInt(parts[5].trim());
+                        items.add(new Consumable(id, name, desc, locs, healingAmount));
+                        break;
+                    }
+                    case "weapon": {
+                        List<String> locs = parseList(parts[4]);
+                        int damage = Integer.parseInt(parts[5].trim());
+                        int dot = Integer.parseInt(parts[6].trim());
+                        items.add(new Weapon(id, name, desc, locs, damage, dot));
+                        break;
+                    }
+                    default:
+                        System.err.println("Unknown item category: " + category + " in line: " + line);
+                }
+            }
+
+        } catch (Exception e) {
+            System.err.println("Failed to parse ItemData.txt: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return items;
+    }
+    public static ArrayList<Monster> ParseMonsterData() {
+        ArrayList<Monster> monsters = new ArrayList<>();
+
+        try (InputStream inputStream = Game.class.getClassLoader().getResourceAsStream("data/MonsterData.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split("/", -1);
+                if (parts.length < 8) {
+                    System.err.println("Malformed monster line: " + line);
+                    continue;
+                }
+
+                String category = parts[0].trim();
+                String id = parts[1].trim();
+                String name = parts[2].trim();
+                String description = parts[3].trim();
+                String location = parts[4].trim();
+                int health = Integer.parseInt(parts[5].trim());
+                int damage = Integer.parseInt(parts[6].trim());
+                List<String> drops = parseList(parts[7]);
+
+                Monster monster = new Monster(category, id, name, description, location, health, damage, drops);
+                monsters.add(monster);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Failed to load MonsterData.txt: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return monsters;
+    }
+
 }
-}
+
+
 

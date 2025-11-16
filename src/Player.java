@@ -6,8 +6,9 @@ public class Player extends Character {
     int evasion;
     int hunger;
     int thrist;
+    private String currentRoomid;
     boolean DayorNight;
-    private int hp;
+    private int hp = 100;
     Weapon equippedWeapon;
     Armor equippedArmor;
     public static ArrayList<Item> inventory = new ArrayList<Item>();
@@ -27,6 +28,9 @@ public class Player extends Character {
         this.DayorNight=true;
         this.equippedWeapon=null;
         this.equippedArmor=null;
+
+    }
+    public static void PlayerMoveDirection(String direction) {
 
     }
 
