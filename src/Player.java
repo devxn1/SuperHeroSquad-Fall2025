@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.List;
 
 public class Player extends Character {
-    String CurrentRoom;
+    static String CurrentRoom;
     int defense;
     int evasion;
     int hunger;
@@ -29,7 +29,7 @@ public class Player extends Character {
 
     public Player(String currentRoom,int HP, int attackDMG,int defense,int evasion,int hunger,int thrist,ArrayList<Item> PlayerInventory) {
         super(HP,attackDMG);
-        this.CurrentRoom=currentRoom;
+        CurrentRoom=currentRoom;
         this.HP=HP;
         this.attackDMG=attackDMG;
         this.defense=defense;
@@ -94,10 +94,6 @@ public class Player extends Character {
         CurrentRoom = currentRoom;
     }
 
-    public static void MoveDirection(String direction){
-
-    }
-
 
     public ArrayList<Item> getPlayerInventory() {
         return PlayerInventory;
@@ -119,12 +115,12 @@ public class Player extends Character {
         }
     }
 
-    public void PlayerMoveDirection(String direction) {
+    public static void PlayerMoveDirection(String direction) {
 
         // 1. Find the current room object based on this.CurrentRoom
         Room currentRoom = null;
         for (Room r : Game.RoomData) {
-            if (r.getRoomID().equals(this.CurrentRoom)) {
+            if (r.getRoomID().equals(currentRoom.getRoomID())) {
                 currentRoom = r;
                 break;
             }
@@ -144,7 +140,8 @@ public class Player extends Character {
         }
 
         // 3. Move player into next room
-        this.CurrentRoom = nextRoomID;
+        CurrentRoom = nextRoomID;
+
 
         // 4. Retrieve next room object
         Room nextRoom = null;
@@ -305,9 +302,7 @@ public class Player extends Character {
 
     }
 
-    void sleep() {
 
-    }
 
     void avoid(Monster tempMonster) {
         //It going to be 95% chance to avoid monster encounter
@@ -399,14 +394,14 @@ public class Player extends Character {
             else if(Command.equalsIgnoreCase("Help")) {
                 showHelp();
             }
-            else if(Command.equalsIgnoreCase("Item")) {
-                //item use here in combat
-            }
             else if(Command.equalsIgnoreCase("equip")) {
                 //Equip here
             }
             else if(Command.equalsIgnoreCase("unequip")) {
                 //Unequip Here
+            }
+            else{
+                System.out.println("Incorrect Command");
             }
         }
     }

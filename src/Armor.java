@@ -1,14 +1,18 @@
+import java.util.List;
+
 public class Armor extends Item {
     private int defense;
     private int evasion;
     private int hpAdded;
 
-    public Armor(String id, String name, String description, String roomID, int defense, int evasion, int hpAdded){
+    public Armor(String id, String name, String description, List<String> roomID, int defense){
         super(id, name, description, roomID);
         this.defense = defense;
         this.evasion = evasion;
         this.hpAdded = hpAdded;
     }
+
+
 
     public int getDefense() {
         return defense;

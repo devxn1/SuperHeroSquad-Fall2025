@@ -1,15 +1,69 @@
-/*
 import java.util.*;
 import java.io.*;
 
 public class Main {
     private Player player;
     private Map<String, Room> world = new HashMap<>();
+    private Map<String, Item> items = new HashMap<>();
 
     public static void main(String[] args) {
         Main main = new Main();
+        main.loadItems("ItemData.txt");
         main.loadRooms("RoomData.txt");
         main.start();
+    }
+
+    private static List<String> parseList(String raw) {
+        List<String> list = new ArrayList<>();
+        if (raw != null && !raw.trim().isEmpty()) {
+            for (String part : raw.split(",")) {
+                String trimmed = part.trim();
+                if (!trimmed.isEmpty() && !trimmed.equals("0")) {
+                    list.add(trimmed);
+                }
+            }
+        }
+        return list;
+    }
+
+    private void loadItems(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("/", -1);
+
+                String type = parts[0];
+                String id = parts[1];
+                String name = parts[2];
+                String desc = parts[3];
+
+                Item item;
+
+                switch (type) {
+                    case "Weapon" -> {
+                        List<String> locs = parseList(parts[4]);
+                        int damage = Integer.parseInt(parts[5]);
+                        int element = Integer.parseInt(parts[6]);
+                        item = new Weapon(id, name, desc, locs, damage, element);
+                    }
+                    case "Armor" -> {
+                        List<String> locs = parseList(parts[4]);
+                        int defense = Integer.parseInt(parts[5]);
+                        item = new Armor(id, name, desc, locs, defense);
+                    }
+                    case "Consumable" -> {
+                        List<String> locs = parseList(parts[4]);
+                        int heal = Integer.parseInt(parts[5]);
+                        item = new Consumable(id, name, desc, locs, heal);
+                    }
+                    default -> item = new Item(id, name, desc,null );
+                }
+
+                items.put(id, item);
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading items: " + e.getMessage());
+        }
     }
 
     private void loadRooms(String filename) {
@@ -23,8 +77,9 @@ public class Main {
                 String description = parts[2];
                 boolean locked = Boolean.parseBoolean(parts[3]);
 
-                // Exits
+                //Exits
                 String[] exitParts = parts[4].split(",", -1);
+                List<String> locs = parseList(parts[4]);
                 String north = exitParts[0].equals("0") ? null : exitParts[0];
                 String south = exitParts[1].equals("0") ? null : exitParts[1];
                 String east = exitParts[2].equals("0") ? null : exitParts[2];
@@ -35,7 +90,10 @@ public class Main {
                 if (parts.length > 5 && !parts[5].isBlank()) {
                     String[] itemIds = parts[5].split(",");
                     for (String itemId : itemIds) {
-                        items.add(new Item(itemId));
+                        Item base = this.items.get(itemId);
+                        if (base != null) {
+                            items.add(base);
+                        }
                     }
                 }
 
@@ -45,7 +103,10 @@ public class Main {
                     puzzles.addAll(Arrays.asList(parts[6].split(",")));
                 }
 
-                Room room = new Room(id, name, description, locked, north, south, east, west, items, puzzles);
+                //Create Room
+                Room room = new Room(id, "DefaultBiome", name, false,locs, locked ? "LOCKED" : null);
+
+                for (Item it : items) room.addItemToRoom(it);
                 world.put(id, room);
             }
         } catch (IOException e) {
@@ -60,8 +121,7 @@ public class Main {
         System.out.println("Superhero Squad Final Project Implementation");
         System.out.println("Commands: North/n, South/s, East/e, West/w,\nLook/Inspect, Take/Grab, Gather,\nCraft, Build, Use, Map/m, Journal/j,\nInventory/i, Sleep, Stats, Save/Load, Help/?, Quit");
 
-        List<Item> playerInventory = new ArrayList<>();
-        player = new Player("A1", 100, 5, 5, 5, 100, 100, playerInventory);
+        player = new Player("A1", 100, 5, 5, 5, 100, 100, new ArrayList<>());
 
         //Game loop
         while (true) {
@@ -77,10 +137,14 @@ public class Main {
                 case "STATS" -> player.displayStats();
                 case "HELP", "?" -> player.showHelp();
                 case "LOOK", "INSPECT" -> lookAround();
-                //case "NORTH", "N", "SOUTH", "S", "EAST", "E", "WEST", "W" -> player.playerMoveDirection(input);
+                case "NORTH", "N" -> player.PlayerMoveDirection("north");
+                case "SOUTH", "S" -> player.PlayerMoveDirection("south");
+                case "EAST", "E" -> player.PlayerMoveDirection("east");
+                case "WEST", "W" -> player.PlayerMoveDirection("west");
+                case "INVENTORY", "I" -> player.displayInventory();
                 default -> {
-                    //if more than one word is typed in, this runs. Separates first word (command) from
-                    // next word (usually an object the user is trying to use)
+                    /*if more than one word is typed in, this runs. Separates first word (command) from
+                     next word (usually an object the user is trying to use) */
                     String command = input;
                     String object = null;
                     if (input.contains(" ")) {
@@ -91,6 +155,25 @@ public class Main {
                     commandUsage(command, object);
                 }
             }
+        }
+    }
+
+    private void commandUsage(String command, String object) {
+        switch (command) {
+            case "USE" -> useItem(object);
+            case "TAKE", "GRAB" -> takeItem(object);
+            /*
+            NOT IMPLEMENTED:
+            case "GATHER" -> {}
+            case "CRAFT" -> {}
+            case "BUILD" -> {}
+            case "MAP", "M" -> {}
+            case "JOURNAL", "J" -> {}
+            case "SLEEP" -> {}
+            case "SAVE" -> {}
+            case "LOAD" -> {}
+            */
+            default -> System.out.println("Unknown command, type HELP for list of commands");
         }
     }
 
@@ -111,14 +194,6 @@ public class Main {
         System.out.println(currentRoom.getExitDirection());
     }
 
-    private void commandUsage(String command, String object) {
-        switch (command) {
-            case "USE" -> useItem(object);
-            case "TAKE", "GRAB" -> takeItem(object);
-            default -> System.out.println("Unknown command, type HELP for list of commands");
-        }
-    }
-
     private void takeItem(String itemName) {
         if (itemName == null || itemName.isBlank()) {
             System.out.println("Specify an item name.");
@@ -130,8 +205,8 @@ public class Main {
 
         List<Item> items = currentRoom.getItems();
         for (Item item : items) {
-            if (item.getName().equalsIgnoreCase(itemName)) {
-                player.itemInventory().add(item);
+            if (item.getName().equalsIgnoreCase(itemName.trim())) {
+                player.getPlayerInventory().add(item);
                 currentRoom.removeItemFromRoom(item.getName());
                 System.out.println("You have taken: " + item.getName());
                 return;
@@ -142,15 +217,15 @@ public class Main {
 
     private void useItem(String itemName) {
         if (itemName == null || itemName.isBlank()) {
-            System.out.println("Use what? Specify an item name.");
+            System.out.println("Type Use (item-name). Specify an item name.");
             return;
         }
 
-        for (Item item : player.itemInventory()) {
+        for (Item item : player.getPlayerInventory()) {
             if (item.getName().equalsIgnoreCase(itemName)) {
                 item.use(player);
                 if (item instanceof Consumable) {
-                    player.itemInventory().remove(item);
+                    player.getPlayerInventory().remove(item);
                 }
                 return;
             }
@@ -158,4 +233,3 @@ public class Main {
         System.out.println("You do not have an item named: " + itemName);
     }
 }
-*/
