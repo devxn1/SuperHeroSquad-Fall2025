@@ -302,9 +302,7 @@ public class Player extends Character {
 
     }
 
-    void sleep() {
 
-    }
 
     void avoid(Monster tempMonster) {
         //It going to be 95% chance to avoid monster encounter
@@ -395,9 +393,6 @@ public class Player extends Character {
             }
             else if(Command.equalsIgnoreCase("Help")) {
                 showHelp();
-            }
-            else if(Command.equalsIgnoreCase("Item")) {
-                //item use here in combat
             }
             else if(Command.equalsIgnoreCase("equip")) {
                 //Equip here

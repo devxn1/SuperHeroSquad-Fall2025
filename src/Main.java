@@ -13,6 +13,19 @@ public class Main {
         main.start();
     }
 
+    private static List<String> parseList(String raw) {
+        List<String> list = new ArrayList<>();
+        if (raw != null && !raw.trim().isEmpty()) {
+            for (String part : raw.split(",")) {
+                String trimmed = part.trim();
+                if (!trimmed.isEmpty() && !trimmed.equals("0")) {
+                    list.add(trimmed);
+                }
+            }
+        }
+        return list;
+    }
+
     private void loadItems(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -28,19 +41,22 @@ public class Main {
 
                 switch (type) {
                     case "Weapon" -> {
+                        List<String> locs = parseList(parts[4]);
                         int damage = Integer.parseInt(parts[5]);
                         int element = Integer.parseInt(parts[6]);
-                        item = new Weapon(id, name, desc, "", damage, element);
+                        item = new Weapon(id, name, desc, locs, damage, element);
                     }
                     case "Armor" -> {
+                        List<String> locs = parseList(parts[4]);
                         int defense = Integer.parseInt(parts[5]);
-                        item = new Armor(id, name, desc, "", defense, 0, 0);
+                        item = new Armor(id, name, desc, locs, defense);
                     }
                     case "Consumable" -> {
+                        List<String> locs = parseList(parts[4]);
                         int heal = Integer.parseInt(parts[5]);
-                        item = new Consumable(id, name, desc, "", heal);
+                        item = new Consumable(id, name, desc, locs, heal);
                     }
-                    default -> item = new Item(id, name, desc, "");
+                    default -> item = new Item(id, name, desc,null );
                 }
 
                 items.put(id, item);
@@ -63,6 +79,7 @@ public class Main {
 
                 //Exits
                 String[] exitParts = parts[4].split(",", -1);
+                List<String> locs = parseList(parts[4]);
                 String north = exitParts[0].equals("0") ? null : exitParts[0];
                 String south = exitParts[1].equals("0") ? null : exitParts[1];
                 String east = exitParts[2].equals("0") ? null : exitParts[2];
@@ -87,7 +104,7 @@ public class Main {
                 }
 
                 //Create Room
-                Room room = new Room(id, "DefaultBiome", name, description, north, east, south, west, locked ? "LOCKED" : null);
+                Room room = new Room(id, "DefaultBiome", name, false,locs, locked ? "LOCKED" : null);
 
                 for (Item it : items) room.addItemToRoom(it);
                 world.put(id, room);
