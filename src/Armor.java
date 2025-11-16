@@ -3,7 +3,7 @@ public abstract class Armor extends Item {
     private int evasion;
     private int hpAdded;
 
-    public Armor(int id, String name, String description, int roomID, int defense, int evasion, int hpAdded){
+    public Armor(String id, String name, String description, int roomID, int defense, int evasion, int hpAdded){
         super(id, name, description, roomID);
         this.defense = defense;
         this.evasion = evasion;

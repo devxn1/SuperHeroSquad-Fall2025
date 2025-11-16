@@ -1,36 +1,83 @@
-import java.util.Scanner;
+/*
 import java.util.*;
+import java.io.*;
 
 public class Main {
     private Player player;
+    private Map<String, Room> world = new HashMap<>();
 
     public static void main(String[] args) {
         Main main = new Main();
+        main.loadRooms("RoomData.txt");
         main.start();
+    }
+
+    private void loadRooms(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                //ID/Name/Description/Locked/North,South,East,West/Items/Puzzles
+                String[] parts = line.split("/", -1);
+                String id = parts[0];
+                String name = parts[1];
+                String description = parts[2];
+                boolean locked = Boolean.parseBoolean(parts[3]);
+
+                // Exits
+                String[] exitParts = parts[4].split(",", -1);
+                String north = exitParts[0].equals("0") ? null : exitParts[0];
+                String south = exitParts[1].equals("0") ? null : exitParts[1];
+                String east = exitParts[2].equals("0") ? null : exitParts[2];
+                String west = exitParts[3].equals("0") ? null : exitParts[3];
+
+                //Items
+                List<Item> items = new ArrayList<>();
+                if (parts.length > 5 && !parts[5].isBlank()) {
+                    String[] itemIds = parts[5].split(",");
+                    for (String itemId : itemIds) {
+                        items.add(new Item(itemId));
+                    }
+                }
+
+                //Puzzles
+                List<String> puzzles = new ArrayList<>();
+                if (parts.length > 6 && !parts[6].isBlank()) {
+                    puzzles.addAll(Arrays.asList(parts[6].split(",")));
+                }
+
+                Room room = new Room(id, name, description, locked, north, south, east, west, items, puzzles);
+                world.put(id, room);
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading rooms: " + e.getMessage());
+        }
     }
 
     public void start() {
         Scanner scanner = new Scanner(System.in);
         String input;
+
         System.out.println("Superhero Squad Final Project Implementation");
         System.out.println("Commands: North/n, South/s, East/e, West/w,\nLook/Inspect, Take/Grab, Gather,\nCraft, Build, Use, Map/m, Journal/j,\nInventory/i, Sleep, Stats, Save/Load, Help/?, Quit");
 
+        List<Item> playerInventory = new ArrayList<>();
+        player = new Player("A1", 100, 5, 5, 5, 100, 100, playerInventory);
+
         //Game loop
         while (true) {
-
             //Player inputs
             System.out.println("Enter a direction or a command:");
             input = scanner.nextLine().trim().toUpperCase();
             //I find it easier to separate one words from the two words
             switch (input) {
                 case "QUIT" -> {
-                    System.out.println("Quitting the game");
+                    System.out.println("Quitting Survival Island Game");
                     System.exit(0);
                 }
-                case "STATS" -> player.showStats();
-                case "HELP" -> player.showHelp();
-                //case "LOOK", "INSPECT" -> System.out.println(currentRoom.getRoomDescription());
-                //case "INVENTORY", "I" -> displayInventory();
+                case "STATS" -> player.displayStats();
+                case "HELP", "?" -> player.showHelp();
+                case "LOOK", "INSPECT" -> lookAround();
+                //case "NORTH", "N", "SOUTH", "S", "EAST", "E", "WEST", "W" -> player.playerMoveDirection(input);
                 default -> {
                     //if more than one word is typed in, this runs. Separates first word (command) from
                     // next word (usually an object the user is trying to use)
@@ -47,59 +94,68 @@ public class Main {
         }
     }
 
+    private void lookAround() {
+        Room currentRoom = world.get(player.getCurrentRoom());
+        if (currentRoom == null) {
+            System.out.println("Error: current room not found!");
+            return;
+        }
+        System.out.println(currentRoom.getRoomDescription());
+        if (!currentRoom.getItems().isEmpty()) {
+            System.out.println("Items in this room:");
+            for (Item it : currentRoom.getItems()) {
+                System.out.println("- " + it.getName());
+            }
+        }
+        //shows exits, removable
+        System.out.println(currentRoom.getExitDirection());
+    }
+
     private void commandUsage(String command, String object) {
         switch (command) {
-            //case "USE" -> useItem(object);
-            //case "NORTH", "N" -> player.move("NORTH");
-            //case "SOUTH", "S" -> player.move("SOUTH");
-            //case "EAST", "E" -> player.move("EAST");
-            //case "WEST", "W" -> player.move("WEST");
+            case "USE" -> useItem(object);
+            case "TAKE", "GRAB" -> takeItem(object);
             default -> System.out.println("Unknown command, type HELP for list of commands");
         }
     }
 
-    /*
+    private void takeItem(String itemName) {
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Specify an item name.");
+            return;
+        }
+
+        Room currentRoom = world.get(player.getCurrentRoom());
+        if (currentRoom == null) return;
+
+        List<Item> items = currentRoom.getItems();
+        for (Item item : items) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                player.itemInventory().add(item);
+                currentRoom.removeItemFromRoom(item.getName());
+                System.out.println("You have taken: " + item.getName());
+                return;
+            }
+        }
+        System.out.println("No such item found: " + itemName);
+    }
+
     private void useItem(String itemName) {
         if (itemName == null || itemName.isBlank()) {
-            System.out.println("Type what item you want to use; (Use 'name-of-item')");
+            System.out.println("Use what? Specify an item name.");
             return;
         }
 
-        Item found = itemInInventory(itemName);
-        if (found != null) {
-            //Call the items abstract use method.
-            found.use(player);
-
-            if ("Consumable".equalsIgnoreCase(found.getType())) {
-                player.itemInventory().remove(found);
-                System.out.println(found.getName() + " consumed and removed from your inventory.");
+        for (Item item : player.itemInventory()) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                item.use(player);
+                if (item instanceof Consumable) {
+                    player.itemInventory().remove(item);
+                }
+                return;
             }
-        } else {
-            System.out.println("You do not have an item named '" + itemName + "' in your inventory!");
         }
+        System.out.println("You do not have an item named: " + itemName);
     }
-
-    private Item itemInInventory(String itemName) {
-        if (itemName == null) return null;
-        for (Item it : player.itemInventory()) {
-            if (it.getName().equalsIgnoreCase(itemName)) return it;
-        }
-        return null;
-    }
-
-    private void displayInventory() {
-        System.out.println("Current inventory:\n");
-        if (player.itemInventory().isEmpty()) {
-            System.out.println("Your inventory is empty.");
-            return;
-        }
-        for (Item it : player.itemInventory()) {
-            System.out.println("- " + it.getName() + " (" + it.getType() + ") : " + it.getDescription());
-        }
-    }
-
-    public void addToInventory(Item item) {
-        if (item != null) player.itemInventory().add(item);
-    }
-     */
 }
+*/
