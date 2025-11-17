@@ -408,9 +408,8 @@ public class Game {
         return puzzles;
     }
 
-    /**
-     * Assigns puzzles to their corresponding rooms after both have been parsed
-     */
+
+     // putting puzzle in room
     public static void assignPuzzlesToRooms() {
         registerCustomPuzzles();
         for (Puzzle puzzle : PuzzleData) {
@@ -506,7 +505,7 @@ public class Game {
                         return;
                     } else {
                         puzzle.decrementAttempts();
-                        System.out.println("\n✗ Incorrect!");
+                        System.out.println("\n Incorrect!");
                         if (puzzle.getRemainingAttempts() > 0) {
                             System.out.println("Attempts remaining: " +
                                     puzzle.getRemainingAttempts());
@@ -518,7 +517,7 @@ public class Game {
                     String hint = puzzle.getHint();
                     System.out.println("\nHint: " + hint);
                     if (puzzle.isSolved()) {
-                        System.out.println("\n✓ Auto-solved after 3 hints!");
+                        System.out.println("\n Auto-solved after 3 hints!");
                         givePuzzleReward(puzzle, currentRoom);
                         return;
                     }
@@ -606,10 +605,10 @@ public class Game {
         }
 
         String hint = puzzle.getHint();
-        System.out.println("\n💡 Hint: " + hint);
+        System.out.println("\n Hint: " + hint);
 
         if (puzzle.isSolved()) {
-            System.out.println("\n✓ Auto-solved after 3 hints!");
+            System.out.println("\n Auto-solved after 3 hints!");
             givePuzzleReward(puzzle, currentRoom);
         }
     }
