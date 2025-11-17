@@ -83,6 +83,16 @@ public class Main {
                     inspectItem(argument);
                 }
                 break;
+            case "craft":
+                Game.player.craftItem(argument);
+                break;
+            case "journal":   // <<=== NEW
+                Game.player.viewRecipeBook();
+                break;
+
+            case "j":         // <<=== NEW
+                Game.player.viewRecipeBook();
+                break;
             default:
                 System.out.println("Unknown command: " + command);
                 System.out.println("Type 'help' for a list of commands.");

@@ -24,3 +24,9 @@ Craftable/I13/Poisoned Spiked gauntlet/Spiked gauntlets, dipped in poison./Craft
 Craftable/I14/Firey Spiked Gauntlets/Spiked flaming gauntlets, it can burn a monster for quite some time. Be careful to not set the forest on fire./Crafted/12/4/I11,I07
 Craftable/I15/Poisoned Sharp Machete/A sharp machete dosed in poison, a single cut can really hurt an enemy/Crafted/12/2/I11,IO5
 Craftable/I16/Firey Machete/A Flaming Sharp Machete could burn a Monster for quite some time. Be careful to not set the forest on fire./Crafted/12/4/I11,I07
+Recipe/I10/Spiked Gauntlet/"Crafts Guantlet"//I04,I03
+Recipe/A10/Caldera Beacon/"Crafts Caldera Beacon"//A06,A07,A08,A09
+Recipe/I15/Poisoned Sharp Machete/"Crafts Poisoned Sharp Machete"//I11,I05
+Recipe/I16/Firey Machete/"Crafts Firey Machete"//I11,I07
+Recipe/I13/Poisoned Spiked Gauntlet/"Crafts Poisoned spiked Guantlet"//I10,I05
+Recipe/I14/Firey Spiked Gauntlets/"Crafts Firey Spiked Guantelets"//I10,I07

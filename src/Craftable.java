@@ -1,4 +1,4 @@
 public interface Craftable {
-    public abstract void craft ();
+    public abstract void craft (String name);
     public abstract void GetMaterials();
 }

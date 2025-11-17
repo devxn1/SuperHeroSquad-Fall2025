@@ -11,18 +11,18 @@ import java.io.PrintWriter;
 import java.io.File;
 
 public class Player extends Character {
-    static String CurrentRoom;
-    int defense;
-    int evasion;
-    int hunger;
-    int thrist;
-    boolean DayorNight;
-    private int hp;
-    Weapon equippedWeapon;
-    Armor equippedArmor;
-    ArrayList<Item> PlayerInventory;
-    ArrayList<Artifact> ArtifactInventory;
-    ArrayList<Recipe> MaterialInventory;
+    private String CurrentRoom;
+    private  int defense;
+    private  int evasion;
+    private int hunger;
+    private int thrist;
+    private boolean DayorNight;
+    private  int hp;
+    private Weapon equippedWeapon;
+    private Armor equippedArmor;
+    private ArrayList<Item> PlayerInventory;
+    private ArrayList<Artifact> ArtifactInventory;
+    private  ArrayList<Recipe> Journal;
     private Map<String, Room> world;
 
 
@@ -35,7 +35,7 @@ public class Player extends Character {
                   int thrist,
                   ArrayList<Item> PlayerInventory,
                   ArrayList<Artifact> ArtifactInventory,
-                  ArrayList<Recipe> MaterialInventory) {
+                  ArrayList<Recipe> Journal) {
         super(HP,attackDMG);
         CurrentRoom=currentRoom;
         this.HP=HP;
@@ -49,7 +49,7 @@ public class Player extends Character {
         this.equippedArmor=null;
         this.PlayerInventory=PlayerInventory;
         this.ArtifactInventory=new ArrayList<>();
-        this.MaterialInventory=new ArrayList<>();
+        this.Journal=new ArrayList<>();
 
     }
 
@@ -110,6 +110,22 @@ public class Player extends Character {
     public void setPlayerInventory(ArrayList<Item> playerInventory) {
         PlayerInventory = playerInventory;
     }
+    public ArrayList<Recipe> getRecipeBook(){
+        return this.Journal;
+    }
+    public void viewRecipeBook(){
+        if(Journal.isEmpty()){
+            System.out.println("Your Recipe Book is empty");
+        }
+        else{
+            System.out.println("\t Recipe Book");
+            for(Recipe R: Journal){
+                System.out.println(R.getName());
+            }
+            System.out.println();
+        }
+    }
+
 
     public void displayInventory() {
         if (PlayerInventory.isEmpty()) {
@@ -123,12 +139,35 @@ public class Player extends Character {
         }
     }
 
-    public static void PlayerMoveDirection(String direction) {
+    public void PlayerMoveDirection(String input) {
+        String direction;
+
+        switch (input.toLowerCase()) {
+            case "1":
+            case "north":
+                direction = "north";
+                break;
+            case "2":
+            case "east":
+                direction = "east";
+                break;
+            case "3":
+            case "south":
+                direction = "south";
+                break;
+            case "4":
+            case "west":
+                direction = "west";
+                break;
+            default:
+                System.out.println("Invalid direction. Use 1-4 or north/south/east/west.");
+                return;
+        }
 
         // 1. Find current room
         Room currentRoom = null;
         for (Room r : Game.RoomData) {
-            if (r.getRoomID().equals(CurrentRoom)) {   // FIXED: compare to CurrentRoom STRING
+            if (r.getRoomID().equals(this.getCurrentRoom())) {
                 currentRoom = r;
                 break;
             }
@@ -142,15 +181,15 @@ public class Player extends Character {
         // 2. Get destination
         String nextRoomID = currentRoom.getExit(direction);
 
-        if (nextRoomID == null || nextRoomID.equals("0") || nextRoomID.isEmpty()) {
+        if (nextRoomID == null || nextRoomID.isEmpty() || nextRoomID.equals("0")) {
             System.out.println("You cannot go " + direction + " from here.");
             return;
         }
 
-        // 3. Update player location
-        CurrentRoom = nextRoomID;
+        // 3. Move player
+        this.setCurrentRoom(nextRoomID);
 
-        // 4. Find destination room
+        // 4. Load next room
         Room nextRoom = null;
         for (Room r : Game.RoomData) {
             if (r.getRoomID().equals(nextRoomID)) {
@@ -164,7 +203,7 @@ public class Player extends Character {
             return;
         }
 
-        // 5. Show room details
+        // 5. Show room info
         System.out.println("\nYou move " + direction + "...");
         System.out.println(nextRoom.getFullRoomInfo());
 
@@ -174,6 +213,7 @@ public class Player extends Character {
             System.out.println("\n⚠ A monster is here: " + nextRoom.getMonster().getName());
         }
     }
+
     //Display ALl their Stats
     void displayStats() {
         System.out.println("HP: " + getHP()+"/100");
@@ -322,7 +362,7 @@ public class Player extends Character {
         if(!tempMonster.isAlive()){
             System.out.println("IT DEAD!");
         }
-        else if(chance<0.95){
+        else if(chance<0.50){
             //Debug message below to test out avoid mechanic
             System.out.println("You avoided combat");
         }
@@ -356,9 +396,44 @@ public class Player extends Character {
     public void setEquippedArmor(Armor equippedArmor) {
         this.equippedArmor = equippedArmor;
     }
+    public void craftItem(String itemName) {
+
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Usage: craft <item-name>");
+            return;
+        }
+
+        // -----------------------------------
+        // 1. FIND THE CRAFTABLE ITEM IN GAME
+        // -----------------------------------
+        CraftableItem craftItem = null;
+
+        for (Item item : Game.ItemData) {
+            if (item instanceof CraftableItem) {
+
+                // Match by name or ID
+                if (item.getName().equalsIgnoreCase(itemName) ||
+                        item.getID().equalsIgnoreCase(itemName)) {
+
+                    craftItem = (CraftableItem) item;
+                    break;
+                }
+            }
+        }
 
 
-    void Combat(Monster tempMonster) {
+        if (craftItem == null) {
+            System.out.println("❌ You cannot craft \"" + itemName + "\".");
+            return;
+        }
+
+
+        craftItem.craft(itemName);
+    }
+
+
+
+    public  void Combat(Monster tempMonster) {
         System.out.println("Your HP" + getHP());
         System.out.println(tempMonster.displayerMonster());
         System.out.println("Monster HP: " + tempMonster.getHP());

@@ -32,6 +32,11 @@ public class Game {
                 new ArrayList<Artifact>(),
                 new ArrayList<Recipe>()// empty inventory at start
         );
+        for (Item item : ItemData) {
+            if (item instanceof Recipe recipe) {
+                player.getRecipeBook().add(recipe);
+            }
+        }
         registerCommands();
 
     }
@@ -214,7 +219,21 @@ public class Game {
                         List<String> materialIDs = parseList(parts[7]);
                         items.add(new CraftableItem(id, name, desc, locs, damage, dot, materialIDs));
                         break;
+                    }case "recipe": {
+                        String id1 = parts[1].trim();
+                        String name1 = parts[2].trim();
+                        String desc1 = parts[3].trim();
+
+                        // 4th field = empty room list for recipes
+                        ArrayList<String> emptyLocations = new ArrayList<>(parseList(parts[4]));
+
+                        // 5th field = materials
+                        ArrayList<String> mats = new ArrayList<>(parseList(parts[5]));
+
+                        items.add(new Recipe(id1, name1, desc1, emptyLocations, mats));
+                        break;
                     }
+
                     default:
                         System.err.println("Unknown item category: " + category + " in line: " + line);
                 }
