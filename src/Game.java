@@ -23,7 +23,7 @@ public class Game {
         assignPuzzlesToRooms();
 
         player = new Player(
-                "C4",         // starting room ID
+                "A1",         // starting room ID
                 100,          // HP
                 10,           // attackDMG
                 5,            // defense
