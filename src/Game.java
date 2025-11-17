@@ -15,8 +15,8 @@ public class Game {
         RoomData = ParseRoomdata();
         ItemData = ParseItemData();
         MonsterData = ParseMonsterData();
-        //PuzzleData = ParsePuzzleData();
-
+        PuzzleData = ParsePuzzleData();
+        assignPuzzlesToRooms();
         assignMonstersToRooms();
         assignItemsToRooms();
 
@@ -88,6 +88,16 @@ public class Game {
 
         System.out.println(currentRoom.getFullRoomInfo());
     }
+
+    private static Room getCurrentRoom() {
+        for (Room r : RoomData) {
+            if (r.getRoomID().equals(player.getCurrentRoom())) {
+                return r;
+            }
+        }
+        return null;
+    }
+
     public static void welcomeMessage(){
         System.out.println("Welcome to the Adventure Game!");
         System.out.println("Type 'help' to see a list of commands.");
@@ -323,5 +333,223 @@ public class Game {
         }
         System.out.println("Assigned " + itemsAssigned + " item instances to rooms.");
     }
+
+    public static ArrayList<Puzzle> ParsePuzzleData() {
+        ArrayList<Puzzle> puzzles = new ArrayList<>();
+
+        try (InputStream inputStream = Game.class.getClassLoader().getResourceAsStream("data/PuzzleData.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split("/", -1);
+                if (parts.length < 7) {
+                    System.err.println("Malformed puzzle line: " + line);
+                    continue;
+                }
+
+                String puzzleID = parts[0].trim();
+                String puzzleName = parts[1].trim();
+                String roomID = parts[2].trim();
+                String rewardType = parts[3].trim();
+                String puzzleDescription = parts[4].trim();
+                int puzzleAttempts = Integer.parseInt(parts[5].trim());
+                String rewardID = parts[6].trim();
+
+                Puzzle puzzle = new Puzzle(puzzleID, puzzleName, roomID,
+                        puzzleDescription, puzzleAttempts,
+                        rewardType, rewardID);
+                puzzles.add(puzzle);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Failed to load PuzzleData.txt: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return puzzles;
+    }
+    public static void assignPuzzlesToRooms() {
+        for (Puzzle puzzle : PuzzleData) {
+            String roomID = puzzle.getRoomID();
+
+            // Find the room with matching ID
+            for (Room room : RoomData) {
+                if (room.getRoomID().equalsIgnoreCase(roomID)) {
+                    room.setPuzzle(puzzle);
+                    break;
+                }
+            }
+        }
+        System.out.println("Assigned " + PuzzleData.size() + " puzzles to rooms.");
+    }
+
+
+    // Puzzle
+    public static void solvePuzzle() {
+        Room currentRoom = getCurrentRoom();
+
+        if (currentRoom == null) {
+            System.out.println("Error: Can't find current room!");
+            return;
+        }
+
+        if (!currentRoom.hasPuzzle()) {
+            System.out.println("There's no puzzle in this room.");
+            return;
+        }
+
+        Puzzle puzzle = currentRoom.getPuzzle();
+
+        if (puzzle.isSolved()) {
+            System.out.println("This puzzle has already been solved!");
+            return;
+        }
+
+        puzzleLoop(puzzle, currentRoom);
+    }
+
+    private static void puzzleLoop(Puzzle puzzle, Room currentRoom) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("\n╔═══════════════════════════════════════╗");
+        System.out.println("║  " + puzzle.getPuzzleName());
+        System.out.println("╚═══════════════════════════════════════╝");
+        System.out.println(puzzle.getPuzzleDescription());
+        System.out.println("\nType: " + puzzle.getRewardType());
+        System.out.println("Attempts remaining: " + puzzle.getRemainingAttempts());
+        System.out.println("\nCommands: solve <answer> | hint | quit");
+
+        while (!puzzle.isSolved() && puzzle.getRemainingAttempts() > 0) {
+            System.out.print("\n🧩 > ");
+            String input = scanner.nextLine().trim();
+
+            if (input.isEmpty()) continue;
+
+            String[] parts = input.split(" ", 2);
+            String command = parts[0].toLowerCase();
+
+            switch (command) {
+                case "solve":
+                    if (parts.length < 2) {
+                        System.out.println("Usage: solve <your answer>");
+                        break;
+                    }
+
+                    // Attempt to solve the puzzle
+                    if (puzzle.attemptSolve(parts[1])) {
+                        System.out.println("\n✓ CORRECT! Puzzle solved!");
+                        puzzle.markSolved();
+                        distributePuzzleReward(puzzle, currentRoom);
+                        return;
+                    } else {
+                        puzzle.decrementAttempts();
+                        System.out.println("\n✗ Incorrect!");
+                        if (puzzle.getRemainingAttempts() > 0) {
+                            System.out.println("Attempts remaining: " +
+                                    puzzle.getRemainingAttempts());
+                        }
+                    }
+                    break;
+
+                case "hint":
+                    String hint = puzzle.getHint();
+                    System.out.println("\n💡 Hint: " + hint);
+                    if (puzzle.isSolved()) {
+                        System.out.println("\n✓ Auto-solved after 3 hints!");
+                        distributePuzzleReward(puzzle, currentRoom);
+                        return;
+                    }
+                    break;
+
+                case "info":
+                    showPuzzleInfo(puzzle);
+                    break;
+
+                case "quit":
+                case "exit":
+                    System.out.println("Exiting puzzle...");
+                    return;
+
+                default:
+                    System.out.println("Unknown command. Try: solve <answer>, hint, info, quit");
+            }
+        }
+
+        if (puzzle.getRemainingAttempts() <= 0) {
+            System.out.println("\n❌ Out of attempts! Puzzle failed.");
+            System.out.println("You can try again later.");
+        }
+    }
+
+    private static void showPuzzleInfo(Puzzle puzzle) {
+        System.out.println("\n=== Puzzle Information ===");
+        System.out.println("Name: " + puzzle.getPuzzleName());
+        System.out.println("Type: " + puzzle.getRewardType());
+        System.out.println("Description: " + puzzle.getPuzzleDescription());
+        System.out.println("Attempts: " + puzzle.getRemainingAttempts() + "/" +
+                puzzle.getPuzzleAttempts());
+        System.out.println("Status: " + (puzzle.isSolved() ? "SOLVED" : "UNSOLVED"));
+    }
+
+    private static void distributePuzzleReward(Puzzle puzzle, Room currentRoom) {
+        String rewardType = puzzle.getRewardType();
+        String rewardID = puzzle.getRewardID();
+
+        System.out.println("\n🎁 Reward: " + rewardID);
+
+        // Check if reward is a room unlock
+        boolean isRoomID = false;
+        for (Room room : RoomData) {
+            if (room.getRoomID().equalsIgnoreCase(rewardID)) {
+                isRoomID = true;
+                System.out.println("✓ New area unlocked: " + room.getRoomName());
+                break;
+            }
+        }
+
+        // Check if reward is an item
+        if (!isRoomID) {
+            for (Item item : ItemData) {
+                if (item.getID().equalsIgnoreCase(rewardID)) {
+                    player.getPlayerInventory().add(item);
+                    System.out.println("✓ Received: " + item.getName());
+                    System.out.println("   " + item.getDescription());
+                    break;
+                }
+            }
+        }
+
+        currentRoom.removePuzzle();
+    }
+
+    public static void getPuzzleHint() {
+        Room currentRoom = getCurrentRoom();
+
+        if (currentRoom == null || !currentRoom.hasPuzzle()) {
+            System.out.println("There's no puzzle here!");
+            return;
+        }
+
+        Puzzle puzzle = currentRoom.getPuzzle();
+
+        if (puzzle.isSolved()) {
+            System.out.println("This puzzle is already solved!");
+            return;
+        }
+
+        String hint = puzzle.getHint();
+        System.out.println("\n💡 Hint: " + hint);
+
+        if (puzzle.isSolved()) {
+            System.out.println("\n✓ Auto-solved after 3 hints!");
+            distributePuzzleReward(puzzle, currentRoom);
+        }
+    }
+
+
+
 
 }

@@ -50,34 +50,58 @@ public class Puzzle {
 
     // to get hints
     private void loadHintsFromFile() {
-        try (Scanner scanner = new Scanner(new File("data/PuzzleHints.txt"))) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.trim().isEmpty()) continue; // skip blank lines
+        try {
+            // Try to load from classpath first (for jar/resource loading)
+            java.io.InputStream inputStream = getClass().getClassLoader()
+                    .getResourceAsStream("data/PuzzleHints.txt");
 
-                String[] parts = line.split("/");
-
-                // hintID / puzzleID / hintNumber / hintText
-                if (parts.length >= 4 && parts[1].equals(this.puzzleID)) {
-                    hints.add(parts[3]);
+            if (inputStream == null) {
+                // Fallback to file system
+                java.io.File file = new java.io.File("data/PuzzleHints.txt");
+                if (file.exists()) {
+                    inputStream = new java.io.FileInputStream(file);
+                } else {
+                    System.out.println("Warning: PuzzleHints.txt not found for puzzle " + puzzleID);
+                    return;
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error loading hints for puzzle " + puzzleID);
+
+            try (Scanner scanner = new Scanner(inputStream)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    if (line.trim().isEmpty()) continue; // skip blank lines
+
+                    String[] parts = line.split("/");
+
+                    // hintID / puzzleID / hintNumber / hintText
+                    if (parts.length >= 4 && parts[1].equals(this.puzzleID)) {
+                        hints.add(parts[3]);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error loading hints for puzzle " + puzzleID + ": " + e.getMessage());
         }
     }
 
-    public String getHint() {
-        if (hintsUsed >= 3) {
-            this.markSolved();
-            System.out.println("You've used all 3 hints.");
-            System.out.println("Puzzle will be automatically solved.");
-            return "Puzzle automatically solved!";
 
+    public String getHint() {
+        if (hints.isEmpty()) {
+            return "No hints available for this puzzle.";
+        }
+
+        if (hintsUsed >= hints.size()) {
+            return "No more hints available.";
         }
 
         String hint = hints.get(hintsUsed);
         hintsUsed++;
+
+        // Auto-solve after 3 hints
+        if (hintsUsed >= 3) {
+            this.markSolved();
+        }
+
         return hint;
     }
 
