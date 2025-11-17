@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**Class: AmbushMonster
  * @author Devin Gomez
  * @version 1.0
@@ -13,6 +16,7 @@ public class AmbushMonster extends Character {
     private String roomID;
     private boolean isAlive;
     private double ambushChance;
+    private final List<Item> drops =  new ArrayList<>();
 
     public AmbushMonster(int HP, int attackDMG, String monsterID, String name,
                          String description, String roomID, boolean isAlive,
@@ -25,8 +29,23 @@ public class AmbushMonster extends Character {
         this.roomID = roomID;
         this.isAlive = isAlive;
 
+
         this.ambushChance = Math.max(0.0, Math.min(1.0, ambushChance));
+
     }
+
+    public void addDrop(Item item) {
+        if (item != null) {
+            drops.add(item);
+        }
+    }
+
+    public void addDrops(List<Item> items) {
+        if (items != null) {
+            drops.addAll(items);
+        }
+    }
+
 
     public String getMonsterID() {
         return monsterID;

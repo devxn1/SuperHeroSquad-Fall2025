@@ -21,7 +21,7 @@ public class Game {
         assignItemsToRooms();
 
         player = new Player(
-                "A1",         // starting room ID
+                "D5",         // starting room ID
                 100,          // HP
                 10,           // attackDMG
                 5,            // defense
