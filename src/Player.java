@@ -619,6 +619,8 @@ public class Player extends Character {
                 System.out.println(tempMonster.getName()+" is DEAD!");
                 //tempMonster.drop(tempRoom);
                 tempRoom.setMonster(tempMonster);
+
+                Game.checkForGameCompletion();
                 return;
             }
         }
