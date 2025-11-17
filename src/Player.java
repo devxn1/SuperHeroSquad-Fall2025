@@ -113,17 +113,37 @@ public class Player extends Character {
     public ArrayList<Recipe> getRecipeBook(){
         return this.Journal;
     }
-    public void viewRecipeBook(){
-        if(Journal.isEmpty()){
+    public void viewRecipeBook() {
+        if (Journal.isEmpty()) {
             System.out.println("Your Recipe Book is empty");
+            return;
         }
-        else{
-            System.out.println("\t Recipe Book");
-            for(Recipe R: Journal){
-                System.out.println(R.getName());
+
+        System.out.println("\n=== Recipe Book ===");
+
+        for (Recipe R : Journal) {
+            System.out.println("\n" + R.getName());
+            System.out.println("--------------------");
+
+            for (String materialID : R.requiredMaterials) {
+                Item materialItem = findItemByID(materialID);
+                if (materialItem != null) {
+                    System.out.println("  - " + materialItem.getName());
+                } else {
+                    System.out.println("  - " + materialID + " (Unknown Item)");
+                }
             }
-            System.out.println();
         }
+
+        System.out.println("\n===================\n");
+    }
+    private Item findItemByID(String id) {
+        for (Item it : Game.ItemData) {
+            if (it.getID().equalsIgnoreCase(id)) {
+                return it;
+            }
+        }
+        return null;
     }
 
 
@@ -309,44 +329,44 @@ public class Player extends Character {
     }
 
     void loadPlayer() {
-            Scanner fileinput=null;
-            String fileName="User/player.txt";
-            File file=new File(fileName);
-            try{
-                fileinput=new Scanner(file);
-            }
-            catch(FileNotFoundException e){
-                System.out.println("player.txt is not found, please put back text file.");
-                System.exit(0);
-            }
+        Scanner fileinput=null;
+        String fileName="User/player.txt";
+        File file=new File(fileName);
+        try{
+            fileinput=new Scanner(file);
+        }
+        catch(FileNotFoundException e){
+            System.out.println("player.txt is not found, please put back text file.");
+            System.exit(0);
+        }
 
-            while(fileinput.hasNextLine()){
-                String line=fileinput.nextLine();
-                String[] split=line.split("/");
+        while(fileinput.hasNextLine()){
+            String line=fileinput.nextLine();
+            String[] split=line.split("/");
 
-                //Create Variables based on what would be stored in file then set them.
-                String TempCurrentRoom=split[0];
-                setCurrentRoom(TempCurrentRoom);
-                int TempHP=Integer.parseInt(split[1]);
-                setHP(TempHP);
-                int TempDMG=Integer.parseInt(split[2]);
-                setAttackDMG(TempDMG);
-                int TempDefense=Integer.parseInt(split[3]);
-                setDefense(TempDefense);
-                int TempEvasion=Integer.parseInt(split[4]);
-                setEvasion(TempEvasion);
-                int TempHunger=Integer.parseInt(split[5]);
-                setHunger(TempHunger);
-                int TempThrist=Integer.parseInt(split[6]);
-                setThrist(TempThrist);
-                boolean tempTime=Boolean.parseBoolean(split[7]);
-                setDayorNight(tempTime);
+            //Create Variables based on what would be stored in file then set them.
+            String TempCurrentRoom=split[0];
+            setCurrentRoom(TempCurrentRoom);
+            int TempHP=Integer.parseInt(split[1]);
+            setHP(TempHP);
+            int TempDMG=Integer.parseInt(split[2]);
+            setAttackDMG(TempDMG);
+            int TempDefense=Integer.parseInt(split[3]);
+            setDefense(TempDefense);
+            int TempEvasion=Integer.parseInt(split[4]);
+            setEvasion(TempEvasion);
+            int TempHunger=Integer.parseInt(split[5]);
+            setHunger(TempHunger);
+            int TempThrist=Integer.parseInt(split[6]);
+            setThrist(TempThrist);
+            boolean tempTime=Boolean.parseBoolean(split[7]);
+            setDayorNight(tempTime);
 
 
 
-                //Below this would be inventory, and equipment, will work later
+            //Below this would be inventory, and equipment, will work later
 
-            }
+        }
 
     }
 
