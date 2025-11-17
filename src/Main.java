@@ -107,6 +107,20 @@ public class Main {
                 break;
             case "load":
                 Game.player.loadPlayer();
+                }
+                break;
+            case "solve":
+                if (argument.equalsIgnoreCase("puzzle") || argument.isEmpty()) {
+                    Game.solvePuzzle();
+                } else {
+                    System.out.println("Usage: solve puzzle");
+                }
+                break;
+            case "puzzle":
+                Game.solvePuzzle();
+                break;
+            case "hint":
+                Game.getPuzzleHint();
                 break;
             default:
                 System.out.println("Unknown command: " + command);
