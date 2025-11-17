@@ -11,20 +11,20 @@ import java.io.PrintWriter;
 import java.io.File;
 
 public class Player extends Character {
-    static String CurrentRoom;
-    int defense;
-    int evasion;
-    int hunger;
-    int thrist;
-    boolean DayorNight;
-    private int hp;
-    Weapon equippedWeapon;
-    Armor equippedArmor;
-    ArrayList<Item> PlayerInventory;
-    ArrayList<Artifact> ArtifactInventory;
-    ArrayList<Recipe> MaterialInventory;
+    private String CurrentRoom;
+    private  int defense;
+    private  int evasion;
+    private int hunger;
+    private int thrist;
+    private boolean DayorNight;
+    private  int hp;
+    private Weapon equippedWeapon;
+    private Armor equippedArmor;
+    private ArrayList<Item> PlayerInventory;
+    private ArrayList<Artifact> ArtifactInventory;
+    private  ArrayList<Recipe> Journal;
     private Map<String, Room> world;
-    private TimeOfDay timeOfDay;
+
 
     public Player(String currentRoom,
                   int HP,
@@ -35,7 +35,7 @@ public class Player extends Character {
                   int thrist,
                   ArrayList<Item> PlayerInventory,
                   ArrayList<Artifact> ArtifactInventory,
-                  ArrayList<Recipe> MaterialInventory) {
+                  ArrayList<Recipe> Journal) {
         super(HP,attackDMG);
         CurrentRoom=currentRoom;
         this.HP=HP;
@@ -49,8 +49,8 @@ public class Player extends Character {
         this.equippedArmor=null;
         this.PlayerInventory=PlayerInventory;
         this.ArtifactInventory=new ArrayList<>();
-        this.MaterialInventory=new ArrayList<>();
-        this.timeOfDay = new TimeOfDay();
+        this.Journal=new ArrayList<>();
+
     }
 
 
@@ -102,11 +102,6 @@ public class Player extends Character {
         CurrentRoom = currentRoom;
     }
 
-    public TimeOfDay getTimeOfDay() {
-        return timeOfDay;
-    }
-
-
 
     public ArrayList<Item> getPlayerInventory() {
         return PlayerInventory;
@@ -115,6 +110,42 @@ public class Player extends Character {
     public void setPlayerInventory(ArrayList<Item> playerInventory) {
         PlayerInventory = playerInventory;
     }
+    public ArrayList<Recipe> getRecipeBook(){
+        return this.Journal;
+    }
+    public void viewRecipeBook() {
+        if (Journal.isEmpty()) {
+            System.out.println("Your Recipe Book is empty");
+            return;
+        }
+
+        System.out.println("\n=== Recipe Book ===");
+
+        for (Recipe R : Journal) {
+            System.out.println("\n" + R.getName());
+            System.out.println("--------------------");
+
+            for (String materialID : R.requiredMaterials) {
+                Item materialItem = findItemByID(materialID);
+                if (materialItem != null) {
+                    System.out.println("  - " + materialItem.getName());
+                } else {
+                    System.out.println("  - " + materialID + " (Unknown Item)");
+                }
+            }
+        }
+
+        System.out.println("\n===================\n");
+    }
+    private Item findItemByID(String id) {
+        for (Item it : Game.ItemData) {
+            if (it.getID().equalsIgnoreCase(id)) {
+                return it;
+            }
+        }
+        return null;
+    }
+
 
     public void displayInventory() {
         if (PlayerInventory.isEmpty()) {
@@ -132,7 +163,7 @@ public class Player extends Character {
         // 1. Find current room
         Room currentRoom = null;
         for (Room r : Game.RoomData) {
-            if (r.getRoomID().equals(CurrentRoom)) {   // FIXED: compare to CurrentRoom STRING
+            if (r.getRoomID().equals(this.getCurrentRoom())) {
                 currentRoom = r;
                 break;
             }
@@ -146,19 +177,15 @@ public class Player extends Character {
         // 2. Get destination
         String nextRoomID = currentRoom.getExit(direction);
 
-        if (nextRoomID == null || nextRoomID.equals("0") || nextRoomID.isEmpty()) {
+        if (nextRoomID == null || nextRoomID.isEmpty() || nextRoomID.equals("0")) {
             System.out.println("You cannot go " + direction + " from here.");
             return;
         }
 
-        // 3. Update player location
-        CurrentRoom = nextRoomID;
-        // Advance time because the player moved
-        if (Game.player != null && Game.player.getTimeOfDay() != null) {
-            Game.player.getTimeOfDay().updateTime(direction);
-        }
+        // 3. Move player
+        this.setCurrentRoom(nextRoomID);
 
-        // 4. Find destination room
+        // 4. Load next room
         Room nextRoom = null;
         for (Room r : Game.RoomData) {
             if (r.getRoomID().equals(nextRoomID)) {
@@ -172,7 +199,7 @@ public class Player extends Character {
             return;
         }
 
-        // 5. Show room details
+        // 5. Show room info
         System.out.println("\nYou move " + direction + "...");
         System.out.println(nextRoom.getFullRoomInfo());
 
@@ -482,20 +509,6 @@ public class Player extends Character {
             }
         }
 
-
-    }
-
-    public void drop(String itemName) {
-        for (Item tempkey : PlayerInventory) {
-            if (tempkey.getName().equalsIgnoreCase(itemName)) {
-                PlayerInventory.remove(tempkey);
-                //currentRoom.addItem(tempkey);
-                System.out.println(tempkey.getName() + " has been dropped successfully from the player inventory and place in room.");
-                return;
-            } else {
-                System.out.println("No item was dropped in this room");
-            }
-        }
     }
 
 
@@ -510,12 +523,12 @@ public class Player extends Character {
         if(!tempMonster.isAlive()){
             System.out.println("IT DEAD!");
         }
-        else if(chance<0.95){
+        else if(chance<0.50){
             //Debug message below to test out avoid mechanic
             System.out.println("You avoided combat");
         }
         else{
-            //Combat(tempMonster);
+            Combat(tempMonster);
         }
 
     }
@@ -544,18 +557,48 @@ public class Player extends Character {
     public void setEquippedArmor(Armor equippedArmor) {
         this.equippedArmor = equippedArmor;
     }
+    public void craftItem(String itemName) {
 
-
-    void Combat(Monster tempMonster,Room tempRoom) {
-        if(tempMonster == null){
-            return;
-        }
-        else if(!tempMonster.isAlive()){
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Usage: craft <item-name>");
             return;
         }
 
+        // -----------------------------------
+        // 1. FIND THE CRAFTABLE ITEM IN GAME
+        // -----------------------------------
+        CraftableItem craftItem = null;
+
+        for (Item item : Game.ItemData) {
+            if (item instanceof CraftableItem) {
+
+                // Match by name or ID
+                if (item.getName().equalsIgnoreCase(itemName) ||
+                        item.getID().equalsIgnoreCase(itemName)) {
+
+                    craftItem = (CraftableItem) item;
+                    break;
+                }
+            }
+        }
+
+
+        if (craftItem == null) {
+            System.out.println("❌ You cannot craft \"" + itemName + "\".");
+            return;
+        }
+
+
+        craftItem.craft(itemName);
+    }
+
+
+
+    public  void Combat(Monster tempMonster) {
+        System.out.println("Your HP" + getHP());
+        System.out.println(tempMonster.displayerMonster());
+        System.out.println("Monster HP: " + tempMonster.getHP());
         int MonsterHP = tempMonster.getHP();
-        boolean isAlive=tempMonster.isAlive();
         Scanner UserInput = new Scanner(System.in);
         while (isAlive) {
             System.out.println("Your HP: " + getHP());
@@ -573,7 +616,7 @@ public class Player extends Character {
                 //Put random chance to just exit battle
                 Random rand = new Random();
                 double MonsterChance=rand.nextDouble(0,1);
-                double PlayerChance=rand.nextDouble(0,10);
+                double PlayerChance=rand.nextDouble(0,1);
                 if(MonsterChance<PlayerChance) {
                     break;
                 }
@@ -581,7 +624,6 @@ public class Player extends Character {
                     System.out.println("You weren't able to run away");
                     setHP(this.getHP() - tempMonster.getAttackDMG());
                 }
-
             } else if (Command.equalsIgnoreCase("Inventory")) {
                 //Put inventory Here
                 displayInventory();
@@ -603,6 +645,12 @@ public class Player extends Character {
             }
             else if(Command.equalsIgnoreCase("Help")) {
                 showHelp();
+            }
+            else if(Command.equalsIgnoreCase("equip")) {
+                //Equip here
+            }
+            else if(Command.equalsIgnoreCase("unequip")) {
+                //Unequip Here
             }
             else{
                 System.out.println("Incorrect Command");

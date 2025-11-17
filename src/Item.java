@@ -12,6 +12,9 @@ public class Item {
         this.description = description;
         this.roomID = roomID;
     }
+    public Item(){
+
+    }
 
     public String getID() { return id; }
     public String getName() { return name; }

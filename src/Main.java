@@ -13,6 +13,7 @@ public class Main {
         main.start();
     }
 
+
     public void start() {
         Scanner scanner = new Scanner(System.in);
         String input;
@@ -23,7 +24,7 @@ public class Main {
         System.out.println("Inventory/i, Stats, Help/?, Quit");
         System.out.println("================================================\n");
 
-        player =Game.player;
+        player = Game.player;
 
         // Show starting room
         Game.lookAround();
@@ -59,27 +60,7 @@ public class Main {
 
         switch (verb) {
             case "take":
-                takeItem(argument);
-                break;
-            case "attack":
-                Monster m=null;
-                Room tempRoom=null;
-                for(int i=0; i<Game.RoomData.size(); i++){
-                    if(Objects.equals(Game.RoomData.get(i).getRoomID(), Game.player.getCurrentRoom())){
-                        if(Game.RoomData.get(i).hasMonster()) {
-                            m = Game.RoomData.get(i).getMonster();
-                            tempRoom = Game.RoomData.get(i);
-                        }
-                    }
-                    else{
-                        //System.out.println("No monsters");
-                    }
-                }
-                Game.player.Combat(m,tempRoom);
-                break;
             case "pickup":
-                takeItem(argument);
-                break;
             case "grab":
                 takeItem(argument);
                 break;
@@ -102,24 +83,15 @@ public class Main {
                     inspectItem(argument);
                 }
                 break;
-            case "solve":
-                if (argument.equalsIgnoreCase("puzzle") || argument.isEmpty()) {
-                    Game.solvePuzzle();
-                } else {
-                    System.out.println("Usage: solve puzzle");
-                }
+            case "craft":
+                Game.player.craftItem(argument);
                 break;
-            case "puzzle":
-                Game.solvePuzzle();
+            case "journal":   // <<=== NEW
+                Game.player.viewRecipeBook();
                 break;
-            case "hint":
-                Game.getPuzzleHint();
-                break;
-            case "save":
-                Game.player.savePlayer();
-                break;
-            case "load":
-                Game.player.loadPlayer();
+
+            case "j":         // <<=== NEW
+                Game.player.viewRecipeBook();
                 break;
             default:
                 System.out.println("Unknown command: " + command);
@@ -143,23 +115,13 @@ public class Main {
 
         if (currentRoom == null) return;
 
-        Monster m=currentRoom.getMonster();
-        boolean monsterAlive = (m != null && m.isAlive()); //True if it not null or alive
-        //false when it null or dead
-
         List<Item> items = currentRoom.getItems();
         for (Item item : items) {
             if (item.getName().equalsIgnoreCase(itemName.trim())) {
-                if (!monsterAlive) {
-                    Game.player.getPlayerInventory().add(item);
-                    currentRoom.removeItemFromRoom(item.getName());
-                    System.out.println("You have taken: " + item.getName());
-                    return;
-                }
-                else{
-                    System.out.println("You cannot take that — the monster is guarding it!");
-                    return;
-                }
+                Game.player.getPlayerInventory().add(item);
+                currentRoom.removeItemFromRoom(item.getName());
+                System.out.println("You have taken: " + item.getName());
+                return;
             }
         }
         System.out.println("No such item found: " + itemName);
@@ -280,8 +242,6 @@ public class Main {
         }
         System.out.println("You don't have that item.");
     }
-
-
 
    /* private void lookAround() {
         Room currentRoom = world.get(player.getCurrentRoom());
