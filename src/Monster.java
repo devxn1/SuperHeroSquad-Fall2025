@@ -80,4 +80,18 @@ public class Monster extends Character{
     public void setAlive(boolean alive) {
         IsAlive = alive;
     }
+
+    void drop(Room currentRoom){
+        for(Item items:getMonsterInventory()){
+            for(int i=0; i<getMonsterInventory().size();i++){
+                if(getMonsterInventory().get(i).getName().equals(items.getName())){
+                    MonsterInventory.remove(getMonsterInventory().get(i));
+                    currentRoom.addItemToRoom(getMonsterInventory().get(i));
+                    System.out.println("Dropped items");
+                    return;
+                }
+            }
+
+        }
+    }
 }
