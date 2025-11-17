@@ -34,26 +34,28 @@ public class Room {
         this.roomName = roomName;
         this.roomDescription = roomDescription;
         this.exits = new HashMap<>();
-//        if (north != null && !north.trim().isEmpty()) {
-//            exits.put("north", north.trim());
-//        }
-//        if (east != null && !east.trim().isEmpty()) {
-//            exits.put("east", east.trim());
-//        }
-//        if (south != null && !south.trim().isEmpty()) {
-//            exits.put("south", south.trim());
-//        }
-//        if (west != null && !west.trim().isEmpty()) {
-//            exits.put("west", west.trim());
-//        }
 
-        if (isLockedBy == null || isLockedBy.trim().isEmpty()) {
-            this.isLockedBy = null;
-        } else {
-            this.isLockedBy = isLockedBy.trim();
+        // Parse directions: [north, east, south, west]
+        if (Directions != null && Directions.size() >= 4) {
+            String north = Directions.get(0);
+            String east = Directions.get(1);
+            String south = Directions.get(2);
+            String west = Directions.get(3);
+
+            if (north != null && !north.trim().isEmpty() && !north.equals("0")) {
+                exits.put("north", north.trim());
+            }
+            if (east != null && !east.trim().isEmpty() && !east.equals("0")) {
+                exits.put("east", east.trim());
+            }
+            if (south != null && !south.trim().isEmpty() && !south.equals("0")) {
+                exits.put("south", south.trim());
+            }
+            if (west != null && !west.trim().isEmpty() && !west.equals("0")) {
+                exits.put("west", west.trim());
+            }
         }
 
-        //this.isLockedBy = isLockedBy;
         if (isLockedBy == null || isLockedBy.trim().isEmpty()) {
             this.isLockedBy = null;
         } else {
@@ -61,7 +63,6 @@ public class Room {
         }
 
         this.visited = false;
-
 
         this.items = new ArrayList<>();
         this.puzzle = null;
@@ -196,7 +197,7 @@ public class Room {
 
     /* Removes item from the current room.
      * Really to meant to called when a player pickups an item
-    */
+     */
     public Item removeItemFromRoom(String itemName) {
         if (itemName == null) {
             return null;

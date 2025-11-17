@@ -10,45 +10,88 @@ public class Game {
     public static HashMap<String, Runnable> commandInputs = new HashMap<>();
     public static Player player;
 
-public static void loadGame(){
-    welcomeMessage();
-    RoomData = ParseRoomdata();
-    ItemData = ParseItemData();
-    MonsterData = ParseMonsterData();
-    //PuzzleData = ParsePuzzleData();
-    player = new Player(
-            "A1",         // starting room ID
-            100,          // HP
-            10,           // attackDMG
-            5,            // defense
-            5,            // evasion
-            50,           // hunger
-            50,           // thirst
-            new ArrayList<Item>(),
-            new ArrayList<Artifact>(),
-            new ArrayList<Recipe>()// empty inventory at start
-    );
-    registerCommands();
+    public static void loadGame(){
+        welcomeMessage();
+        RoomData = ParseRoomdata();
+        ItemData = ParseItemData();
+        MonsterData = ParseMonsterData();
+        //PuzzleData = ParsePuzzleData();
 
-}
+        assignMonstersToRooms();
+        assignItemsToRooms();
 
-public static void registerCommands(){
-NaviagationCommands();
-}
-public static void NaviagationCommands(){
-    commandInputs.put("north", () -> player.PlayerMoveDirection("north"));
-    commandInputs.put("south", () -> player.PlayerMoveDirection("south"));
-    commandInputs.put("east", () -> player.PlayerMoveDirection("east"));
-    commandInputs.put("west", () -> player.PlayerMoveDirection("west"));
-    commandInputs.put("move north", () -> player.PlayerMoveDirection("north"));
-    commandInputs.put("move south", () -> player.PlayerMoveDirection("south"));
-    commandInputs.put("move east", () -> player.PlayerMoveDirection("east"));
-    commandInputs.put("move west", () -> player.PlayerMoveDirection("west"));
-}
-public static void welcomeMessage(){
-    System.out.println("Welcome to the Adventure Game!");
-    System.out.println("Type 'help' to see a list of commands.");
-}
+        player = new Player(
+                "A1",         // starting room ID
+                100,          // HP
+                10,           // attackDMG
+                5,            // defense
+                5,            // evasion
+                50,           // hunger
+                50,           // thirst
+                new ArrayList<Item>(),
+                new ArrayList<Artifact>(),
+                new ArrayList<Recipe>()// empty inventory at start
+        );
+        registerCommands();
+
+    }
+
+    public static void registerCommands(){
+        NaviagationCommands();
+        GameCommands();
+        ItemCommands();
+    }
+
+    public static void NaviagationCommands(){
+        commandInputs.put("north", () -> player.PlayerMoveDirection("north"));
+        commandInputs.put("south", () -> player.PlayerMoveDirection("south"));
+        commandInputs.put("east", () -> player.PlayerMoveDirection("east"));
+        commandInputs.put("west", () -> player.PlayerMoveDirection("west"));
+        commandInputs.put("n", () -> player.PlayerMoveDirection("north"));
+        commandInputs.put("s", () -> player.PlayerMoveDirection("south"));
+        commandInputs.put("e", () -> player.PlayerMoveDirection("east"));
+        commandInputs.put("w", () -> player.PlayerMoveDirection("west"));
+        commandInputs.put("move north", () -> player.PlayerMoveDirection("north"));
+        commandInputs.put("move south", () -> player.PlayerMoveDirection("south"));
+        commandInputs.put("move east", () -> player.PlayerMoveDirection("east"));
+        commandInputs.put("move west", () -> player.PlayerMoveDirection("west"));
+    }
+
+    public static void GameCommands(){
+        commandInputs.put("help", Game::help);
+        commandInputs.put("?", Game::help);
+        commandInputs.put("quit", Game::quitGame);
+        commandInputs.put("inventory", () -> player.displayInventory());
+        commandInputs.put("i", () -> player.displayInventory());
+        commandInputs.put("stats", () -> player.displayStats());
+        commandInputs.put("look", () -> lookAround());
+        commandInputs.put("inspect", () -> lookAround());
+    }
+
+    public static void ItemCommands(){
+        // These will be handled separately in processCommand since they need parameters
+    }
+
+    public static void lookAround() {
+        Room currentRoom = null;
+        for (Room r : RoomData) {
+            if (r.getRoomID().equals(player.getCurrentRoom())) {
+                currentRoom = r;
+                break;
+            }
+        }
+
+        if (currentRoom == null) {
+            System.out.println("Error: current room not found!");
+            return;
+        }
+
+        System.out.println(currentRoom.getFullRoomInfo());
+    }
+    public static void welcomeMessage(){
+        System.out.println("Welcome to the Adventure Game!");
+        System.out.println("Type 'help' to see a list of commands.");
+    }
     public static void help() {
         System.out.println("Available commands:");
         System.out.println(" <direction> - Move in the specified direction (north, south, east, west)");
@@ -60,11 +103,11 @@ public static void welcomeMessage(){
         System.out.println("lost - Show your current location and possible directions");
         System.out.println("quit - Exit the game");
 
-}
-public static void quitGame(){
-    System.out.println("Thank you for playing! Goodbye.");
-    System.exit(0);
-}
+    }
+    public static void quitGame(){
+        System.out.println("Thank you for playing! Goodbye.");
+        System.exit(0);
+    }
     public static ArrayList<Room> ParseRoomdata() {
         ArrayList<Room> rooms = new ArrayList<>();
 
@@ -110,7 +153,7 @@ public static void quitGame(){
         if (raw != null && !raw.trim().isEmpty()) {
             for (String part : raw.split(",")) {
                 String trimmed = part.trim();
-                if (!trimmed.isEmpty() && !trimmed.equals("0")) {
+                if (!trimmed.isEmpty()) {
                     list.add(trimmed);
                 }
             }
@@ -219,10 +262,14 @@ public static void quitGame(){
                 }
 
 
-               // tempItems.add(drops);
+                // tempItems.add(drops);
 
                 Monster monster = new Monster(id, name, description, location, health, damage, tempItems);
                 monsters.add(monster);
+
+                for(Monster monster1 : monsters) {
+
+                }
             }
 
         } catch (Exception e) {
@@ -232,8 +279,49 @@ public static void quitGame(){
 
         return monsters;
     }
+    public static void assignMonstersToRooms() {
+        for (Monster monster : MonsterData) {
+            String roomID = monster.getIDLocation();
+
+            // Find the room with matching ID
+            for (Room room : RoomData) {
+                if (room.getRoomID().equalsIgnoreCase(roomID)) {
+                    room.setMonster(monster);
+                    break;
+                }
+            }
+        }
+        System.out.println("Assigned " + MonsterData.size() + " monsters to rooms.");
+    }
+
+    public static void assignItemsToRooms() {
+        int itemsAssigned = 0;
+
+        for (Item item : ItemData) {
+            List<String> roomIDs = item.getRoomID();
+
+            // Skip items with no room assignments or "Crafted"/"Anywhere" locations
+            if (roomIDs == null || roomIDs.isEmpty()) {
+                continue;
+            }
+
+            for (String roomID : roomIDs) {
+                // Skip special locations
+                if (roomID.equalsIgnoreCase("Crafted") || roomID.equalsIgnoreCase("Anywhere")) {
+                    continue;
+                }
+
+                // Find the room and add the item
+                for (Room room : RoomData) {
+                    if (room.getRoomID().equalsIgnoreCase(roomID)) {
+                        room.addItemToRoom(item);
+                        itemsAssigned++;
+                        break;
+                    }
+                }
+            }
+        }
+        System.out.println("Assigned " + itemsAssigned + " item instances to rooms.");
+    }
 
 }
-
-
-
