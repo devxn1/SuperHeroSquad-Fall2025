@@ -122,9 +122,6 @@ public class Player extends Character {
             System.out.println();
         }
     }
-
-
-
     public static void PlayerMoveDirection(String direction) {
 
         // 1. Find current room
@@ -319,6 +316,38 @@ public class Player extends Character {
         return null;
     }
 
+
+    //USED AI for this Part to make so that Player class can heal during Combat
+    public void useItem(String itemName) {
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Specify an item name to use.");
+            return;
+        }
+
+        Item item = findItemFromInventory(itemName);
+
+        if (item == null) {
+            System.out.println("You don't have \"" + itemName + "\" in your inventory.");
+            return;
+        }
+
+        // --- USE CONSUMABLE ---
+        if (item instanceof Consumable consumable) {
+            int healAmount = consumable.getHealing();
+
+            int oldHP = getHP();
+            setHP(getHP() + healAmount);
+
+            PlayerInventory.remove(item);
+
+            System.out.println("You used " + consumable.getName() +
+                    " and healed for " + healAmount + " HP.");
+            System.out.println("HP: " + oldHP + " → " + getHP());
+
+            return;
+        }
+    }
+
     void loadPlayer() {
             Scanner fileinput=null;
             String fileName="User/player.txt";
@@ -479,6 +508,21 @@ public class Player extends Character {
                 //Put inventory Here
                 displayInventory();
             }
+            else if(Command.toLowerCase().startsWith("use ")){
+                String item=Command.substring(4);
+                Item isitThere =findItemFromInventory(item);
+
+                if(isitThere == null){
+                    System.out.println("You Don't Have it");
+                }
+                else if(isitThere instanceof Consumable){
+                    useItem(item);
+                }
+                else{
+                    System.out.println("Can't use this item during combat");
+                }
+
+            }
             else if(Command.equalsIgnoreCase("Help")) {
                 showHelp();
             }
@@ -495,7 +539,7 @@ public class Player extends Character {
                 tempMonster.setAlive(false);
                 isAlive=false;
                 System.out.println(tempMonster.getName()+" is DEAD!");
-                tempMonster.drop(tempRoom);
+                //tempMonster.drop(tempRoom);
                 tempRoom.setMonster(tempMonster);
                 return;
             }
