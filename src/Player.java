@@ -261,6 +261,8 @@ public class Player extends Character {
     }
 
 
+
+
     public void unequipWeapon() {
         if (equippedWeapon == null) {
             System.out.println("You don't have any weapon equipped");
