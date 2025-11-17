@@ -15,8 +15,8 @@ public class Game {
         RoomData = ParseRoomdata();
         ItemData = ParseItemData();
         MonsterData = ParseMonsterData();
-        //PuzzleData = ParsePuzzleData();
-
+        PuzzleData = ParsePuzzleData();
+        assignPuzzlesToRooms();
         assignMonstersToRooms();
         assignItemsToRooms();
 
@@ -323,5 +323,60 @@ public class Game {
         }
         System.out.println("Assigned " + itemsAssigned + " item instances to rooms.");
     }
+
+    public static ArrayList<Puzzle> ParsePuzzleData() {
+        ArrayList<Puzzle> puzzles = new ArrayList<>();
+
+        try (InputStream inputStream = Game.class.getClassLoader().getResourceAsStream("data/PuzzleData.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split("/", -1);
+                if (parts.length < 7) {
+                    System.err.println("Malformed puzzle line: " + line);
+                    continue;
+                }
+
+                String puzzleID = parts[0].trim();
+                String puzzleName = parts[1].trim();
+                String roomID = parts[2].trim();
+                String rewardType = parts[3].trim();
+                String puzzleDescription = parts[4].trim();
+                int puzzleAttempts = Integer.parseInt(parts[5].trim());
+                String rewardID = parts[6].trim();
+
+                Puzzle puzzle = new Puzzle(puzzleID, puzzleName, roomID,
+                        puzzleDescription, puzzleAttempts,
+                        rewardType, rewardID);
+                puzzles.add(puzzle);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Failed to load PuzzleData.txt: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return puzzles;
+    }
+    public static void assignPuzzlesToRooms() {
+        for (Puzzle puzzle : PuzzleData) {
+            String roomID = puzzle.getRoomID();
+
+            // Find the room with matching ID
+            for (Room room : RoomData) {
+                if (room.getRoomID().equalsIgnoreCase(roomID)) {
+                    room.setPuzzle(puzzle);
+                    break;
+                }
+            }
+        }
+        System.out.println("Assigned " + PuzzleData.size() + " puzzles to rooms.");
+    }
+
+
+
 
 }
