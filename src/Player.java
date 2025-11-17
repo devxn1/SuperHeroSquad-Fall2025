@@ -173,7 +173,7 @@ public class Player extends Character {
         nextRoom.visit();
 
         if (nextRoom.hasMonster() && nextRoom.getMonster().isAlive()) {
-            System.out.println("\n⚠ A monster is here: " + nextRoom.getMonster().getName());
+            System.out.println("\nA monster is here: " + nextRoom.getMonster().getName());
         }
     }
 
@@ -247,6 +247,7 @@ public class Player extends Character {
         }
 
         equippedWeapon = weapon;
+        setAttackDMG(attackDMG+ equippedWeapon.getDamage());
         System.out.println("Equipped " + equippedWeapon.getName() +
                 " (+" + equippedWeapon.getDamage() + " attack damage)");
     }
@@ -259,7 +260,54 @@ public class Player extends Character {
         }
 
         System.out.println("Unequipped " + equippedWeapon.getName());
+        setAttackDMG(attackDMG- equippedWeapon.getDamage());
         equippedWeapon = null;
+    }
+
+    public void equipArmor(String itemName){
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Specify an armor name to equip.");
+            return;
+        }
+
+        Item item = findItemFromInventory(itemName);
+
+        if (item == null) {
+            System.out.println("You don't have an item named \"" + itemName + "\"");
+            return;
+        }
+
+        if (!(item instanceof Armor armor)) {
+            System.out.println(item.getName() + " cannot be equipped as armor.");
+            return;
+        }
+
+        // Already equipped?
+        if (equippedArmor != null && equippedArmor.getName().equalsIgnoreCase(armor.getName())) {
+            System.out.println("You already have " + armor.getName() + " equipped.");
+            return;
+        }
+
+        // Unequip previous armor first
+        if (equippedArmor != null) {
+            System.out.println("Unequipped " + equippedArmor.getName());
+        }
+
+        equippedArmor = armor;
+        setDefense(defense+armor.getDefense());
+
+        System.out.println("Equipped " + armor.getName() +
+                " (+" + armor.getDefense() + " defense)");
+    }
+    public void unequipArmor() {
+        if (equippedArmor == null) {
+            System.out.println("You don't have any armor equipped.");
+            return;
+        }
+
+        System.out.println("Unequipped " + equippedArmor.getName());
+        setDefense(defense-equippedArmor.getDefense());
+        equippedArmor = null;
     }
 
     private Item findItemFromInventory(String itemName) {
@@ -404,12 +452,14 @@ public class Player extends Character {
         Scanner UserInput = new Scanner(System.in);
         while (isAlive) {
             System.out.println("Your HP: " + getHP());
-            System.out.println("Monster HP: " + tempMonster.getHP());
+            System.out.println("Monster HP: " + MonsterHP);
             System.out.println("Commands:");
             String Command = UserInput.nextLine();
             if (Command.equalsIgnoreCase("Attack")) {
                 MonsterHP -= this.getAttackDMG();
-                setHP(this.getHP() - tempMonster.getAttackDMG());
+                int DealtDmg=tempMonster.getAttackDMG();
+                DealtDmg-= getDefense();
+                setHP(this.getHP() - DealtDmg);
             } else if (Command.equalsIgnoreCase("Stats")) {
                 displayStats();
             } else if (Command.equalsIgnoreCase("Run")) {
