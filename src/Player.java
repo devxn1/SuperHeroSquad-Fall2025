@@ -166,6 +166,7 @@ public class Player extends Character {
             System.out.println("\n⚠ A monster is here: " + nextRoom.getMonster().getName());
         }
     }
+
     //Display ALl their Stats
     void displayStats() {
         System.out.println("HP: " + getHP()+"/100");
@@ -300,6 +301,36 @@ public class Player extends Character {
 
             }
 
+    }
+
+
+    public void take(String itemName){
+        for (Item tempkey : PlayerInventory) {
+            if (tempkey.getName().equalsIgnoreCase(itemName)) {
+                PlayerInventory.add(tempkey);
+               // currentRoom.removeItem(tempkey);
+                System.out.println(tempkey.getName() +" has been picked up from the room and successfully added to the player inventory.");
+                return;
+            }
+            else {
+                System.out.println("This item has not been found/exist in this room");
+            }
+        }
+
+
+    }
+
+    public void drop(String itemName) {
+        for (Item tempkey : PlayerInventory) {
+            if (tempkey.getName().equalsIgnoreCase(itemName)) {
+                PlayerInventory.remove(tempkey);
+                //currentRoom.addItem(tempkey);
+                System.out.println(tempkey.getName() + " has been dropped successfully from the player inventory and place in room.");
+                return;
+            } else {
+                System.out.println("No item was dropped in this room");
+            }
+        }
     }
 
 
