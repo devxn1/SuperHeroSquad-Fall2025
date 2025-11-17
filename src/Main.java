@@ -64,17 +64,17 @@ public class Main {
             case "attack":
                 Monster m=null;
                 Room tempRoom=null;
-               for(int i=0; i<Game.RoomData.size(); i++){
-                   if(Objects.equals(Game.RoomData.get(i).getRoomID(), Game.player.getCurrentRoom())){
-                       if(Game.RoomData.get(i).hasMonster()) {
-                           m = Game.RoomData.get(i).getMonster();
-                           tempRoom = Game.RoomData.get(i);
-                       }
-                   }
-                   else{
-                       //System.out.println("No monsters");
-                   }
-               }
+                for(int i=0; i<Game.RoomData.size(); i++){
+                    if(Objects.equals(Game.RoomData.get(i).getRoomID(), Game.player.getCurrentRoom())){
+                        if(Game.RoomData.get(i).hasMonster()) {
+                            m = Game.RoomData.get(i).getMonster();
+                            tempRoom = Game.RoomData.get(i);
+                        }
+                    }
+                    else{
+                        //System.out.println("No monsters");
+                    }
+                }
                 Game.player.Combat(m,tempRoom);
                 break;
             case "pickup":
