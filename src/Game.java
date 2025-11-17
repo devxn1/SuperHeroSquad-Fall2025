@@ -19,9 +19,10 @@ public class Game {
 
         assignMonstersToRooms();
         assignItemsToRooms();
+        assignPuzzlesToRooms();
 
         player = new Player(
-                "D5",         // starting room ID
+                "C4",         // starting room ID
                 100,          // HP
                 10,           // attackDMG
                 5,            // defense
@@ -89,6 +90,9 @@ public class Game {
         System.out.println(currentRoom.getFullRoomInfo());
     }
 
+    /**
+     * Helper method to get the player's current room
+     */
     private static Room getCurrentRoom() {
         for (Room r : RoomData) {
             if (r.getRoomID().equals(player.getCurrentRoom())) {
@@ -97,7 +101,6 @@ public class Game {
         }
         return null;
     }
-
     public static void welcomeMessage(){
         System.out.println("Welcome to the Adventure Game!");
         System.out.println("Type 'help' to see a list of commands.");
@@ -109,6 +112,8 @@ public class Game {
         System.out.println("drop <item> - Drop an item from your inventory");
         System.out.println("inspect <item> - Inspect an item in your inventory");
         System.out.println("inventory - View your current inventory");
+        System.out.println("solve puzzle - Attempt to solve a puzzle in the current room");
+        System.out.println("hint - Get a hint for the current puzzle");
         System.out.println("help - Show this help message");
         System.out.println("lost - Show your current location and possible directions");
         System.out.println("quit - Exit the game");
@@ -334,6 +339,10 @@ public class Game {
         System.out.println("Assigned " + itemsAssigned + " item instances to rooms.");
     }
 
+    /**
+     * Parses puzzle data from PuzzleData.txt
+     * Format: puzzleID/puzzleName/roomID/rewardType/puzzleDescription/puzzleAttempts/rewardID
+     */
     public static ArrayList<Puzzle> ParsePuzzleData() {
         ArrayList<Puzzle> puzzles = new ArrayList<>();
 
@@ -371,6 +380,10 @@ public class Game {
 
         return puzzles;
     }
+
+    /**
+     * Assigns puzzles to their corresponding rooms after both have been parsed
+     */
     public static void assignPuzzlesToRooms() {
         for (Puzzle puzzle : PuzzleData) {
             String roomID = puzzle.getRoomID();
@@ -386,8 +399,9 @@ public class Game {
         System.out.println("Assigned " + PuzzleData.size() + " puzzles to rooms.");
     }
 
-
-    // Puzzle
+    /**
+     * Main entry point for puzzle solving
+     */
     public static void solvePuzzle() {
         Room currentRoom = getCurrentRoom();
 
@@ -411,6 +425,9 @@ public class Game {
         puzzleLoop(puzzle, currentRoom);
     }
 
+    /**
+     * Interactive puzzle solving loop
+     */
     private static void puzzleLoop(Puzzle puzzle, Room currentRoom) {
         Scanner scanner = new Scanner(System.in);
 
@@ -423,7 +440,7 @@ public class Game {
         System.out.println("\nCommands: solve <answer> | hint | quit");
 
         while (!puzzle.isSolved() && puzzle.getRemainingAttempts() > 0) {
-            System.out.print("\n🧩 > ");
+            System.out.print("\n > ");
             String input = scanner.nextLine().trim();
 
             if (input.isEmpty()) continue;
@@ -440,7 +457,7 @@ public class Game {
 
                     // Attempt to solve the puzzle
                     if (puzzle.attemptSolve(parts[1])) {
-                        System.out.println("\n✓ CORRECT! Puzzle solved!");
+                        System.out.println("\nCORRECT! Puzzle solved!");
                         puzzle.markSolved();
                         distributePuzzleReward(puzzle, currentRoom);
                         return;
@@ -456,7 +473,7 @@ public class Game {
 
                 case "hint":
                     String hint = puzzle.getHint();
-                    System.out.println("\n Hint: " + hint);
+                    System.out.println("\nHint: " + hint);
                     if (puzzle.isSolved()) {
                         System.out.println("\n✓ Auto-solved after 3 hints!");
                         distributePuzzleReward(puzzle, currentRoom);
@@ -479,11 +496,14 @@ public class Game {
         }
 
         if (puzzle.getRemainingAttempts() <= 0) {
-            System.out.println("\n Out of attempts! Puzzle failed.");
+            System.out.println("\nOut of attempts! Puzzle failed.");
             System.out.println("You can try again later.");
         }
     }
 
+    /**
+     * Display detailed puzzle information
+     */
     private static void showPuzzleInfo(Puzzle puzzle) {
         System.out.println("\n=== Puzzle Information ===");
         System.out.println("Name: " + puzzle.getPuzzleName());
@@ -494,6 +514,9 @@ public class Game {
         System.out.println("Status: " + (puzzle.isSolved() ? "SOLVED" : "UNSOLVED"));
     }
 
+    /**
+     * Distribute reward when puzzle is solved
+     */
     private static void distributePuzzleReward(Puzzle puzzle, Room currentRoom) {
         String rewardType = puzzle.getRewardType();
         String rewardID = puzzle.getRewardID();
@@ -525,6 +548,9 @@ public class Game {
         currentRoom.removePuzzle();
     }
 
+    /**
+     * Quick hint command - gets hint without entering full puzzle loop
+     */
     public static void getPuzzleHint() {
         Room currentRoom = getCurrentRoom();
 
@@ -549,26 +575,4 @@ public class Game {
         }
     }
 
-
-//            // Skip items with no room assignments or "Crafted"/"Anywhere" locations
-//            if (roomIDs == null || roomIDs.isEmpty()) {
-//                continue;
-//            }
-//
-//            for (String roomID : roomIDs) {
-//                // Skip special locations
-//                if (roomID.equalsIgnoreCase("Crafted") || roomID.equalsIgnoreCase("Anywhere")) {
-//                    continue;
-//                }
-//
-//                // Find the room and add the item
-//                for (Room room : RoomData) {
-//                    if (room.getRoomID().equalsIgnoreCase(roomID)) {
-//                        room.addItemToRoom(item);
-//                        itemsAssigned++;
-//                        break;
-//                    }
-//                }
-//            }
-        //}
 }
