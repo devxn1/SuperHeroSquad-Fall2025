@@ -36,7 +36,7 @@ public class Game {
         );
         for (Item item : ItemData) {
             if (item instanceof Recipe recipe) {
-                player.getRecipeBook().add(recipe);
+                //player.getRecipeBook().add(recipe);
             }
         }
         registerCommands();
@@ -117,6 +117,8 @@ public class Game {
         System.out.println("Available commands:");
         System.out.println(" <direction> - Move in the specified direction (north, south, east, west)");
         System.out.println("pickup <item> - Pick up an item");
+        System.out.println("equip - equip items such armor");
+        System.out.println("unequip - unequip current item equipment");
         System.out.println("drop <item> - Drop an item from your inventory");
         System.out.println("inspect <item> - Inspect an item in your inventory");
         System.out.println("inventory - View your current inventory");
@@ -125,6 +127,9 @@ public class Game {
         System.out.println("help - Show this help message");
         System.out.println("lost - Show your current location and possible directions");
         System.out.println("quit - Exit the game");
+        System.out.println("save - Saves current state of the game");
+        System.out.println("load - Loads previous state the game");
+
 
     }
     public static void quitGame(){

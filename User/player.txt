@@ -1,1 +1,1 @@
-A1/100/10/7/5/50/50/true/Leather Armor
+A1/100/10/5/5/50/50/true/Leather Armor
