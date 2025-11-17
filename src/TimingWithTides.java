@@ -43,14 +43,14 @@ public class TimingWithTides extends Puzzle {
             return false;
         }
 
-        int hour = player.getTimeOfDay().getCurrentHour();
-        System.out.println("The current tide hour is: " + hour);
-
-        if (isLowTide(hour)) {
-            markSolved();
-            System.out.println("You enter during low tide.");
-            return true;
-        }
+        //int hour = player.getTimeOfDay().getCurrentHour();
+//        System.out.println("The current tide hour is: " + hour);
+//
+//        if (isLowTide(hour)) {
+//            markSolved();
+//            System.out.println("You enter during low tide.");
+//            return true;
+//        }
 
         // Wrong timing
         System.out.println("The tide is high — the raging water prevents you from entering this area!");
