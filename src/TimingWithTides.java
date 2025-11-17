@@ -43,10 +43,7 @@ public class TimingWithTides extends Puzzle {
             return false;
         }
 
-        //placeholder while someone else edits player
-        int hour = 5;
-        /*Need to update player into THIS line of code, the correct way to do this:
-        int hour = player.getCurrentHour();*/
+        int hour = player.getTimeOfDay().getCurrentHour();
         System.out.println("The current tide hour is: " + hour);
 
         if (isLowTide(hour)) {

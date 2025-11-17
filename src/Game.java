@@ -16,6 +16,7 @@ public class Game {
         ItemData = ParseItemData();
         MonsterData = ParseMonsterData();
         PuzzleData = ParsePuzzleData();
+        assignPuzzlesToRooms();
 
         assignMonstersToRooms();
         assignItemsToRooms();
@@ -66,6 +67,8 @@ public class Game {
         commandInputs.put("stats", () -> player.displayStats());
         commandInputs.put("look", () -> lookAround());
         commandInputs.put("inspect", () -> lookAround());
+        commandInputs.put("solve", Game::solvePuzzle);
+        commandInputs.put("puzzle", Game::solvePuzzle);
     }
 
     public static void ItemCommands(){
@@ -372,6 +375,7 @@ public class Game {
         return puzzles;
     }
     public static void assignPuzzlesToRooms() {
+        registerCustomPuzzles();
         for (Puzzle puzzle : PuzzleData) {
             String roomID = puzzle.getRoomID();
 
@@ -386,6 +390,22 @@ public class Game {
         System.out.println("Assigned " + PuzzleData.size() + " puzzles to rooms.");
     }
 
+    public static void registerCustomPuzzles() {
+        for (Room room : RoomData) {
+            Puzzle existing = room.getPuzzle();
+
+            if (existing == null) continue;
+
+            String pid = existing.getPuzzleID();
+
+            if (pid.equalsIgnoreCase("P03")) {
+                room.setPuzzle(new TimingWithTides(player));
+            }
+            else if (pid.equalsIgnoreCase("P04")) {
+                room.setPuzzle(new CrystalResonance());
+            }
+        }
+    }
 
     // Puzzle
     public static void solvePuzzle() {

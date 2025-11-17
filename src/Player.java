@@ -24,7 +24,7 @@ public class Player extends Character {
     ArrayList<Artifact> ArtifactInventory;
     ArrayList<Recipe> MaterialInventory;
     private Map<String, Room> world;
-
+    private TimeOfDay timeOfDay;
 
     public Player(String currentRoom,
                   int HP,
@@ -50,7 +50,7 @@ public class Player extends Character {
         this.PlayerInventory=PlayerInventory;
         this.ArtifactInventory=new ArrayList<>();
         this.MaterialInventory=new ArrayList<>();
-
+        this.timeOfDay = new TimeOfDay();
     }
 
 
@@ -102,6 +102,11 @@ public class Player extends Character {
         CurrentRoom = currentRoom;
     }
 
+    public TimeOfDay getTimeOfDay() {
+        return timeOfDay;
+    }
+
+
 
     public ArrayList<Item> getPlayerInventory() {
         return PlayerInventory;
@@ -151,6 +156,10 @@ public class Player extends Character {
 
         // 3. Update player location
         CurrentRoom = nextRoomID;
+        // Advance time because the player moved
+        if (Game.player != null && Game.player.getTimeOfDay() != null) {
+            Game.player.getTimeOfDay().updateTime(direction);
+        }
 
         // 4. Find destination room
         Room nextRoom = null;
