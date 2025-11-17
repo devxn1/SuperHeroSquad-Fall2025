@@ -213,6 +213,13 @@ public class Main {
     }
 
     private static void equipItem(String itemName) {
+        Item equippedItem = null;
+        for(int i=0; i<Game.ItemData.size(); i++) {
+            if(Game.ItemData.get(i).getName().equalsIgnoreCase(itemName)) {
+                equippedItem = Game.ItemData.get(i);
+            }
+        }
+
         if (itemName == null || itemName.isBlank()) {
             System.out.println("Specify an item name to equip.");
             return;
@@ -223,11 +230,40 @@ public class Main {
             return;
         }
 
-        Game.player.equipWeapon(itemName);
+        assert equippedItem != null;
+        if(equippedItem.getType().equalsIgnoreCase("Weapon")) {
+            Game.player.equipWeapon(itemName);
+            return;
+        }
+        else if(equippedItem.getType().equalsIgnoreCase("Armor")) {
+            Game.player.equipArmor(itemName);
+            return;
+        }
+        else{
+            return;
+        }
     }
 
     private static void unequipItem(String itemName) {
-        Game.player.unequipWeapon();
+        Item equippedItem = null;
+        for(int i=0; i<Game.ItemData.size(); i++) {
+            if(Game.ItemData.get(i).getName().equalsIgnoreCase(itemName)) {
+                equippedItem = Game.ItemData.get(i);
+            }
+        }
+        assert equippedItem != null;
+        if(equippedItem.getType().equalsIgnoreCase("Weapon")) {
+            Game.player.unequipWeapon();
+            return;
+        }
+        else if(equippedItem.getType().equalsIgnoreCase("Armor")) {
+            Game.player.unequipArmor();
+            return;
+        }
+        else{
+            return;
+        }
+
     }
 
     private static void inspectItem(String itemName) {
