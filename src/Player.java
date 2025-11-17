@@ -601,7 +601,7 @@ public class Player extends Character {
                 System.out.println("Incorrect Command");
             }
 
-            if(getHP()<=0){
+            if (getHP()<=0){
                 //Put Lose Method Here where player must reload or start game
             }//Make sure Monster is dead in room
             else if(MonsterHP<=0){
@@ -612,6 +612,7 @@ public class Player extends Character {
                 System.out.println(tempMonster.getName()+" is DEAD!");
                 //tempMonster.drop(tempRoom);
                 tempRoom.setMonster(tempMonster);
+                Game.checkForGameCompletion();
                 return;
             }
         }
