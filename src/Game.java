@@ -459,7 +459,7 @@ public class Game {
                     if (puzzle.attemptSolve(parts[1])) {
                         System.out.println("\nCORRECT! Puzzle solved!");
                         puzzle.markSolved();
-                        distributePuzzleReward(puzzle, currentRoom);
+                        givePuzzleReward(puzzle, currentRoom);
                         return;
                     } else {
                         puzzle.decrementAttempts();
@@ -476,7 +476,7 @@ public class Game {
                     System.out.println("\nHint: " + hint);
                     if (puzzle.isSolved()) {
                         System.out.println("\n✓ Auto-solved after 3 hints!");
-                        distributePuzzleReward(puzzle, currentRoom);
+                        givePuzzleReward(puzzle, currentRoom);
                         return;
                     }
                     break;
@@ -514,10 +514,8 @@ public class Game {
         System.out.println("Status: " + (puzzle.isSolved() ? "SOLVED" : "UNSOLVED"));
     }
 
-    /**
-     * Distribute reward when puzzle is solved
-     */
-    private static void distributePuzzleReward(Puzzle puzzle, Room currentRoom) {
+
+    private static void givePuzzleReward(Puzzle puzzle, Room currentRoom) {
         String rewardType = puzzle.getRewardType();
         String rewardID = puzzle.getRewardID();
 
@@ -548,9 +546,7 @@ public class Game {
         currentRoom.removePuzzle();
     }
 
-    /**
-     * Quick hint command - gets hint without entering full puzzle loop
-     */
+
     public static void getPuzzleHint() {
         Room currentRoom = getCurrentRoom();
 
@@ -571,8 +567,37 @@ public class Game {
 
         if (puzzle.isSolved()) {
             System.out.println("\n✓ Auto-solved after 3 hints!");
-            distributePuzzleReward(puzzle, currentRoom);
+            givePuzzleReward(puzzle, currentRoom);
         }
     }
+
+
+    //Trying ending
+
+    /* Goes through every monster in the list,
+     * which is all monster in the game to
+     * check if they're alive
+    */
+    public static boolean allMonstersDefeated() {
+
+        for (Monster m : MonsterData) {
+
+            if (m.isAlive()) {
+             return false;
+            }
+        }
+        // if never found a living monster, they’re all defeated
+        return true;
+    }
+
+    public static void checkForGameCompletion() {
+        if (allMonstersDefeated()) {
+            System.out.println("\nYou have defeated all monsters!");
+            System.out.println("Congratulations, you beat the game!!!");
+            quitGame();
+        }
+    }
+
+
 
 }
