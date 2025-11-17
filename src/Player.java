@@ -584,7 +584,7 @@ public class Player extends Character {
 
 
         if (craftItem == null) {
-            System.out.println("❌ You cannot craft \"" + itemName + "\".");
+            System.out.println("You cannot craft \"" + itemName + "\".");
             return;
         }
 
