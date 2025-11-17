@@ -198,6 +198,8 @@ public class Player extends Character {
     }
 
 
+
+    //Fixed issues with Inventory saving with ChatGPT
     void savePlayer() {
         PrintWriter fileoutput;
         while(true){
@@ -205,15 +207,24 @@ public class Player extends Character {
                 fileoutput=new PrintWriter("User/player.txt");
                 //Going to print Room,HP,DMG,Defense,Evasion,Hunger,Thirst,(True or false) DayorNight
                 //Into player.txt file
-                fileoutput.println(getCurrentRoom()+"/"+getHP()+"/"+getAttackDMG()+"/"+getDefense());
+                fileoutput.print(getCurrentRoom()+"/"+getHP()+"/"+getAttackDMG()+"/"+getDefense());
                 fileoutput.print("/"+getEvasion()+"/"+getHunger()+"/"+getThrist()+"/"+isDayorNight()+"/");
-                StringBuilder temp= new StringBuilder();
-                for(Item T:getPlayerInventory()){
-                    temp.append(T.getName());
-                }
-                fileoutput.print(temp);
-                fileoutput.close();//<Remember to close to save buffer into file
+                //StringBuilder temp= new StringBuilder();
+                List<Item> inv = getPlayerInventory();
 
+                for (int i = 0; i < inv.size(); i++) {
+                    fileoutput.print(inv.get(i).getName().trim());
+                    if (i < inv.size() - 1) {
+                        fileoutput.print(","); // inventory is comma-separated internally
+                    }
+                }
+
+                // Newline for safety
+                fileoutput.println();
+
+                System.out.println("Player saved!");
+                fileoutput.close();
+                break;
                 //Will Add inventory later, it a pain to deal with SORRY!!!
             } catch (FileNotFoundException e) {
                 System.out.println("player.txt is not found, please put back text file.");
@@ -335,7 +346,7 @@ public class Player extends Character {
         if (item instanceof Consumable consumable) {
             int healAmount = consumable.getHealing();
 
-            int oldHP = getHP();
+            int oldHP = getHP(); //Previous HP before Healing
             setHP(getHP() + healAmount);
 
             PlayerInventory.remove(item);
@@ -347,49 +358,107 @@ public class Player extends Character {
             return;
         }
     }
-
-    void loadPlayer() {
-            Scanner fileinput=null;
-            String fileName="User/player.txt";
-            File file=new File(fileName);
-            try{
-                fileinput=new Scanner(file);
+    private boolean inventoryContainsItem(String itemName) {
+        for (Item i : PlayerInventory) {
+            if (i.getName().equalsIgnoreCase(itemName)) {
+                return true;
             }
-            catch(FileNotFoundException e){
-                System.out.println("player.txt is not found, please put back text file.");
-                System.exit(0);
-            }
-
-            while(fileinput.hasNextLine()){
-                String line=fileinput.nextLine();
-                String[] split=line.split("/");
-
-                //Create Variables based on what would be stored in file then set them.
-                String TempCurrentRoom=split[0];
-                setCurrentRoom(TempCurrentRoom);
-                int TempHP=Integer.parseInt(split[1]);
-                setHP(TempHP);
-                int TempDMG=Integer.parseInt(split[2]);
-                setAttackDMG(TempDMG);
-                int TempDefense=Integer.parseInt(split[3]);
-                setDefense(TempDefense);
-                int TempEvasion=Integer.parseInt(split[4]);
-                setEvasion(TempEvasion);
-                int TempHunger=Integer.parseInt(split[5]);
-                setHunger(TempHunger);
-                int TempThrist=Integer.parseInt(split[6]);
-                setThrist(TempThrist);
-                boolean tempTime=Boolean.parseBoolean(split[7]);
-                setDayorNight(tempTime);
-
-
-
-                //Below this would be inventory, and equipment, will work later
-
-            }
-
+        }
+        return false;
     }
 
+    void loadPlayer() {
+
+            String fileName = "User/player.txt";
+            File file = new File(fileName);
+
+            if (!file.exists()) {
+                System.out.println("ERROR: player.txt not found in /User folder.");
+                return;
+            }
+
+            try (Scanner fileinput = new Scanner(file)) {
+
+                if (!fileinput.hasNextLine()) {
+                    System.out.println("player.txt is empty.");
+                    return;
+                }
+
+                String line = fileinput.nextLine();
+                String[] split = line.split("/");
+
+                if (split.length < 9) {
+                    System.out.println("player.txt is missing required fields.");
+                    return;
+                }
+
+                try {
+                    // Base attributes
+                    setCurrentRoom(split[0]);
+                    setHP(Integer.parseInt(split[1]));
+                    setAttackDMG(Integer.parseInt(split[2]));
+                    setDefense(Integer.parseInt(split[3]));
+                    setEvasion(Integer.parseInt(split[4]));
+                    setHunger(Integer.parseInt(split[5]));
+                    setThrist(Integer.parseInt(split[6]));
+                    setDayorNight(Boolean.parseBoolean(split[7]));
+
+                } catch (NumberFormatException e) {
+                    System.out.println("player.txt has invalid number formatting.");
+                    return;
+                }
+
+
+                if (!split[8].isEmpty()) {
+                    String[] items = split[8].split("\\*,\\*");
+
+                    for (String itemName : items) {
+                        itemName = itemName.trim();
+                        Item found = findItemFromInventory(itemName);
+
+                        // Prevent duplicates
+                        if (found != null && !inventoryContainsItem(itemName)) {
+                            PlayerInventory.add(found);
+                        }
+                    }
+                }
+
+                if (split.length >= 10 && !split[9].isEmpty()) {
+                    String weaponName = split[9].trim();
+                    Item weapon = findItemFromInventory(weaponName);
+
+                    // Ensure it exists in inventory before equipping
+                    if (weapon != null && !inventoryContainsItem(weaponName)) {
+                        PlayerInventory.add(weapon);
+                    }
+
+                    if (weapon != null) {
+                        equipWeapon(weaponName);
+                    }
+                }
+
+                if (split.length >= 11 && !split[10].isEmpty()) {
+                    String armorName = split[10].trim();
+                    Item armor = findItemFromInventory(armorName);
+
+                    // Ensure it exists in inventory before equipping
+                    if (armor != null && !inventoryContainsItem(armorName)) {
+                        PlayerInventory.add(armor);
+                    }
+
+                    if (armor != null) {
+                        equipArmor(armorName);
+                    }
+                }
+
+                System.out.println("Player loaded successfully!");
+
+            } catch (FileNotFoundException e) {
+                System.out.println("player.txt could not be found. Put back in the User folder.");
+            }
+
+
+    }
 
     public void take(String itemName){
         for (Item tempkey : PlayerInventory) {
