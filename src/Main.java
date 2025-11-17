@@ -18,30 +18,183 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String input;
 
-        System.out.println("Superhero Squad Final Project Implementation");
-        System.out.println("Commands: North/n, South/s, East/e, West/w,\nLook/Inspect, Take/Grab, Gather,\nCraft, Build, Use, Map/m, Journal/j,\nInventory/i, Sleep, Stats, Save/Load, Help/?, Quit");
+        System.out.println("\n=== Superhero Squad Final Project Implementation ===");
+        System.out.println("Commands: North/n, South/s, East/e, West/w,");
+        System.out.println("Look/Inspect, Take/Grab, Use, Equip, Unequip,");
+        System.out.println("Inventory/i, Stats, Help/?, Quit");
+        System.out.println("================================================\n");
 
         player = Game.player;
+
+        // Show starting room
+        Game.lookAround();
+
         //Game loop
         while (true) {
             //Player inputs
-            System.out.println("Enter a direction or a command:");
-            input = scanner.nextLine().trim().toUpperCase();
-            //I find it easier to separate one words from the two words
+            System.out.print("\n> ");
+            input = scanner.nextLine().trim();
+
+            if (input.isEmpty()) {
+                continue;
+            }
+
+            //Process the command
             processCommand(input);
-
-
         }
-
-
     }
     public static void processCommand(String command) {
-        Runnable action = Game.commandInputs.get(command.toLowerCase().trim());
+        String lowerCommand = command.toLowerCase().trim();
+
+        // Check for single-word commands first
+        Runnable action = Game.commandInputs.get(lowerCommand);
         if (action != null) {
             action.run();
-        } else {
-            System.out.println("Unknown command: " + command);
+            return;
         }
+
+        // Handle multi-word commands
+        String[] parts = lowerCommand.split("\\s+", 2);
+        String verb = parts[0];
+        String argument = parts.length > 1 ? parts[1] : "";
+
+        switch (verb) {
+            case "take":
+            case "pickup":
+            case "grab":
+                takeItem(argument);
+                break;
+            case "drop":
+                dropItem(argument);
+                break;
+            case "use":
+                useItem(argument);
+                break;
+            case "equip":
+                equipItem(argument);
+                break;
+            case "unequip":
+                unequipItem(argument);
+                break;
+            case "inspect":
+                if (argument.isEmpty()) {
+                    Game.lookAround();
+                } else {
+                    inspectItem(argument);
+                }
+                break;
+            default:
+                System.out.println("Unknown command: " + command);
+                System.out.println("Type 'help' for a list of commands.");
+        }
+    }
+
+    private static void takeItem(String itemName) {
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Specify an item name.");
+            return;
+        }
+
+        Room currentRoom = null;
+        for (Room r : Game.RoomData) {
+            if (r.getRoomID().equals(Game.player.getCurrentRoom())) {
+                currentRoom = r;
+                break;
+            }
+        }
+
+        if (currentRoom == null) return;
+
+        List<Item> items = currentRoom.getItems();
+        for (Item item : items) {
+            if (item.getName().equalsIgnoreCase(itemName.trim())) {
+                Game.player.getPlayerInventory().add(item);
+                currentRoom.removeItemFromRoom(item.getName());
+                System.out.println("You have taken: " + item.getName());
+                return;
+            }
+        }
+        System.out.println("No such item found: " + itemName);
+    }
+
+    private static void dropItem(String itemName) {
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Specify an item name.");
+            return;
+        }
+
+        for (Item item : Game.player.getPlayerInventory()) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                Game.player.getPlayerInventory().remove(item);
+
+                // Add to current room
+                Room currentRoom = null;
+                for (Room r : Game.RoomData) {
+                    if (r.getRoomID().equals(Game.player.getCurrentRoom())) {
+                        currentRoom = r;
+                        break;
+                    }
+                }
+                if (currentRoom != null) {
+                    currentRoom.addItemToRoom(item);
+                }
+
+                System.out.println("You dropped: " + item.getName());
+                return;
+            }
+        }
+        System.out.println("You don't have that item.");
+    }
+
+    private static void useItem(String itemName) {
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Type 'use <item-name>'. Specify an item name.");
+            return;
+        }
+
+        for (Item item : Game.player.getPlayerInventory()) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                item.use(Game.player);
+                if (item instanceof Consumable) {
+                    Game.player.getPlayerInventory().remove(item);
+                }
+                return;
+            }
+        }
+        System.out.println("You do not have an item named: " + itemName);
+    }
+
+    private static void equipItem(String itemName) {
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Specify an item name to equip.");
+            return;
+        }
+
+        if (itemName.equalsIgnoreCase("weapon")) {
+            System.out.println("Specify the weapon name, not just 'weapon'");
+            return;
+        }
+
+        Game.player.equipWeapon(itemName);
+    }
+
+    private static void unequipItem(String itemName) {
+        Game.player.unequipWeapon();
+    }
+
+    private static void inspectItem(String itemName) {
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Specify an item name.");
+            return;
+        }
+
+        for (Item item : Game.player.getPlayerInventory()) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                System.out.println(item.toString());
+                return;
+            }
+        }
+        System.out.println("You don't have that item.");
     }
 
    /* private void lookAround() {
@@ -100,4 +253,4 @@ public class Main {
         System.out.println("You do not have an item named: " + itemName);
     }
 */
-    }
+}
