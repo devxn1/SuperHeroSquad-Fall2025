@@ -102,6 +102,19 @@ public class Main {
                     inspectItem(argument);
                 }
                 break;
+            case "solve":
+                if (argument.equalsIgnoreCase("puzzle") || argument.isEmpty()) {
+                    Game.solvePuzzle();
+                } else {
+                    System.out.println("Usage: solve puzzle");
+                }
+                break;
+            case "puzzle":
+                Game.solvePuzzle();
+                break;
+            case "hint":
+                Game.getPuzzleHint();
+                break;
             case "save":
                 Game.player.savePlayer();
                 break;
@@ -245,6 +258,8 @@ public class Main {
         }
         System.out.println("You don't have that item.");
     }
+
+
 
    /* private void lookAround() {
         Room currentRoom = world.get(player.getCurrentRoom());
