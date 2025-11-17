@@ -102,13 +102,6 @@ public class Main {
                     inspectItem(argument);
                 }
                 break;
-            case "save":
-                Game.player.savePlayer();
-                break;
-            case "load":
-                Game.player.loadPlayer();
-                }
-                break;
             case "solve":
                 if (argument.equalsIgnoreCase("puzzle") || argument.isEmpty()) {
                     Game.solvePuzzle();
@@ -121,6 +114,12 @@ public class Main {
                 break;
             case "hint":
                 Game.getPuzzleHint();
+                break;
+            case "save":
+                Game.player.savePlayer();
+                break;
+            case "load":
+                Game.player.loadPlayer();
                 break;
             default:
                 System.out.println("Unknown command: " + command);
@@ -245,6 +244,8 @@ public class Main {
         }
         System.out.println("You don't have that item.");
     }
+
+
 
    /* private void lookAround() {
         Room currentRoom = world.get(player.getCurrentRoom());
