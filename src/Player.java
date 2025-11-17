@@ -123,6 +123,8 @@ public class Player extends Character {
         }
     }
 
+
+
     public static void PlayerMoveDirection(String direction) {
 
         // 1. Find current room
@@ -174,6 +176,7 @@ public class Player extends Character {
             System.out.println("\n⚠ A monster is here: " + nextRoom.getMonster().getName());
         }
     }
+
     //Display ALl their Stats
     void displayStats() {
         System.out.println("HP: " + getHP()+"/100");
@@ -311,6 +314,36 @@ public class Player extends Character {
     }
 
 
+    public void take(String itemName){
+        for (Item tempkey : PlayerInventory) {
+            if (tempkey.getName().equalsIgnoreCase(itemName)) {
+                PlayerInventory.add(tempkey);
+               // currentRoom.removeItem(tempkey);
+                System.out.println(tempkey.getName() +" has been picked up from the room and successfully added to the player inventory.");
+                return;
+            }
+            else {
+                System.out.println("This item has not been found/exist in this room");
+            }
+        }
+
+
+    }
+
+    public void drop(String itemName) {
+        for (Item tempkey : PlayerInventory) {
+            if (tempkey.getName().equalsIgnoreCase(itemName)) {
+                PlayerInventory.remove(tempkey);
+                //currentRoom.addItem(tempkey);
+                System.out.println(tempkey.getName() + " has been dropped successfully from the player inventory and place in room.");
+                return;
+            } else {
+                System.out.println("No item was dropped in this room");
+            }
+        }
+    }
+
+
 
     void avoid(Monster tempMonster) {
         //It going to be 95% chance to avoid monster encounter
@@ -327,7 +360,7 @@ public class Player extends Character {
             System.out.println("You avoided combat");
         }
         else{
-            Combat(tempMonster);
+            //Combat(tempMonster);
         }
 
     }
@@ -358,24 +391,20 @@ public class Player extends Character {
     }
 
 
-    void Combat(Monster tempMonster) {
-        System.out.println("Your HP" + getHP());
-        System.out.println(tempMonster.displayerMonster());
-        System.out.println("Monster HP: " + tempMonster.getHP());
-        int MonsterHP = tempMonster.getHP();
-        Scanner UserInput = new Scanner(System.in);
-        while (true) {
-            if(getHP()<=0){
-                //Put Lose Method Here where player must reload or start game
-            }//Make sure Monster is dead in room
-            else if(MonsterHP<=0){
-                tempMonster.setHP(0);
-                //The Monster should be dead when false
-                tempMonster.setAlive(false);
-                break;
-            }
+    void Combat(Monster tempMonster,Room tempRoom) {
+        if(tempMonster == null){
+            return;
+        }
+        else if(!tempMonster.isAlive()){
+            return;
+        }
 
-            System.out.println("Your HP" + getHP());
+        int MonsterHP = tempMonster.getHP();
+        boolean isAlive=tempMonster.isAlive();
+        Scanner UserInput = new Scanner(System.in);
+        while (isAlive) {
+            System.out.println("Your HP: " + getHP());
+            System.out.println("Monster HP: " + tempMonster.getHP());
             System.out.println("Commands:");
             String Command = UserInput.nextLine();
             if (Command.equalsIgnoreCase("Attack")) {
@@ -387,7 +416,7 @@ public class Player extends Character {
                 //Put random chance to just exit battle
                 Random rand = new Random();
                 double MonsterChance=rand.nextDouble(0,1);
-                double PlayerChance=rand.nextDouble(0,1);
+                double PlayerChance=rand.nextDouble(0,10);
                 if(MonsterChance<PlayerChance) {
                     break;
                 }
@@ -395,6 +424,7 @@ public class Player extends Character {
                     System.out.println("You weren't able to run away");
                     setHP(this.getHP() - tempMonster.getAttackDMG());
                 }
+
             } else if (Command.equalsIgnoreCase("Inventory")) {
                 //Put inventory Here
                 displayInventory();
@@ -402,14 +432,22 @@ public class Player extends Character {
             else if(Command.equalsIgnoreCase("Help")) {
                 showHelp();
             }
-            else if(Command.equalsIgnoreCase("equip")) {
-                //Equip here
-            }
-            else if(Command.equalsIgnoreCase("unequip")) {
-                //Unequip Here
-            }
             else{
                 System.out.println("Incorrect Command");
+            }
+
+            if(getHP()<=0){
+                //Put Lose Method Here where player must reload or start game
+            }//Make sure Monster is dead in room
+            else if(MonsterHP<=0){
+                tempMonster.setHP(0);
+                //The Monster should be dead when false
+                tempMonster.setAlive(false);
+                isAlive=false;
+                System.out.println(tempMonster.getName()+" is DEAD!");
+                tempMonster.drop(tempRoom);
+                tempRoom.setMonster(tempMonster);
+                return;
             }
         }
     }

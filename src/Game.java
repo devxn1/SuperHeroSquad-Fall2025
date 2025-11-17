@@ -15,8 +15,8 @@ public class Game {
         RoomData = ParseRoomdata();
         ItemData = ParseItemData();
         MonsterData = ParseMonsterData();
-        PuzzleData = ParsePuzzleData();
-        assignPuzzlesToRooms();
+        //PuzzleData = ParsePuzzleData();
+
         assignMonstersToRooms();
         assignItemsToRooms();
 
@@ -550,6 +550,28 @@ public class Game {
     }
 
 
+            // Skip items with no room assignments or "Crafted"/"Anywhere" locations
+            if (roomIDs == null || roomIDs.isEmpty()) {
+                continue;
+            }
 
+            for (String roomID : roomIDs) {
+                // Skip special locations
+                if (roomID.equalsIgnoreCase("Crafted") || roomID.equalsIgnoreCase("Anywhere")) {
+                    continue;
+                }
+
+                // Find the room and add the item
+                for (Room room : RoomData) {
+                    if (room.getRoomID().equalsIgnoreCase(roomID)) {
+                        room.addItemToRoom(item);
+                        itemsAssigned++;
+                        break;
+                    }
+                }
+            }
+        }
+        System.out.println("Assigned " + itemsAssigned + " item instances to rooms.");
+    }
 
 }
