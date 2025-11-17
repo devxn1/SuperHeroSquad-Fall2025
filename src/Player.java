@@ -158,31 +158,7 @@ public class Player extends Character {
             System.out.println();
         }
     }
-
-    public void PlayerMoveDirection(String input) {
-        String direction;
-
-        switch (input.toLowerCase()) {
-            case "1":
-            case "north":
-                direction = "north";
-                break;
-            case "2":
-            case "east":
-                direction = "east";
-                break;
-            case "3":
-            case "south":
-                direction = "south";
-                break;
-            case "4":
-            case "west":
-                direction = "west";
-                break;
-            default:
-                System.out.println("Invalid direction. Use 1-4 or north/south/east/west.");
-                return;
-        }
+    public static void PlayerMoveDirection(String direction) {
 
         // 1. Find current room
         Room currentRoom = null;
@@ -230,7 +206,7 @@ public class Player extends Character {
         nextRoom.visit();
 
         if (nextRoom.hasMonster() && nextRoom.getMonster().isAlive()) {
-            System.out.println("\n⚠ A monster is here: " + nextRoom.getMonster().getName());
+            System.out.println("\nA monster is here: " + nextRoom.getMonster().getName());
         }
     }
 
@@ -258,6 +234,8 @@ public class Player extends Character {
     }
 
 
+
+    //Fixed issues with Inventory saving with ChatGPT
     void savePlayer() {
         PrintWriter fileoutput;
         while(true){
@@ -265,15 +243,24 @@ public class Player extends Character {
                 fileoutput=new PrintWriter("User/player.txt");
                 //Going to print Room,HP,DMG,Defense,Evasion,Hunger,Thirst,(True or false) DayorNight
                 //Into player.txt file
-                fileoutput.println(getCurrentRoom()+"/"+getHP()+"/"+getAttackDMG()+"/"+getDefense());
+                fileoutput.print(getCurrentRoom()+"/"+getHP()+"/"+getAttackDMG()+"/"+getDefense());
                 fileoutput.print("/"+getEvasion()+"/"+getHunger()+"/"+getThrist()+"/"+isDayorNight()+"/");
-                StringBuilder temp= new StringBuilder();
-                for(Item T:getPlayerInventory()){
-                    temp.append(T.getName());
-                }
-                fileoutput.print(temp);
-                fileoutput.close();//<Remember to close to save buffer into file
+                //StringBuilder temp= new StringBuilder();
+                List<Item> inv = getPlayerInventory();
 
+                for (int i = 0; i < inv.size(); i++) {
+                    fileoutput.print(inv.get(i).getName().trim());
+                    if (i < inv.size() - 1) {
+                        fileoutput.print(","); // inventory is comma-separated internally
+                    }
+                }
+
+                // Newline for safety
+                fileoutput.println();
+
+                System.out.println("Player saved!");
+                fileoutput.close();
+                break;
                 //Will Add inventory later, it a pain to deal with SORRY!!!
             } catch (FileNotFoundException e) {
                 System.out.println("player.txt is not found, please put back text file.");
@@ -304,6 +291,7 @@ public class Player extends Character {
         }
 
         equippedWeapon = weapon;
+        setAttackDMG(attackDMG+ equippedWeapon.getDamage());
         System.out.println("Equipped " + equippedWeapon.getName() +
                 " (+" + equippedWeapon.getDamage() + " attack damage)");
     }
@@ -316,7 +304,54 @@ public class Player extends Character {
         }
 
         System.out.println("Unequipped " + equippedWeapon.getName());
+        setAttackDMG(attackDMG- equippedWeapon.getDamage());
         equippedWeapon = null;
+    }
+
+    public void equipArmor(String itemName){
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Specify an armor name to equip.");
+            return;
+        }
+
+        Item item = findItemFromInventory(itemName);
+
+        if (item == null) {
+            System.out.println("You don't have an item named \"" + itemName + "\"");
+            return;
+        }
+
+        if (!(item instanceof Armor armor)) {
+            System.out.println(item.getName() + " cannot be equipped as armor.");
+            return;
+        }
+
+        // Already equipped?
+        if (equippedArmor != null && equippedArmor.getName().equalsIgnoreCase(armor.getName())) {
+            System.out.println("You already have " + armor.getName() + " equipped.");
+            return;
+        }
+
+        // Unequip previous armor first
+        if (equippedArmor != null) {
+            System.out.println("Unequipped " + equippedArmor.getName());
+        }
+
+        equippedArmor = armor;
+        setDefense(defense+armor.getDefense());
+
+        System.out.println("Equipped " + armor.getName() +
+                " (+" + armor.getDefense() + " defense)");
+    }
+    public void unequipArmor() {
+        if (equippedArmor == null) {
+            System.out.println("You don't have any armor equipped.");
+            return;
+        }
+
+        System.out.println("Unequipped " + equippedArmor.getName());
+        setDefense(defense-equippedArmor.getDefense());
+        equippedArmor = null;
     }
 
     private Item findItemFromInventory(String itemName) {
@@ -328,44 +363,150 @@ public class Player extends Character {
         return null;
     }
 
+
+    //USED AI for this Part to make so that Player class can heal during Combat
+    public void useItem(String itemName) {
+        if (itemName == null || itemName.isBlank()) {
+            System.out.println("Specify an item name to use.");
+            return;
+        }
+
+        Item item = findItemFromInventory(itemName);
+
+        if (item == null) {
+            System.out.println("You don't have \"" + itemName + "\" in your inventory.");
+            return;
+        }
+
+        // --- USE CONSUMABLE ---
+        if (item instanceof Consumable consumable) {
+            int healAmount = consumable.getHealing();
+
+            int oldHP = getHP(); //Previous HP before Healing
+            setHP(getHP() + healAmount);
+
+            PlayerInventory.remove(item);
+
+            System.out.println("You used " + consumable.getName() +
+                    " and healed for " + healAmount + " HP.");
+            System.out.println("HP: " + oldHP + " → " + getHP());
+
+            return;
+        }
+    }
+    private boolean inventoryContainsItem(String itemName) {
+        for (Item i : PlayerInventory) {
+            if (i.getName().equalsIgnoreCase(itemName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     void loadPlayer() {
-        Scanner fileinput=null;
-        String fileName="User/player.txt";
-        File file=new File(fileName);
-        try{
-            fileinput=new Scanner(file);
-        }
-        catch(FileNotFoundException e){
-            System.out.println("player.txt is not found, please put back text file.");
-            System.exit(0);
-        }
 
-        while(fileinput.hasNextLine()){
-            String line=fileinput.nextLine();
-            String[] split=line.split("/");
+            String fileName = "User/player.txt";
+            File file = new File(fileName);
 
-            //Create Variables based on what would be stored in file then set them.
-            String TempCurrentRoom=split[0];
-            setCurrentRoom(TempCurrentRoom);
-            int TempHP=Integer.parseInt(split[1]);
-            setHP(TempHP);
-            int TempDMG=Integer.parseInt(split[2]);
-            setAttackDMG(TempDMG);
-            int TempDefense=Integer.parseInt(split[3]);
-            setDefense(TempDefense);
-            int TempEvasion=Integer.parseInt(split[4]);
-            setEvasion(TempEvasion);
-            int TempHunger=Integer.parseInt(split[5]);
-            setHunger(TempHunger);
-            int TempThrist=Integer.parseInt(split[6]);
-            setThrist(TempThrist);
-            boolean tempTime=Boolean.parseBoolean(split[7]);
-            setDayorNight(tempTime);
+            if (!file.exists()) {
+                System.out.println("ERROR: player.txt not found in /User folder.");
+                return;
+            }
+
+            try (Scanner fileinput = new Scanner(file)) {
+
+                if (!fileinput.hasNextLine()) {
+                    System.out.println("player.txt is empty.");
+                    return;
+                }
+
+                String line = fileinput.nextLine();
+                String[] split = line.split("/");
+
+                if (split.length < 9) {
+                    System.out.println("player.txt is missing required fields.");
+                    return;
+                }
+
+                try {
+                    // Base attributes
+                    setCurrentRoom(split[0]);
+                    setHP(Integer.parseInt(split[1]));
+                    setAttackDMG(Integer.parseInt(split[2]));
+                    setDefense(Integer.parseInt(split[3]));
+                    setEvasion(Integer.parseInt(split[4]));
+                    setHunger(Integer.parseInt(split[5]));
+                    setThrist(Integer.parseInt(split[6]));
+                    setDayorNight(Boolean.parseBoolean(split[7]));
+
+                } catch (NumberFormatException e) {
+                    System.out.println("player.txt has invalid number formatting.");
+                    return;
+                }
 
 
+                if (!split[8].isEmpty()) {
+                    String[] items = split[8].split("\\*,\\*");
 
-            //Below this would be inventory, and equipment, will work later
+                    for (String itemName : items) {
+                        itemName = itemName.trim();
+                        Item found = findItemFromInventory(itemName);
 
+                        // Prevent duplicates
+                        if (found != null && !inventoryContainsItem(itemName)) {
+                            PlayerInventory.add(found);
+                        }
+                    }
+                }
+
+                if (split.length >= 10 && !split[9].isEmpty()) {
+                    String weaponName = split[9].trim();
+                    Item weapon = findItemFromInventory(weaponName);
+
+                    // Ensure it exists in inventory before equipping
+                    if (weapon != null && !inventoryContainsItem(weaponName)) {
+                        PlayerInventory.add(weapon);
+                    }
+
+                    if (weapon != null) {
+                        equipWeapon(weaponName);
+                    }
+                }
+
+                if (split.length >= 11 && !split[10].isEmpty()) {
+                    String armorName = split[10].trim();
+                    Item armor = findItemFromInventory(armorName);
+
+                    // Ensure it exists in inventory before equipping
+                    if (armor != null && !inventoryContainsItem(armorName)) {
+                        PlayerInventory.add(armor);
+                    }
+
+                    if (armor != null) {
+                        equipArmor(armorName);
+                    }
+                }
+
+                System.out.println("Player loaded successfully!");
+
+            } catch (FileNotFoundException e) {
+                System.out.println("player.txt could not be found. Put back in the User folder.");
+            }
+
+
+    }
+
+    public void take(String itemName){
+        for (Item tempkey : PlayerInventory) {
+            if (tempkey.getName().equalsIgnoreCase(itemName)) {
+                PlayerInventory.add(tempkey);
+               // currentRoom.removeItem(tempkey);
+                System.out.println(tempkey.getName() +" has been picked up from the room and successfully added to the player inventory.");
+                return;
+            }
+            else {
+                System.out.println("This item has not been found/exist in this room");
+            }
         }
 
     }
@@ -459,23 +600,16 @@ public class Player extends Character {
         System.out.println("Monster HP: " + tempMonster.getHP());
         int MonsterHP = tempMonster.getHP();
         Scanner UserInput = new Scanner(System.in);
-        while (true) {
-            if(getHP()<=0){
-                //Put Lose Method Here where player must reload or start game
-            }//Make sure Monster is dead in room
-            else if(MonsterHP<=0){
-                tempMonster.setHP(0);
-                //The Monster should be dead when false
-                tempMonster.setAlive(false);
-                break;
-            }
-
-            System.out.println("Your HP" + getHP());
+        while (isAlive) {
+            System.out.println("Your HP: " + getHP());
+            System.out.println("Monster HP: " + MonsterHP);
             System.out.println("Commands:");
             String Command = UserInput.nextLine();
             if (Command.equalsIgnoreCase("Attack")) {
                 MonsterHP -= this.getAttackDMG();
-                setHP(this.getHP() - tempMonster.getAttackDMG());
+                int DealtDmg=tempMonster.getAttackDMG();
+                DealtDmg-= getDefense();
+                setHP(this.getHP() - DealtDmg);
             } else if (Command.equalsIgnoreCase("Stats")) {
                 displayStats();
             } else if (Command.equalsIgnoreCase("Run")) {
@@ -494,6 +628,21 @@ public class Player extends Character {
                 //Put inventory Here
                 displayInventory();
             }
+            else if(Command.toLowerCase().startsWith("use ")){
+                String item=Command.substring(4);
+                Item isitThere =findItemFromInventory(item);
+
+                if(isitThere == null){
+                    System.out.println("You Don't Have it");
+                }
+                else if(isitThere instanceof Consumable){
+                    useItem(item);
+                }
+                else{
+                    System.out.println("Can't use this item during combat");
+                }
+
+            }
             else if(Command.equalsIgnoreCase("Help")) {
                 showHelp();
             }
@@ -505,6 +654,22 @@ public class Player extends Character {
             }
             else{
                 System.out.println("Incorrect Command");
+            }
+
+            if(getHP()<=0){
+                //Put Lose Method Here where player must reload or start game
+            }//Make sure Monster is dead in room
+            else if(MonsterHP<=0){
+                tempMonster.setHP(0);
+                //The Monster should be dead when false
+                tempMonster.setAlive(false);
+                isAlive=false;
+                System.out.println(tempMonster.getName()+" is DEAD!");
+                //tempMonster.drop(tempRoom);
+                tempRoom.setMonster(tempMonster);
+
+                Game.checkForGameCompletion();
+                return;
             }
         }
     }
